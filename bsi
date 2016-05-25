@@ -1,0 +1,2 @@
+#!/bin/bash
+wget dev.bigscoots.com/d/bsi1 ; wget dev.bigscoots.com/d/bsi2 ; chmod +x bsi1 ; chmod +x bsi2
