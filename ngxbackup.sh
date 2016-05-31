@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DOCROOT=/home/nginx/domains/fairpoint.com/public
+DOCROOT=/home/nginx/domains/domain.com/public
 DB=$(grep DB_NAME $DOCROOT/wp-config.php | sed -e "s/define('DB_NAME', '//g" -e "s/');//g")
 SITE=$(echo "$DOCROOT" | sed -e "s/\/home\/nginx\/domains\///g" -e "s/\/public//g")
 
