@@ -1,11 +1,16 @@
 #!/bin/bash
 
+BKUSER=0000
 DOCROOT=/home/nginx/domains/domain.com/public
 DB=$(grep DB_NAME $DOCROOT/wp-config.php | sed -e "s/define('DB_NAME', '//g" -e "s/');//g")
 SITE=$(echo "$DOCROOT" | sed -e "s/\/home\/nginx\/domains\///g" -e "s/\/public//g")
 
-mkdir -p /backup/DATE="$(date +%Y-%m-%d)/$SITE"
-mysqldump "$DB" | gzip > $DOCROOT/"$DB".sql.gz 
-tar -zcf /backup/DATE="$(date +%Y-%m-%d)"/"$SITE".tar.gz "$DOCROOT"
+ssh "$BKUSER"@int-backup.bigscoots.com 'mkdir -p ~/backup/"$(date +%Y-%m-%d)"'
+
+mysqldump "$DB" | gzip > $DOCROOT/"$DB".sql.gz
+
+tar zcf - "$DOCROOT" | ssh "$BKUSER"@int-backup.bigscoots.com "cat > ~/backup/$(date +%Y-%m-%d)/$SITE.tar.gz"
+
 rm -f $DOCROOT/"$DB".sql.gz
-find /backup/ -type f -iname '*.tar.gz' ctime +14 -exec rm {} \;
+
+ssh "$BKUSER"@int-backup.bigscoots.com 'find ~/backup/ -type d -ctime +3 -exec rm -rf {} \;'
