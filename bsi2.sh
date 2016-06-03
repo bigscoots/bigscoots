@@ -14,11 +14,7 @@ sleep 1
 
 
 DOMAIN=$(echo $(hostname) | awk -F. '{print $2"."$3}')
-echo $DOMAIN
-
 EMAIL=$(echo admin@$DOMAIN)
-echo $EMAIL
-
 IP=$(ifconfig venet0:0 | grep 'inet' | awk {'print $2'} | sed s/.*://)
 
 echo
