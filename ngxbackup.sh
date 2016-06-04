@@ -2,7 +2,7 @@
 
 BKUSER=0000
 DOCROOT=/home/nginx/domains/domain.com/public
-DB=$(grep DB_NAME $DOCROOT/wp-config.php | sed -e "s/define('DB_NAME', '//g" -e "s/');//g")
+DB=$(grep DB_NAME $DOCROOT/wp-config.php | sed -e "s/define('DB_NAME', '//g" -e "s/');//g" | tr -d '\r')
 SITE=$(echo "$DOCROOT" | sed -e "s/\/home\/nginx\/domains\///g" -e "s/\/public//g")
 
 ssh "$BKUSER"@int-backup.bigscoots.com 'mkdir -p ~/backup/"$(date +%Y-%m-%d)"'
