@@ -12,7 +12,7 @@ DB=$(grep DB_NAME $DOCROOT/wp-config.php | sed -e "s/define('DB_NAME', '//g" -e 
 SITE=$(echo "$DOCROOT" | sed -e "s/\/home\/nginx\/domains\///g" -e "s/\/public//g")
 CURRDATE=$(date +%Y-%m-%d)
 
-ssh "$BKUSER"@$DBSERVER 'mkdir -p ~/backup/"$CURRDATE"'
+ssh "$BKUSER"@$DBSERVER "mkdir -p ~/backup/$CURRDATE"
 
 mysqldump "$DB" | gzip > $DOCROOT/"$DB".sql.gz
 
