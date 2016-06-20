@@ -28,6 +28,7 @@ echo "######################################################"
 sleep 1
 
 touch /etc/.whostmgrft
+echo > /etc/wwwacct.conf
 echo ADDR $IP >> /etc/wwwacct.conf
 echo NSTTL 86400 >> /etc/wwwacct.conf
 echo TTL 14400 >> /etc/wwwacct.conf
@@ -44,8 +45,8 @@ echo NS4 >> /etc/wwwacct.conf
 echo HOMEDIR /home >> /etc/wwwacct.conf
 echo NS3 >> /etc/wwwacct.conf
 echo LOGSTYLE combined >> /etc/wwwacct.conf
-echo DEFMOD x3 >> /etc/wwwacct.conf
-echo DEFWEBMAILTHEME x3 >> /etc/wwwacct.conf
+echo DEFMOD paper_lantern >> /etc/wwwacct.conf
+echo DEFWEBMAILTHEME paper_lantern >> /etc/wwwacct.conf
 echo $EMAIL > /root/.forward
 wget -O /var/cpanel/cpanel.config dev.bigscoots.com/d/cpanel.config
 /usr/local/cpanel/whostmgr/bin/whostmgr2 --updatetweaksettings
