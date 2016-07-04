@@ -1,12 +1,11 @@
 #!/bin/bash
+# Usage: /bigscoots/ngxbackup.sh /home/nginx/domain.com/public daily,weekly,monthly
 
 # Touch
 BKUSER=0000
 DOCROOT=$1
 FREQUENCY=$2
 DBSERVER=int-backup2.bigscoots.com
-
-# Usage: /bigscoots/ngxbackup.sh /home/nginx/domain.com/public daily,weekly,monthly
 
 # No Touch
 DB=$(grep DB_NAME "$DOCROOT"/wp-config.php | sed -e "s/define('DB_NAME', '//g" -e "s/');//g" | tr -d '\r')
