@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Requires bc
 # Usage single: /bigscoots/Convert_nonVSwap2VSwap.sh 123
 # Usage all: for CT in $(vzlist -H -o ctid); /bigscoots/Convert_nonVSwap2VSwap.sh $CT ; done
 
