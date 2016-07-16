@@ -2,7 +2,7 @@
 
 # Requires bc
 # Usage single: /bigscoots/Convert_nonVSwap2VSwap.sh 123
-# Usage all: for CT in $(vzlist -H -o ctid); /bigscoots/Convert_nonVSwap2VSwap.sh $CT ; done
+# Usage all: for CT in $(vzlist -H -o ctid); do /bigscoots/Convert_nonVSwap2VSwap.sh $CT ; done
 
 CTID=$1
 CURRENTMEM=$(vzctl exec $CTID free -m | grep Mem: | awk '{print $2}')
