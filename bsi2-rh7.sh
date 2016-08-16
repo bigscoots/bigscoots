@@ -72,11 +72,11 @@ mkdir /home/installtmp
 cd /home/installtmp
 wget -N http://www.networkpanda.com/scripts/cel_install
 sh cel_install
-wget http://configserver.com/free/csf.tgz
-wget http://configserver.com/free/cmc.tgz
-wget http://configserver.com/free/cse.tgz
-wget http://configserver.com/free/cmq.tgz
-wget http://configserver.com/free/cmm.tgz
+wget https://download.configserver.com/csf.tgz
+wget https://download.configserver.com/cmc.tgz
+wget https://download.configserver.com/cse.tgz
+wget https://download.configserver.com/cmq.tgz
+wget https://download.configserver.com/cmm.tgz
 wget http://download.ndchost.com/accountdnscheck/latest-accountdnscheck
 wget https://s3.amazonaws.com/uploads.hipchat.com/31137/205915/8wnl7tivlp88pfm/rkhunter-1.4.0.tar.gz
 sh latest-accountdnscheck
