@@ -34,7 +34,7 @@ echo NSTTL 86400 >> /etc/wwwacct.conf
 echo TTL 14400 >> /etc/wwwacct.conf
 echo SCRIPTALIAS y >> /etc/wwwacct.conf
 echo NS2 ns2.$DOMAIN >> /etc/wwwacct.conf
-echo ETHDEV $(ip addr | grep -Ev '127.0.0.1|192.168.' |grep -Ev 'lo:|link/loopback|valid_lft|link/ether' |grep -B1 .[0-9]/ |grep -Ev 'inet' | awk '{print $2}' | sed 's/://g') >> /etc/wwwacct.conf
+echo ETHDEV $(ip addr | grep -Ev '127.0.0.1|192.168.' |grep -Ev 'lo:|link/loopback|valid_lft|link/ether' |grep -B1 .[0-9]/ |grep -Ev 'inet' | awk '{print $2}' | sed 's/://g')
 echo HOST $HOSTNAME >> /etc/wwwacct.conf
 echo MINUID 500 >> /etc/wwwacct.conf
 echo CONTACTEMAIL $EMAIL >> /etc/wwwacct.conf
