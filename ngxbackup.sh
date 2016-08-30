@@ -23,7 +23,7 @@ ssh "$BKUSER"@$DBSERVER "mkdir -p ~/backup/$FREQUENCY/$CURRDATE"
 $MYSQLDUMP "$DB" | gzip > "$DOCROOT"/"$DB".sql.gz
 
 # Tarbal the entire site including database directly onto the backup server
-tar zvcf - "$DOCROOT" --exclude='cache' | ssh "$BKUSER"@$DBSERVER "cat > ~/backup/$FREQUENCY/$CURRDATE/$SITE.tar.gz"
+tar zvcf - "$DOCROOT" --exclude='cache' --exclude='managewp/backups' | ssh "$BKUSER"@$DBSERVER "cat > ~/backup/$FREQUENCY/$CURRDATE/$SITE.tar.gz"
 
 # Remove the database backup from the sites docroot
 rm -f "$DOCROOT"/"$DB".sql.gz
