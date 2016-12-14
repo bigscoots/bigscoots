@@ -1,5 +1,5 @@
 #!/bin/bash
-# Usage: /bigscoots/ngxbackup.sh /home/nginx/domain.com/public daily,weekly,monthly
+# Usage: /bigscoots/ngxbackup.sh /home/nginx/domains/domain.com/public daily,weekly,monthly
 
 # Touch
 BKUSER=0000
