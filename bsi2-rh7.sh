@@ -185,6 +185,9 @@ chkconfig rpcbind off
 service saslauthd stop
 chkconfig saslauthd off
 
+yum remove iputils
+rpm -ivh ftp://ftp.muug.mb.ca/mirror/centos/7.2.1511/os/x86_64/Packages/iputils-20121221-7.el7.x86_64.rpm
+
 echo
 echo "######################################################"
 echo "Completed"
