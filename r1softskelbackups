@@ -2,6 +2,7 @@
 
 # Used for r1soft servers
 # Creates a cPanel backup minus the home directory
+# Requires mutt ( yum -y install mutt )
 
 cpusercount=$(whmapi1 listaccts |grep user: |awk '{print $2}'|wc -l)
 bkdir=/backup/r1soft
