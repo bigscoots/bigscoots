@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Used for r1soft servers
+# Creates a cPanel backup minus the home directory
+
+cpusercount=$(whmapi1 listaccts |grep user: |awk '{print $2}'|wc -l)
+
+for user in $(whmapi1 listaccts |grep user: |awk '{print $2}')
+do 
+    nice -n 19 ionice -c3 /scripts/pkgacct --skiphomedir "$user" /backup >> /backup/backup.txt
+    cpbkcomplete=$(grep -c "pkgacct completed" /backup/backup.txt) 
+done
+
+if [ "$cpusercount" == "$cpbkcomplete" ] 
+then
+	echo "This backup completed successfully" | mutt -a "/backup/backup.txt" -s "$HOSTNAME Backup successful:  $cpbkcomplete accounts backed up out of  $cpusercount accounts." -- monitor@bigscoots.com
+else
+	echo "This backups failed, please check attached txt." | mutt -a "/backup/backup.txt" -s "$HOSTNAME Backup failed:  $cpbkcomplete accounts backed up out of  $cpusercount accounts." -- monitor@bigscoots.com
+fi
