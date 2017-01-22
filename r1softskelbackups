@@ -6,7 +6,7 @@
 cpusercount=$(whmapi1 listaccts |grep user: |awk '{print $2}'|wc -l)
 bkdir=/backup/r1soft
 
-mkdir "$bkdir"
+mkdir -p "$bkdir"
 
 for user in $(whmapi1 listaccts |grep user: |awk '{print $2}')
 do 
