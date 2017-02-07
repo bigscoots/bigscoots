@@ -2,7 +2,7 @@
 # Usage: /bigscoots/ngxbackup.sh /home/nginx/domains/domain.com/public daily,weekly,monthly
 
 # Touch
-BKUSER=6062
+BKUSER=0000
 DOCROOT=$1
 FREQUENCY=$2
 RSERVER=int-backup2.bigscoots.com
