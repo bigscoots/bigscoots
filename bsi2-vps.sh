@@ -34,7 +34,7 @@ echo NSTTL 86400 >> /etc/wwwacct.conf
 echo TTL 14400 >> /etc/wwwacct.conf
 echo SCRIPTALIAS y >> /etc/wwwacct.conf
 echo NS2 ns2.$DOMAIN >> /etc/wwwacct.conf
-# echo ETHDEV $(ip addr | grep -Ev '127.0.0.1|192.168.' |grep -Ev 'lo:|link/loopback|valid_lft|link/ether' |grep -B1 .[0-9]/ |grep -Ev 'inet' | awk '{print $2}' | sed 's/://g') >> /etc/wwwacct.conf
+echo venet0:0 >> /etc/wwwacct.conf
 echo HOST $HOSTNAME >> /etc/wwwacct.conf
 echo MINUID 500 >> /etc/wwwacct.conf
 echo CONTACTEMAIL $EMAIL >> /etc/wwwacct.conf
@@ -151,11 +151,6 @@ echo "PHP config + harden functions + Passive FTP ports for pureftpd"
 echo "######################################################"
 sleep 1
 
-sed -i 's/memory_limit = 32M/memory_limit = 128M/g' /usr/local/lib/php.ini
-sed -i 's/display_errors = On/display_errors = Off/g' /usr/local/lib/php.ini
-sed -i 's/enable_dl = On/enable_dl = Off/g' /usr/local/lib/php.ini
-sed -i 's/disable_functions =/disable_functions = "foreach, openbasedir, posix_getpwuid, f_open, system, dl, array_compare, array_user_key_compare, passthru, cat, exec, proc_close, proc_get_status, proc_nice, proc_open, escapeshellcmd, escapeshellarg, show_source, posix_mkfifo, ini_restore, mysql_list_dbs, get_current_user, pconnect, link, symlink, fin, passthruexec, fileread, shell_exec, pcntl_exec, ini_alter, leak, apache_child_terminate, chown, posix_kill, posix_setpgid, posix_setsid, posix_setuid, proc_terminate, syslog,  fpassthru, execute, shell, chgrp, stream_select, passthru, socket_select, socket_create, socket_create_listen, socket_create_pair, socket_listen, socket_accept, socket_bind, socket_strerror, pcntl_fork, pcntl_signal, pcntl_waitpid, pcntl_wexitstatus, pcntl_wifexited, pcntl_wifsignaled, pcntl_wifstopped, pcntl_wstopsig, pcntl_wtermsig, openlog, apache_get_modules, apache_get_version, apache_getenv, apache_note, apache_setenv, virtual"/g' /usr/local/lib/php.ini
-sed -i 's/allow_url_fopen = On/allow_url_fopen = Off/g' /usr/local/lib/php.ini
 sed -ie 's/#Port.*[0-9]$/Port 2222/gI' /etc/ssh/sshd_config
 
 echo
