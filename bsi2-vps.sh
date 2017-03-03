@@ -120,12 +120,12 @@ sed -i 's/PS_EMAIL_ALERT = "1"/PS_EMAIL_ALERT = "0"/g' /etc/csf/csf.conf
 sed -i 's/PORTKNOCKING_ALERT = "1"/PORTKNOCKING_ALERT = "0"/g' /etc/csf/csf.conf
 sed -i 's/LT_EMAIL_ALERT = "1"/LT_EMAIL_ALERT = "0"/g' /etc/csf/csf.conf
 sed -i 's/RESTRICT_SYSLOG = "0"/RESTRICT_SYSLOG = "2"/g' /etc/csf/csf.conf
-sed -i '/PassivePortRange/c\PassivePortRange          30000 50000' /etc/pure-ftpd.conf
-sed -i 's/#UseDNS yes/UseDNS no/g' /etc/ssh/sshd_config
 sed -i 's/LF_PERMBLOCK_ALERT = "1"/LF_PERMBLOCK_ALERT = "0"/g' /etc/csf/csf.conf
 sed -i 's/LF_NETBLOCK_ALERT = "1"/LF_NETBLOCK_ALERT = "0"/g' /etc/csf/csf.conf
 sed -i 's/LF_ALERT_TO = ""/LF_ALERT_TO = "manage@bigscoots.com"/g' /etc/csf/csf.conf
 sed -i 's/X_ARF_TO = ""/X_ARF_TO = "manage@bigscoots.com"/g' /etc/csf/csf.conf
+
+sed -i '/PassivePortRange/c\PassivePortRange          30000 50000' /etc/pure-ftpd.conf
 
 
 echo
@@ -157,6 +157,7 @@ sed -i 's/max_input_time = 60/max_input_time = -1/g' /opt/cpanel/ea-php*/root/et
 sed -i 's/memory_limit = 32M/memory_limit = 256M/g' /opt/cpanel/ea-php*/root/etc/php.ini
 sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 128M/g' /opt/cpanel/ea-php*/root/etc/php.ini
 sed -ie 's/#Port.*[0-9]$/Port 2222/gI' /etc/ssh/sshd_config
+sed -i 's/#UseDNS yes/UseDNS no/g' /etc/ssh/sshd_config
 
 echo
 echo "######################################################"
