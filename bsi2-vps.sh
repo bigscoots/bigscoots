@@ -151,6 +151,11 @@ echo "PHP config + harden functions + Passive FTP ports for pureftpd"
 echo "######################################################"
 sleep 1
 
+sed -i 's/allow_url_fopen = Off/allow_url_fopen = On/g' /opt/cpanel/ea-php*/root/etc/php.ini
+sed -i 's/max_execution_time = 30/max_execution_time = 120/g' /opt/cpanel/ea-php*/root/etc/php.ini
+sed -i 's/max_input_time = 60/max_input_time = -1/g' /opt/cpanel/ea-php*/root/etc/php.ini
+sed -i 's/memory_limit = 32M/memory_limit = 256M/g' /opt/cpanel/ea-php*/root/etc/php.ini
+sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 128M/g' /opt/cpanel/ea-php*/root/etc/php.ini
 sed -ie 's/#Port.*[0-9]$/Port 2222/gI' /etc/ssh/sshd_config
 
 echo
