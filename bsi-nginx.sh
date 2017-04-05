@@ -1,7 +1,10 @@
 #!/bin/bash
 
 yum -y update
+sleep 2
 yum -y install screen
-
-curl -O https://centminmod.com/betainstaller.sh && chmod 0700 betainstaller.sh
-screen -d -m ~/betainstaller.sh
+sleep 2
+curl -O https://centminmod.com/betainstaller.sh
+chmod 0700 betainstaller.sh
+sleep 5
+/usr/bin/screen -d -m ~/betainstaller.sh
