@@ -1,5 +1,6 @@
 #!/bin/bash
 
+sleep 30
 yum -y update
 sleep 2
 yum -y install screen
