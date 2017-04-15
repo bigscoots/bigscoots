@@ -5,7 +5,7 @@ yum -y update
 sleep 2
 yum -y install screen
 sleep 2
-wget -O /betainstaller.sh https://centminmod.com/betainstaller.sh
-chmod 0700 betainstaller.sh
+cd /home
+curl -o betainstaller.sh -L https://centminmod.com/betainstaller.sh
 sleep 5
-/usr/bin/screen -d -m /betainstaller.sh
+/usr/bin/screen -d -m sh betainstaller.sh
