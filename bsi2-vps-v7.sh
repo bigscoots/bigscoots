@@ -127,7 +127,7 @@ sed -i 's/LF_NETBLOCK_ALERT = "1"/LF_NETBLOCK_ALERT = "0"/g' /etc/csf/csf.conf
 sed -i 's/LF_ALERT_TO = ""/LF_ALERT_TO = "manage@bigscoots.com"/g' /etc/csf/csf.conf
 sed -i 's/X_ARF_TO = ""/X_ARF_TO = "manage@bigscoots.com"/g' /etc/csf/csf.conf
 
-sed -i '/PassivePortRange/c\PassivePortRange          30000 50000' /etc/pure-ftpd.conf
+sed -i '/PassivePortRange/c\PassivePortRange          49152 65534' /etc/pure-ftpd.conf
 
 
 echo
