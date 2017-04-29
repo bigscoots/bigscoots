@@ -9,7 +9,7 @@ for db in $databases; do
     if [[ "$db" != "information_schema" ]] && [[ "$db" != _* ]] && [[ "$db" != "performance_schema" ]] ; then
         echo "Dumping database: $db"
 #         mysqldump --skip-lock-tables --lock-tables=false --force --opt --databases $db > $OUTPUTTMP/`date +%m-%d-%Y-%H`.$db.sql
-         mysqldump --skip-lock-tables --lock-tables=false --force --opt --databases $db | gzip -c | ssh 4532@int-backup.bigscoots.com "cat > ~/ngx.lexingtonoverstockwarehouse.com/databases/$(date +%m-%d-%Y-%H).$db.sql.gz"
+        mysqldump $db --single-transaction --quick --opt --skip-lock-tables --routines --triggers | gzip -c | ssh 4532@int-backup.bigscoots.com "cat > ~/ngx.lexingtonoverstockwarehouse.com/databases/$(date +%m-%d-%Y-%H).$db.sql.gz"
 #         gzip $OUTPUTTMP/`date +%m-%d-%Y-%H`.$db.sql
 #         mv $OUTPUTTMP/*.sql.gz $OUTPUT/
     fi
