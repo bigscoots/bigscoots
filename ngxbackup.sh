@@ -20,7 +20,7 @@ ssh "$BKUSER"@$RSERVER 'find ~/backup/$FREQUENCY/ -type d -ctime +10 -exec rm -r
 ssh "$BKUSER"@$RSERVER "mkdir -p ~/backup/$FREQUENCY/$CURRDATE"
 
 # Backup the database into the sites docroot
-$MYSQLDUMP "$DB" | gzip > "$DOCROOT"/"$DB".sql.gz
+$MYSQLDUMP "$DB" --single-transaction --quick --opt --skip-lock-tables --routines --triggers | gzip > "$DOCROOT"/"$DB".sql.gz
 
 # Tarbal the entire site including database directly onto the backup server
 # tar zvcf - "$DOCROOT" --exclude-from '/bigscoots/ngxbackup-excludes.txt' | ssh "$BKUSER"@$RSERVER "cat > ~/backup/$FREQUENCY/$CURRDATE/$SITE.tar.gz"
