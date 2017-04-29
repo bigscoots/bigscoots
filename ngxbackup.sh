@@ -23,10 +23,7 @@ ssh "$BKUSER"@$RSERVER "mkdir -p ~/backup/$FREQUENCY/$CURRDATE"
 $MYSQLDUMP "$DB" | gzip > "$DOCROOT"/"$DB".sql.gz
 
 # Tarbal the entire site including database directly onto the backup server
-tar zvcf - "$DOCROOT" --exclude='wp-content/cache' --exclude='managewp/backups' | ssh "$BKUSER"@$RSERVER "cat > ~/backup/$FREQUENCY/$CURRDATE/$SITE.tar.gz"
-
-# exclude uploads
-# tar zvcf - "$DOCROOT" --exclude='wp-content/cache' --exclude='managewp/backups' --exclude='wp-content/uploads' | ssh "$BKUSER"@$RSERVER "cat > ~/backup/$FREQUENCY/$CURRDATE/$SITE.tar.gz"
+# tar zvcf - "$DOCROOT" --exclude-from '/bigscoots/ngxbackup-excludes.txt' | ssh "$BKUSER"@$RSERVER "cat > ~/backup/$FREQUENCY/$CURRDATE/$SITE.tar.gz"
 
 # Remove the database backup from the sites docroot
 rm -f "$DOCROOT"/"$DB".sql.gz
