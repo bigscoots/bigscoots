@@ -8,7 +8,7 @@ FREQUENCY=$2
 RSERVER=int-backup2.bigscoots.com
 
 # No Touch
-DB=$(grep DB_NAME "$DOCROOT"/wp-config.php | grep -Ev '//define|WP_CACHE_KEY_SALT' | sed -e "s/define('DB_NAME', '//g" -e "s/');//g" | tr -d '\r')
+DB=$(grep DB_NAME "$DOCROOT"/wp-config.php | grep -Ev '//define|WP_CACHE_KEY_SALT' | sed 's/ //g' | sed -e "s/define('DB_NAME','//g" -e "s/');//g" | sed 's/\s.*$//' | tr -d '\r')
 SITE=$(echo "$DOCROOT" | sed -e "s/\/home\/nginx\/domains\///g" -e "s/\/public//g")
 CURRDATE=$(date +%Y-%m-%d)
 MYSQLDUMP=$(which mysqldump)
