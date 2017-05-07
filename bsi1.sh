@@ -37,10 +37,6 @@ yum -y update
 rm -f /etc/localtime
 ln -s /usr/share/zoneinfo/America/Chicago /etc/localtime
 
-mkdir -p /var/cpanel/easy/apache/
-wget -O /var/cpanel/easy/apache/prefs.yaml dev.bigscoots.com/d/prefs.yaml
-wget -O /etc/cp_easyapache_profile.yaml dev.bigscoots.com/d/cp_easyapache_profile.yaml
-
 
 echo
 echo "######################################################"
@@ -49,4 +45,4 @@ echo "######################################################"
 sleep 3
 
 yum install perl screen -y
-cd /home ; wget -N http://httpupdate.cpanel.net/latest ; sh latest
+cd /home && curl -o latest -L https://securedownloads.cpanel.net/latest && sh latest
