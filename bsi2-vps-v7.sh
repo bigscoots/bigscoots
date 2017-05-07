@@ -189,7 +189,7 @@ service saslauthd stop
 chkconfig saslauthd off
 
 yum remove iputils -y
-rpm -ivh ftp://ftp.icm.edu.pl/vol/rzm5/linux-slc/centos/7.2.1511/os/x86_64/Packages/iputils-20121221-7.el7.x86_64.rpm
+rpm -ivh https://buildlogs.centos.org/c7.1511.00/iputils/20151120190818/20121221-7.el7.x86_64/iputils-20121221-7.el7.x86_64.rpm
 yum -y install initscripts
 echo
 echo "######################################################"
