@@ -153,11 +153,11 @@ echo "PHP config + harden functions + Passive FTP ports for pureftpd"
 echo "######################################################"
 sleep 1
 
-sed -i 's/allow_url_fopen = Off/allow_url_fopen = On/g' /opt/cpanel/ea-php*/root/etc/php.ini
-sed -i 's/max_execution_time = 30/max_execution_time = 120/g' /opt/cpanel/ea-php*/root/etc/php.ini
-sed -i 's/max_input_time = 60/max_input_time = -1/g' /opt/cpanel/ea-php*/root/etc/php.ini
-sed -i 's/memory_limit = 32M/memory_limit = 256M/g' /opt/cpanel/ea-php*/root/etc/php.ini
-sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 128M/g' /opt/cpanel/ea-php*/root/etc/php.ini
+sed -i '/allow_url_fopen = /c\allow_url_fopen = On' /opt/cpanel/ea-php*/root/etc/php.ini /opt/cpanel/ea-php*/root/etc/php.d/local.ini 
+sed -i '/max_execution_time = /c\max_execution_time = 120' /opt/cpanel/ea-php*/root/etc/php.ini /opt/cpanel/ea-php*/root/etc/php.d/local.ini
+sed -i '/max_input_time = /c\max_input_time = -1' /opt/cpanel/ea-php*/root/etc/php.ini /opt/cpanel/ea-php*/root/etc/php.d/local.ini
+sed -i '/memory_limit = /c\memory_limit = 256M' /opt/cpanel/ea-php*/root/etc/php.ini /opt/cpanel/ea-php*/root/etc/php.d/local.ini
+sed -i '/upload_max_filesize = /c\upload_max_filesize = 128M' /opt/cpanel/ea-php*/root/etc/php.ini /opt/cpanel/ea-php*/root/etc/php.d/local.ini
 sed -ie 's/#Port.*[0-9]$/Port 2222/gI' /etc/ssh/sshd_config
 sed -i 's/#UseDNS yes/UseDNS no/g' /etc/ssh/sshd_config
 
