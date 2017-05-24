@@ -268,7 +268,7 @@ echo "Setting minimum password strength to 50"
 echo "######################################################"
 sleep 1
 
-whmapi1 setminimumpasswordstrengths passwd=50
+whmapi1 setminimumpasswordstrengths default=50
 
 echo
 echo "######################################################"
