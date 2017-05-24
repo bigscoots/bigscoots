@@ -99,12 +99,6 @@ echo "#####################################"
 
 sleep 1
 
-## Modify These Settings
-
-
-
-
-
 echo
 echo "######################################################"
 echo "Disable cphulk"
@@ -248,6 +242,34 @@ chkconfig saslauthd off
 yum remove iputils -y
 rpm -ivh https://buildlogs.centos.org/c7.1511.00/iputils/20151120190818/20121221-7.el7.x86_64/iputils-20121221-7.el7.x86_64.rpm
 yum -y install initscripts
+
+echo
+echo "######################################################"
+echo "Install maldet and clamav"
+echo "######################################################"
+sleep 1
+
+/scripts/update_local_rpm_versions --edit target_settings.clamav installed
+/scripts/check_cpanel_rpms --fix --targets=clamav
+cd /usr/local/src/
+wget http://www.rfxn.com/downloads/maldetect-current.tar.gz
+tar -xzf maldetect-current.tar.gz
+cd maldetect-*
+sh ./install.sh
+ln -s /usr/local/cpanel/3rdparty/bin/clamscan /usr/local/sbin/clamscan
+ln -s /usr/local/cpanel/3rdparty/bin/freshclam /usr/local/sbin/freshclam
+maldet -d
+maldet -u
+freshclam
+
+echo
+echo "######################################################"
+echo "Setting minimum password strength to 50"
+echo "######################################################"
+sleep 1
+
+whmapi1 setminimumpasswordstrengths passwd=50
+
 echo
 echo "######################################################"
 echo "Completed"
