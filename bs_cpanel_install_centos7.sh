@@ -65,7 +65,7 @@ echo $EMAIL > /root/.forward
 
 mkdir -p /root/cpanel_profile
 cp -rf /bigscoots/cpanel.config /root/cpanel_profile/cpanel.config
-/usr/local/cpanel/scripts/restartsrv_cpsrvd
+cp -rf /bigscoots/bigscoots.json /etc/cpanel_initial_install_ea4_profile.json
 
 echo
 echo "######################################################"
