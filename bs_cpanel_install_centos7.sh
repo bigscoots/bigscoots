@@ -89,8 +89,6 @@ sleep 3
 yum install perl screen -y
 cd /home && curl -o latest -L https://securedownloads.cpanel.net/latest && sh latest
 
-clear
-
 echo
 echo "#####################################"
 echo "#             BigScoots             #"
