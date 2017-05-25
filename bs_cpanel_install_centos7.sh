@@ -272,6 +272,12 @@ whmapi1 setminimumpasswordstrengths default=50
 
 echo
 echo "######################################################"
-echo "Completed"
+echo "Completed - Server will reboot now."
 echo "######################################################"
+
+sleep 3
+
+/usr/sbin/reboot
+
+
 
