@@ -1,6 +1,8 @@
 #!/bin/bash
 
 sleep 30
+rm -f /etc/localtime
+ln -s /usr/share/zoneinfo/America/Chicago /etc/localtime
 yum clean all
 yum -y update
 sleep 2
