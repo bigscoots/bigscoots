@@ -151,6 +151,7 @@ sed -i '/UDP_OUT = "/c\UDP_OUT = "20,21,53,111,113,123,873,2049,6277"' /etc/csf/
 sed -i '/UDP_IN = "/c\UDP_IN = "20,21,53,111,2049"' /etc/csf/csf.conf
 sed -i 's/LF_SCRIPT_ALERT = "0"/LF_SCRIPT_ALERT = "1"/g' /etc/csf/csf.conf
 sed -i '/PT_USERPROC = /c\PT_USERPROC = "0"' /etc/csf/csf.conf
+sed -i '/PT_INTERVAL = /c\PT_INTERVAL = "0"' /etc/csf/csf.conf
 sed -i '/PT_USERTIME = /c\PT_USERTIME = "0"' /etc/csf/csf.conf
 sed -i '/LF_INTEGRITY = /c\LF_INTEGRITY = "0"' /etc/csf/csf.conf
 sed -i '/PT_USERMEM = /c\PT_USERMEM = "0"' /etc/csf/csf.conf
