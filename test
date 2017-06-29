@@ -34,6 +34,12 @@
 
 
 
+      <Directory "/home/pathakproperties">
+        AllowOverride All
+      </Directory>
+
+
+
   <IfModule suphp_module>
     suPHP_UserGroup pathakproperties pathakproperties
   </IfModule>
