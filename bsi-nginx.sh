@@ -20,6 +20,7 @@ echo "root" > /etc/centminmod/email-primary.ini
 echo "root" > /etc/centminmod/email-secondary.ini
 sed -i '/#root/c\root: /dev/null' /etc/aliases
 /bin/newaliases
+ln -s /usr/local/bin/php /usr/sbin/php
 sleep 1
 rm -rf /usr/local/nginx/conf/conf.d/demodomain.com.conf /home/nginx/domains/demodomain.com
 sleep 1
