@@ -265,11 +265,12 @@ maldet -u
 
 echo
 echo "######################################################"
-echo "Setting minimum password strength to 50"
+echo "Some Tweak Settings Changes"
 echo "######################################################"
 sleep 1
 
 whmapi1 setminimumpasswordstrengths default=50
+whmapi1 set_tweaksetting key=smtpmailgidonly value=0
 
 echo
 echo "######################################################"
