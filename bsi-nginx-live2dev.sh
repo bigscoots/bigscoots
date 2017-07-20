@@ -61,16 +61,16 @@ echo
 
 sleep 3
 
-echo "Backing up $devdb to $(echo $devdocroot | sed 's=/public=/backup=g')"
+echo "Backing up $devdb to ${devdocroot//public/backup}"
 echo
 echo
 
-mkdir -p "$(echo $devdocroot | sed 's=/public=/backup=g')/$(date +%Y-%m-%d)"
-mysqldump "$devdb" | gzip > "$(echo $devdocroot | sed 's=/public=/backup=g')/$(date +%Y-%m-%d)/$devdb$(date +%H%M).sql.gz"
+mkdir -p "${devdocroot//public/backup}/$(date +%Y-%m-%d)"
+mysqldump "$devdb" | gzip > "${devdocroot//public/backup}/$(date +%Y-%m-%d)/$devdb$(date +%H%M).sql.gz"
 
 sleep 1
 
-echo "Backed up $devdb to $(echo $devdocroot | sed 's=/public=/backup=g')/$(date +%Y-%m-%d)/$devdb$(date +%H%M).sql.gz"
+echo "Backed up $devdb to ${devdocroot//public/backup}/$(date +%Y-%m-%d)/$devdb$(date +%H%M).sql.gz"
 echo
 echo
 
@@ -80,7 +80,7 @@ echo "Dropping all tables in $devdb"
 echo
 echo
 
-mysql -e "SHOW TABLES FROM $devdb" | grep -v "Tables_in_$devdb" | while read a; do mysql -e "DROP TABLE $devdb.$a" ; done
+mysql -e "SHOW TABLES FROM $devdb" | grep -v "Tables_in_$devdb" | while read -r a; do mysql -e "DROP TABLE $devdb.$a" ; done
 
 sleep 1
 
@@ -108,7 +108,7 @@ echo "Changing all instances of $livesite to $devsite in the database."
 echo
 echo
 
-cd "$devdocroot/"
+cd "$devdocroot/" || exit
 wp --allow-root search-replace "$livesite" "$devsite" --skip-plugins --skip-themes
 
 sleep 1
