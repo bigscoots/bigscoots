@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sleep 30
+sleep 5
 yum clean all
 yum -y update
 sleep 2
