@@ -27,6 +27,6 @@ sleep 1
 yum -y install redis --enablerepo=remi --disableplugin=priorities
 chkconfig redis on
 service redis start
-sleep 3
+sleep 5
 centmin
 
