@@ -1,0 +1,25 @@
+sed -i 's/LOGFLOOD_ALERT = "1"/LOGFLOOD_ALERT = "0"/' /etc/csf/csf.conf
+sed -i 's/LF_PERMBLOCK_ALERT = "1"/LF_PERMBLOCK_ALERT = "0"/' /etc/csf/csf.conf
+sed -i 's/LF_NETBLOCK_ALERT = "1"/LF_NETBLOCK_ALERT = "0"/' /etc/csf/csf.conf
+sed -i 's/LF_EMAIL_ALERT = "1"/LF_EMAIL_ALERT = "0"/' /etc/csf/csf.conf
+sed -i 's/LF_SSH_EMAIL_ALERT = "1"/LF_SSH_EMAIL_ALERT = "0"/' /etc/csf/csf.conf
+sed -i 's/LF_SU_EMAIL_ALERT = "1"/LF_SU_EMAIL_ALERT = "0"/' /etc/csf/csf.conf
+sed -i 's/LT_EMAIL_ALERT = "1"/LT_EMAIL_ALERT = "0"/' /etc/csf/csf.conf
+sed -i 's/RT_RELAY_ALERT = "1"/RT_RELAY_ALERT = "0"/' /etc/csf/csf.conf
+sed -i 's/RT_AUTHRELAY_ALERT = "0"/RT_AUTHRELAY_ALERT = "1"/' /etc/csf/csf.conf
+sed -i 's/RT_LOCALRELAY_ALERT = "0"/RT_LOCALRELAY_ALERT = "1"/' /etc/csf/csf.conf
+sed -i 's/RT_LOCALHOSTRELAY_ALERT = "0"/RT_LOCALHOSTRELAY_ALERT = "1"/' /etc/csf/csf.conf
+sed -i 's/CT_EMAIL_ALERT = "1"/CT_EMAIL_ALERT = "0"/' /etc/csf/csf.conf
+sed -i 's/PT_USERKILL_ALERT = "1"/PT_USERKILL_ALERT = "0"/' /etc/csf/csf.conf
+sed -i 's/PS_EMAIL_ALERT = "1"/PS_EMAIL_ALERT = "0"/' /etc/csf/csf.conf
+sed -i 's/AT_ALERT = "1"/AT_ALERT = "0"/' /etc/csf/csf.conf
+sed -i 's/AT_ALERT = "2"/AT_ALERT = "0"/' /etc/csf/csf.conf
+sed -i 's/AT_ALERT = "3"/AT_ALERT = "0"/' /etc/csf/csf.conf
+sed -i 's/PORTKNOCKING_ALERT = "1"/PORTKNOCKING_ALERT = "0"/' /etc/csf/csf.conf
+sed -i 's/LF_DIRWATCH = "300"/LF_DIRWATCH = "0"/' /etc/csf/csf.conf
+sed -i 's/PT_LOAD = "30"/PT_LOAD = "0"/'  /etc/csf/csf.conf
+sed -i 's/PT_LIMIT = "60"/PT_LIMIT = "0"/' /etc/csf/csf.conf
+sed -i 's/PT_USERPROC = "10"/PT_USERPROC = "0"/' /etc/csf/csf.conf
+sed -i 's/PT_USERMEM = "100"/PT_USERMEM = "0"/' /etc/csf/csf.conf
+sed -i 's/PT_USERTIME = "1800"/PT_USERTIME = "0"/' /etc/csf/csf.conf
+/usr/sbin/csf -ra
