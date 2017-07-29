@@ -28,5 +28,9 @@ yum -y install redis --enablerepo=remi --disableplugin=priorities
 chkconfig redis on
 service redis start
 sleep 5
+cd /
+git clone https://github.com/jcatello/bigscoots
+chown -R nginx: /var/log/php-fpm
+nprestart
+crontab -l | { cat; echo "* * * * * /bigscoots/chkphpfpm_nginx"; } | crontab -
 centmin
-
