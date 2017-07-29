@@ -1,0 +1,8 @@
+\#!/bin/bash
+ maxhits=$(grep -r "server reached max_children setting" /var/log/php-fpm/www-error.log | wc -l)
+ if [ "$maxhits" -ne 0 ]
+ then
+    grep -h "server reached max_children setting" /var/log/php-fpm/www-error.log > /chkphpfpm.txt
+    cat /chkphpfpm.txt | mailx -s "$HOSTNAME - max_children has been reached $maxhits times" monitor@bigscoots.com
+    sed -i '/server reached max_children setting/d' /var/log/php-fpm/www-error.log
+ fi
