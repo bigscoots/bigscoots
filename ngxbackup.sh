@@ -36,6 +36,6 @@ rm -f "$docroot"/"$db".sql.gz
 # rsync the uploads directory if it was excluded
 echo "Running rsync for the $site"
 ssh "$bkuser"@"$rserver" "mkdir -p ~/backup/$site/rsync"
-rsync -ah "$docroot"/ "$bkuser"@"$rserver":~/backup/"$site"/rsync/
+rsync -ah --exclude-from '/bigscoots/ngxbackup-excludes.txt' "$docroot"/ "$bkuser"@"$rserver":~/backup/"$site"/rsync/
 
 # The end
