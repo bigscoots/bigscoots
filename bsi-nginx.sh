@@ -11,6 +11,7 @@ sh betainstaller.sh
 export EDITOR=nano
 timedatectl set-timezone America/Chicago
 # UDPFLOOD has to be disbaled in virtuozzo7 https://bugs.openvz.org/browse/OVZ-6659
+rm -f /etc/csf/csf.error
 sed -i '/UDPFLOOD = /c\UDPFLOOD = "0"' /etc/csf/csf.conf
 csf -ra
 wget -O /usr/local/src/centminmod/inc/wpsetup.inc https://raw.githubusercontent.com/jcatello/centminmod/master/inc/wpsetup.inc
