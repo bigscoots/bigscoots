@@ -7,8 +7,8 @@
 # CHANGE THESE #
 ##            ##
 
-livesite=fitwerx.com
-devsite=temp.fitwerx.com
+livesite=domain.com
+devsite=dev.domain.com
 
 ##                           ##
 # NO MORE CHANGING BELOW HERE #
@@ -66,7 +66,7 @@ echo
 echo
 
 mkdir -p "${devdocroot//public/backup}/$(date +%Y-%m-%d)"
-mysqldump "$devdb" | gzip > "${devdocroot//public/backup}/$(date +%Y-%m-%d)/$devdb$(date +%H%M).sql.gz"
+mysqldump "$devdb" --single-transaction --quick --opt --skip-lock-tables --routines --triggers | gzip > "${devdocroot//public/backup}/$(date +%Y-%m-%d)/$devdb$(date +%H%M).sql.gz"
 
 sleep 1
 
@@ -94,7 +94,8 @@ echo "Importing database from $livedb to $devdb"
 echo
 echo
 
-mysqldump "$livedb" | mysql "$devdb"
+mysqldump "$livedb" --single-transaction --quick --opt --skip-lock-tables --routines --triggers| mysql "$devdb"
+
 
 sleep 1
 
