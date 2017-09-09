@@ -272,6 +272,9 @@ sleep 1
 whmapi1 setminimumpasswordstrengths default=50
 whmapi1 set_tweaksetting key=smtpmailgidonly value=0
 
+wget -O /usr/sbin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar ; chmod +x /usr/sbin/wp
+echo "alias wp='wp --allow-root'" >> /root/.bashrc
+
 echo
 echo "######################################################"
 echo "Completed - Server will reboot now."
