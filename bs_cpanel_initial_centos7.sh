@@ -13,6 +13,5 @@ fi
   sed -i 's/SELINUX=permissive/SELINUX=disabled/g' /etc/selinux/config && setenforce 0
 fi
 
-cd /
-git clone https://github.com/jcatello/bigscoots
+git clone https://github.com/jcatello/bigscoots /bigscoots
 /bigscoots/bs_cpanel_install_centos7.sh
