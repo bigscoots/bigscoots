@@ -275,7 +275,7 @@ whmapi1 set_tweaksetting key=smtpmailgidonly value=0
 /scripts/install_lets_encrypt_autossl_provider
 
 wget -O /usr/sbin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar ; chmod +x /usr/sbin/wp
-echo "alias wp='wp --allow-root'" >> /root/.bashrc
+echo "alias wp='/opt/cpanel/ea-php70/root/usr/bin/php /usr/local/sbin/wp --allow-root'" >> /root/.bashrc
 
 echo
 echo "######################################################"
