@@ -278,6 +278,8 @@ wget -O /usr/sbin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/ph
 echo "alias wp='/opt/cpanel/ea-php70/root/usr/bin/php /usr/local/sbin/wp --allow-root'" >> /root/.bashrc
 crontab -l | { cat; echo "* * * * * /bigscoots/chkphpfpm_nginx"; } | crontab -
 crontab -l | { cat; echo "*/15 * * * * /bigscoots/mon_disk.sh"; } | crontab -
+sed -i 's/export PATH/export PATH\nexport EDITOR=nano/g' /root/.bash_profile
+
 
 echo
 echo "######################################################"
