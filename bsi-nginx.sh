@@ -1,6 +1,9 @@
 #!/bin/bash
 
 sleep 5
+yum -y install e2fsprogs
+hostnamectl set-hostname $(grep -v '#\|local' /etc/hosts| awk '{print $2}')
+chattr +i /etc/hostname
 yum clean all
 yum -y update
 sleep 2
