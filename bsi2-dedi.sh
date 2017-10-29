@@ -25,16 +25,17 @@ sleep 3
 
 yum groupremove -y "Mono" "Mail Server"
 
-DOMAIN=$(echo $(hostname) | awk -F. '{print $2"."$3}')
-echo $DOMAIN
+DOMAIN=$(hostname | awk -F. '{print $2"."$3}')
+echo "$DOMAIN"
 
-EMAIL=$(echo admin@$DOMAIN)
-echo $EMAIL
+EMAIL="admin@$DOMAIN"
+echo "$EMAIL"
 
 IP=$(ip addr |grep inet |grep -Ev '127.0.0.1|192.168.|::1' | awk '{print $2}' | sed 's/\/.*//g' | head -1)
-
+cd /etc/sysconfig/network-scripts/ || exit
 systemctl stop NetworkManager.service
 systemctl disable NetworkManager.service
+
 grep -q '^NM_CONTROLLED' ifcfg-eth* && sed -i 's/^NM_CONTROLLED=yes/NM_CONTROLLED=no/' ifcfg-eth* || echo 'NM_CONTROLLED=no' | tee -a ifcfg-eth* >/dev/null
 grep -q '^ONBOOT' ifcfg-eth0 && sed -i 's/^ONBOOT=no/ONBOOT=yes/' ifcfg-eth0 || echo 'ONBOOT=yes' | tee -a ifcfg-eth0 >/dev/null
 
@@ -47,26 +48,28 @@ sleep 1
 touch /etc/.whostmgrft
 echo > /etc/wwwacct.conf
 
-echo ADDR $IP >> /etc/wwwacct.conf
-echo NSTTL 86400 >> /etc/wwwacct.conf
-echo TTL 14400 >> /etc/wwwacct.conf
-echo SCRIPTALIAS y >> /etc/wwwacct.conf
-echo NS2 ns2.$DOMAIN >> /etc/wwwacct.conf
-echo ETHDEV $(ifconfig -a | sed 's/[ \t].*//;/^\(lo\|\)$/d'|head -1|sed 's/://g') >> /etc/wwwacct.conf
-echo HOST $HOSTNAME >> /etc/wwwacct.conf
-echo MINUID 500 >> /etc/wwwacct.conf
-echo CONTACTEMAIL $EMAIL >> /etc/wwwacct.conf
-echo HOMEMATCH home >> /etc/wwwacct.conf
-echo CONTACTPAGER >> /etc/wwwacct.conf
-echo NS ns1.$DOMAIN >> /etc/wwwacct.conf
-echo NS4 >> /etc/wwwacct.conf
-echo HOMEDIR /home >> /etc/wwwacct.conf
-echo NS3 >> /etc/wwwacct.conf
-echo LOGSTYLE combined >> /etc/wwwacct.conf
-echo DEFMOD paper_lantern >> /etc/wwwacct.conf
-echo DEFWEBMAILTHEME paper_lantern >> /etc/wwwacct.conf
+{
+  echo ADDR "$IP"
+  echo NSTTL 86400
+  echo TTL 14400
+  echo SCRIPTALIAS y
+  echo NS2 ns2."$DOMAIN"
+  echo ETHDEV "$(ifconfig -a | sed 's/[ \t].*//;/^\(lo\|\)$/d'|head -1|sed 's/://g')"
+  echo HOST "$HOSTNAME"
+  echo MINUID 500
+  echo CONTACTEMAIL "$EMAIL"
+  echo HOMEMATCH home
+  echo CONTACTPAGER
+  echo NS ns1."$DOMAIN"
+  echo NS4
+  echo HOMEDIR /home
+  echo NS3
+  echo LOGSTYLE combined
+  echo DEFMOD paper_lantern
+  echo DEFWEBMAILTHEME paper_lantern
+} >> /etc/wwwacct.conf
 
-echo $EMAIL > /root/.forward
+echo "$EMAIL" > /root/.forward
 
 mkdir -p /root/cpanel_profile
 cp -rf /bigscoots/cpanel.config /root/cpanel_profile/cpanel.config
@@ -119,7 +122,7 @@ echo "######################################################"
 sleep 1
 
 mkdir /home/installtmp
-cd /home/installtmp
+cd /home/installtmp || exit
 wget -N http://www.networkpanda.com/scripts/cel_install
 sh cel_install
 wget https://download.configserver.com/csf.tgz
@@ -136,12 +139,12 @@ tar -zxvf cse.tgz
 tar -zxvf cmq.tgz
 tar -zxvf cmm.tgz
 tar -zxvf rkhunter-1.4.0.tar.gz
-cd cmc ; sh install.sh ; cd ..
-cd cse ; sh install.sh ; cd ..
-cd cmq ; sh install.sh ; cd ..
-cd cmm ; sh install.sh ; cd ..
-cd csf ; sh install.cpanel.sh ; cd ..
-cd rkhunter-1.4.0 ; ./installer.sh --install
+cd cmc || exit ; sh install.sh ; cd ..
+cd cse || exit; sh install.sh ; cd ..
+cd cmq || exit ; sh install.sh ; cd ..
+cd cmm || exit ; sh install.sh ; cd ..
+cd csf || exit ; sh install.cpanel.sh ; cd ..
+cd rkhunter-1.4.0 || exit ; ./installer.sh --install
 
 echo
 echo "######################################################"
@@ -197,7 +200,7 @@ echo "mysqltuner easy access"
 echo "######################################################"
 sleep 1
 
-cd / ; wget https://raw.github.com/major/MySQLTuner-perl/master/mysqltuner.pl --no-check-certificate; chmod +x mysqltuner.pl ; mv mysqltuner.pl /usr/sbin
+cd / || exit ; wget https://raw.github.com/major/MySQLTuner-perl/master/mysqltuner.pl --no-check-certificate; chmod +x mysqltuner.pl ; mv mysqltuner.pl /usr/sbin
 
 echo
 echo "######################################################"
@@ -256,10 +259,10 @@ sleep 1
 
 /scripts/update_local_rpm_versions --edit target_settings.clamav installed
 /scripts/check_cpanel_rpms --fix --targets=clamav
-cd /usr/local/src/
+cd /usr/local/src/ || exit
 wget http://www.rfxn.com/downloads/maldetect-current.tar.gz
 tar -xzf maldetect-current.tar.gz
-cd maldetect-*
+cd maldetect-* || exit
 sh ./install.sh
 ln -s /usr/local/cpanel/3rdparty/bin/clamscan /usr/local/sbin/clamscan
 ln -s /usr/local/cpanel/3rdparty/bin/freshclam /usr/local/sbin/freshclam
@@ -300,6 +303,3 @@ echo "cPanel install for $HOSTNAME completed" | mail -s "cPanel install for $HOS
 sleep 1
 
 /usr/sbin/reboot
-
-
-
