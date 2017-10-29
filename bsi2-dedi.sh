@@ -8,10 +8,22 @@ echo "#             BigScoots             #"
 echo "# Fully Managed cPanel Server Setup #"
 echo "#####################################"
 
-sleep 1
+sleep 2
 
-## Modify These Settings
+echo
+echo "######################################################"
+echo "Make sure to set a valid hostname.(ex. server.domain.com)"
+echo "Make sure to set the rDNS for the hostname"
+echo "######################################################"
+sleep 3
 
+echo
+echo "######################################################"
+echo "Remove YUM groups"
+echo "######################################################"
+sleep 3
+
+yum groupremove -y "Mono" "Mail Server"
 
 DOMAIN=$(echo $(hostname) | awk -F. '{print $2"."$3}')
 echo $DOMAIN
@@ -21,6 +33,11 @@ echo $EMAIL
 
 IP=$(ip addr |grep inet |grep -Ev '127.0.0.1|192.168.|::1' | awk '{print $2}' | sed 's/\/.*//g' | head -1)
 
+systemctl stop NetworkManager.service
+systemctl disable NetworkManager.service
+grep -q '^NM_CONTROLLED' ifcfg-eth* && sed -i 's/^NM_CONTROLLED=yes/NM_CONTROLLED=no/' ifcfg-eth* || echo 'NM_CONTROLLED=no' | tee -a ifcfg-eth* >/dev/null
+grep -q '^ONBOOT' ifcfg-eth0 && sed -i 's/^ONBOOT=no/ONBOOT=yes/' ifcfg-eth0 || echo 'ONBOOT=yes' | tee -a ifcfg-eth0 >/dev/null
+
 echo
 echo "######################################################"
 echo "Disable initial setup screen and configure it."
@@ -29,12 +46,13 @@ sleep 1
 
 touch /etc/.whostmgrft
 echo > /etc/wwwacct.conf
+
 echo ADDR $IP >> /etc/wwwacct.conf
 echo NSTTL 86400 >> /etc/wwwacct.conf
 echo TTL 14400 >> /etc/wwwacct.conf
 echo SCRIPTALIAS y >> /etc/wwwacct.conf
 echo NS2 ns2.$DOMAIN >> /etc/wwwacct.conf
-echo ETHDEV eth0 >> /etc/wwwacct.conf
+echo ETHDEV $(ifconfig -a | sed 's/[ \t].*//;/^\(lo\|\)$/d'|head -1|sed 's/://g') >> /etc/wwwacct.conf
 echo HOST $HOSTNAME >> /etc/wwwacct.conf
 echo MINUID 500 >> /etc/wwwacct.conf
 echo CONTACTEMAIL $EMAIL >> /etc/wwwacct.conf
@@ -47,10 +65,42 @@ echo NS3 >> /etc/wwwacct.conf
 echo LOGSTYLE combined >> /etc/wwwacct.conf
 echo DEFMOD paper_lantern >> /etc/wwwacct.conf
 echo DEFWEBMAILTHEME paper_lantern >> /etc/wwwacct.conf
-echo $EMAIL > /root/.forward
-rsync -ahvz /bigscoots/cpanel.config /var/cpanel/
-/usr/local/cpanel/whostmgr/bin/whostmgr2 --updatetweaksettings
 
+echo $EMAIL > /root/.forward
+
+mkdir -p /root/cpanel_profile
+cp -rf /bigscoots/cpanel.config /root/cpanel_profile/cpanel.config
+cp -rf /bigscoots/bigscoots.json /etc/cpanel_initial_install_ea4_profile.json
+
+echo
+echo "######################################################"
+echo "Disable iptables, update the server and set the timezone(Chicago)"
+echo "######################################################"
+sleep 3
+
+chkconfig iptables off
+service iptables stop
+yum -y update
+rm -f /etc/localtime
+ln -s /usr/share/zoneinfo/America/Chicago /etc/localtime
+
+
+echo
+echo "######################################################"
+echo "Install Perl and Screen if its not already, and start cPanel installation."
+echo "######################################################"
+sleep 3
+
+yum install perl screen -y
+cd /home && curl -o latest -L https://securedownloads.cpanel.net/latest && sh latest
+
+echo
+echo "#####################################"
+echo "#             BigScoots             #"
+echo "# Fully Managed cPanel Server Setup #"
+echo "#####################################"
+
+sleep 1
 
 echo
 echo "######################################################"
@@ -105,11 +155,14 @@ sed -i '/TCP_OUT = "/c\TCP_OUT = "20,21,22,25,26,37,43,53,80,110,113,443,587,873
 sed -i '/UDP_OUT = "/c\UDP_OUT = "20,21,53,111,113,123,873,2049,6277"' /etc/csf/csf.conf
 sed -i '/UDP_IN = "/c\UDP_IN = "20,21,53,111,2049"' /etc/csf/csf.conf
 sed -i 's/LF_SCRIPT_ALERT = "0"/LF_SCRIPT_ALERT = "1"/g' /etc/csf/csf.conf
-sed -i 's/SMTP_BLOCK = "0"/SMTP_BLOCK = "1"/g' /etc/csf/csf.conf
 sed -i '/PT_USERPROC = /c\PT_USERPROC = "0"' /etc/csf/csf.conf
+sed -i '/PT_INTERVAL = /c\PT_INTERVAL = "0"' /etc/csf/csf.conf
 sed -i '/PT_USERTIME = /c\PT_USERTIME = "0"' /etc/csf/csf.conf
 sed -i '/LF_INTEGRITY = /c\LF_INTEGRITY = "0"' /etc/csf/csf.conf
 sed -i '/PT_USERMEM = /c\PT_USERMEM = "0"' /etc/csf/csf.conf
+
+# UDPFLOOD has to be disbaled in virtuozzo7 https://bugs.openvz.org/browse/OVZ-6659
+sed -i '/UDPFLOOD = /c\UDPFLOOD = "0"' /etc/csf/csf.conf
 sed -i '/LF_DIRWATCH = /c\LF_DIRWATCH = "0"' /etc/csf/csf.conf
 sed -i 's/LF_EMAIL_ALERT = "1"/LF_EMAIL_ALERT = "0"/g' /etc/csf/csf.conf
 sed -i 's/LF_TRIGGER = "0"/LF_TRIGGER = "20"/g' /etc/csf/csf.conf
@@ -152,13 +205,17 @@ echo "PHP config + harden functions + Passive FTP ports for pureftpd"
 echo "######################################################"
 sleep 1
 
-sed -i 's/allow_url_fopen = Off/allow_url_fopen = On/g' /opt/cpanel/ea-php*/root/etc/php.ini
-sed -i 's/max_execution_time = 30/max_execution_time = 120/g' /opt/cpanel/ea-php*/root/etc/php.ini
-sed -i 's/max_input_time = 60/max_input_time = -1/g' /opt/cpanel/ea-php*/root/etc/php.ini
-sed -i 's/memory_limit = 32M/memory_limit = 256M/g' /opt/cpanel/ea-php*/root/etc/php.ini
-sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 128M/g' /opt/cpanel/ea-php*/root/etc/php.ini
+sed -i '/allow_url_fopen = /c\allow_url_fopen = On' /opt/cpanel/ea-php*/root/etc/php.ini /opt/cpanel/ea-php*/root/etc/php.d/local.ini 
+sed -i '/max_execution_time = /c\max_execution_time = 120' /opt/cpanel/ea-php*/root/etc/php.ini /opt/cpanel/ea-php*/root/etc/php.d/local.ini
+sed -i '/max_input_time = /c\max_input_time = -1' /opt/cpanel/ea-php*/root/etc/php.ini /opt/cpanel/ea-php*/root/etc/php.d/local.ini
+sed -i '/memory_limit = /c\memory_limit = 256M' /opt/cpanel/ea-php*/root/etc/php.ini /opt/cpanel/ea-php*/root/etc/php.d/local.ini
+sed -i '/upload_max_filesize = /c\upload_max_filesize = 128M' /opt/cpanel/ea-php*/root/etc/php.ini /opt/cpanel/ea-php*/root/etc/php.d/local.ini
+sed -i '/post_max_size = /c\post_max_size = 128M' /opt/cpanel/ea-php*/root/etc/php.ini /opt/cpanel/ea-php*/root/etc/php.d/local.ini
 sed -ie 's/#Port.*[0-9]$/Port 2222/gI' /etc/ssh/sshd_config
 sed -i 's/#UseDNS yes/UseDNS no/g' /etc/ssh/sshd_config
+# sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+# sed -i 's/ChallengeResponseAuthentication yes/ChallengeResponseAuthentication no/g' /etc/ssh/sshd_config
+sed -i 's/#PermitRootLogin yes/PermitRootLogin without-password/g' /etc/ssh/sshd_config
 
 echo
 echo "######################################################"
@@ -187,7 +244,62 @@ chkconfig rpcbind off
 service saslauthd stop
 chkconfig saslauthd off
 
+#yum remove iputils -y
+#rpm -ivh https://buildlogs.centos.org/c7.1511.00/iputils/20151120190818/20121221-7.el7.x86_64/iputils-20121221-7.el7.x86_64.rpm
+#yum -y install initscripts
+
 echo
 echo "######################################################"
-echo "Completed"
+echo "Install maldet and clamav"
 echo "######################################################"
+sleep 1
+
+/scripts/update_local_rpm_versions --edit target_settings.clamav installed
+/scripts/check_cpanel_rpms --fix --targets=clamav
+cd /usr/local/src/
+wget http://www.rfxn.com/downloads/maldetect-current.tar.gz
+tar -xzf maldetect-current.tar.gz
+cd maldetect-*
+sh ./install.sh
+ln -s /usr/local/cpanel/3rdparty/bin/clamscan /usr/local/sbin/clamscan
+ln -s /usr/local/cpanel/3rdparty/bin/freshclam /usr/local/sbin/freshclam
+maldet -d
+maldet -u
+
+# Takes too long, will just update it via cron at night.
+# freshclam
+
+echo
+echo "######################################################"
+echo "Rando"
+echo "######################################################"
+sleep 1
+
+whmapi1 setminimumpasswordstrengths default=50
+whmapi1 set_tweaksetting key=smtpmailgidonly value=0
+
+/scripts/install_lets_encrypt_autossl_provider
+
+wget -O /usr/local/sbin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar ; chmod +x /usr/local/sbin/wp
+ln -s /usr/local/sbin/wp /usr/sbin/wp
+echo "alias wp='/opt/cpanel/ea-php70/root/usr/bin/php /usr/local/sbin/wp --allow-root'" >> /root/.bashrc
+crontab -l | { cat; echo "* * * * * /bigscoots/chkphpfpm"; } | crontab -
+crontab -l | { cat; echo "*/15 * * * * /bigscoots/mon_disk.sh"; } | crontab -
+sed -i 's/export PATH/export PATH\nexport EDITOR=nano/g' /root/.bash_profile
+
+
+echo
+echo "######################################################"
+echo "Completed - Server will reboot now."
+echo "######################################################"
+
+sleep 3
+
+echo "cPanel install for $HOSTNAME completed" | mail -s "cPanel install for $HOSTNAME completed" monitor@bigscoots.com
+
+sleep 1
+
+/usr/sbin/reboot
+
+
+
