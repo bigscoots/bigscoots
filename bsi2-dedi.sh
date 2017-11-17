@@ -290,6 +290,16 @@ crontab -l | { cat; echo "* * * * * /bigscoots/chkphpfpm"; } | crontab -
 crontab -l | { cat; echo "*/15 * * * * /bigscoots/mon_disk.sh"; } | crontab -
 sed -i 's/export PATH/export PATH\nexport EDITOR=nano/g' /root/.bash_profile
 
+curl -s https://repo.cloudlinux.com/kernelcare/kernelcare_install.sh | bash
+kcarectl --set-patch-type free --update
+
+{
+  echo fs.enforce_symlinksifowner = 1
+  echo fs.symlinkown_gid = 99
+} >> /etc/sysconfig/kcare/sysctl.conf
+
+sysctl -w fs.enforce_symlinksifowner=1
+sysctl -w fs.symlinkown_gid=99
 
 echo
 echo "######################################################"
