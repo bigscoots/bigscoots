@@ -7,8 +7,8 @@
 # CHANGE THESE #
 ##            ##
 
-livesite=pressurecookrecipes.com
-devsite=dev.pressurecookrecipes.com
+livesite=domain.com
+devsite=dev.domain.com
 
 ##                           ##
 # NO MORE CHANGING BELOW HERE #
