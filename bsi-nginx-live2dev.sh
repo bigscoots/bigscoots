@@ -7,8 +7,8 @@
 # CHANGE THESE #
 ##            ##
 
-livesite=domain.com
-devsite=dev.domain.com
+livesite=pressurecookrecipes.com
+devsite=dev.pressurecookrecipes.com
 
 ##                           ##
 # NO MORE CHANGING BELOW HERE #
@@ -110,7 +110,8 @@ echo
 echo
 
 cd "$devdocroot/" || exit
-wp --allow-root search-replace "$livesite" "$devsite" --skip-plugins --skip-themes
+siteurl=$(wp option get siteurl --allow-root | sed -r 's/https?:\/\///g')
+wp --allow-root search-replace "$siteurl" "$devsite" --skip-plugins --skip-themes --skip-columns=guid
 
 sleep 1
 
