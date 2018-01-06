@@ -48,7 +48,7 @@ echo > /etc/wwwacct.conf
   echo TTL 14400
   echo SCRIPTALIAS y
   echo NS2 ns2."$DOMAIN"
-  echo ETHDEV "$(ifconfig -a | sed 's/[ \t].*//;/^\(lo\|\)$/d'|head -1|sed 's/://g')"
+  echo ETHDEV venet0:0
   echo HOST "$HOSTNAME"
   echo MINUID 500
   echo CONTACTEMAIL "$EMAIL"
