@@ -67,6 +67,8 @@ echo > /etc/wwwacct.conf
   echo DEFWEBMAILTHEME paper_lantern
 } >> /etc/wwwacct.conf
 
+sed -i '/^$/d' /etc/wwwacct.conf
+
 echo "$EMAIL" > /root/.forward
 
 mkdir -p /root/cpanel_profile
