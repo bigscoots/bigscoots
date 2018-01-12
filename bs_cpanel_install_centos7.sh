@@ -79,8 +79,8 @@ echo "Disable iptables, update the server and set the timezone(Chicago)"
 echo "######################################################"
 sleep 3
 
-chkconfig iptables off
-service iptables stop
+/sbin/chkconfig iptables off
+/sbin/service iptables stop
 yum -y update
 rm -f /etc/localtime
 ln -s /usr/share/zoneinfo/America/Chicago /etc/localtime
@@ -206,12 +206,12 @@ echo "PHP config + harden functions + Passive FTP ports for pureftpd"
 echo "######################################################"
 sleep 1
 
-sed -i '/allow_url_fopen = /c\allow_url_fopen = On' /opt/cpanel/ea-php*/root/etc/php.ini /opt/cpanel/ea-php*/root/etc/php.d/local.ini 
-sed -i '/max_execution_time = /c\max_execution_time = 120' /opt/cpanel/ea-php*/root/etc/php.ini /opt/cpanel/ea-php*/root/etc/php.d/local.ini
-sed -i '/max_input_time = /c\max_input_time = -1' /opt/cpanel/ea-php*/root/etc/php.ini /opt/cpanel/ea-php*/root/etc/php.d/local.ini
-sed -i '/memory_limit = /c\memory_limit = 256M' /opt/cpanel/ea-php*/root/etc/php.ini /opt/cpanel/ea-php*/root/etc/php.d/local.ini
-sed -i '/upload_max_filesize = /c\upload_max_filesize = 128M' /opt/cpanel/ea-php*/root/etc/php.ini /opt/cpanel/ea-php*/root/etc/php.d/local.ini
-sed -i '/post_max_size = /c\post_max_size = 128M' /opt/cpanel/ea-php*/root/etc/php.ini /opt/cpanel/ea-php*/root/etc/php.d/local.ini
+sed -i '/allow_url_fopen = /c\allow_url_fopen = On' /opt/cpanel/ea-php*/root/etc/php.ini
+sed -i '/max_execution_time = /c\max_execution_time = 120' /opt/cpanel/ea-php*/root/etc/php.ini
+sed -i '/max_input_time = /c\max_input_time = -1' /opt/cpanel/ea-php*/root/etc/php.ini
+sed -i '/memory_limit = /c\memory_limit = 256M' /opt/cpanel/ea-php*/root/etc/php.ini
+sed -i '/upload_max_filesize = /c\upload_max_filesize = 128M' /opt/cpanel/ea-php*/root/etc/php.ini
+sed -i '/post_max_size = /c\post_max_size = 128M' /opt/cpanel/ea-php*/root/etc/php.ini
 sed -ie 's/#Port.*[0-9]$/Port 2222/gI' /etc/ssh/sshd_config
 sed -i 's/#UseDNS yes/UseDNS no/g' /etc/ssh/sshd_config
 # sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
@@ -224,11 +224,11 @@ echo "Restart some services that need changes to take effect."
 echo "######################################################"
 sleep 1
 
-service httpd restart
-csf -r
-service pure-ftpd restart
-service mysql restart
-service sshd restart
+/sbin/service httpd restart
+/usr/sbin/csf -r
+/sbin/service pure-ftpd restart
+/sbin/service mysql restart
+/sbin/service sshd restart
 
 echo
 echo "######################################################"
@@ -236,14 +236,14 @@ echo "Stop uneceesary services"
 echo "######################################################"
 sleep 1
 
-service xinetd stop
-chkconfig xinetd off
-service portreserve stop
-chkconfig portreserve off
-service rpcbind stop
-chkconfig rpcbind off
-service saslauthd stop
-chkconfig saslauthd off
+/sbin/service xinetd stop
+/sbin/chkconfig xinetd off
+/sbin/service portreserve stop
+/sbin/chkconfig portreserve off
+/sbin/service rpcbind stop
+/sbin/chkconfig rpcbind off
+/sbin/service saslauthd stop
+/sbin/chkconfig saslauthd off
 
 #yum remove iputils -y
 #rpm -ivh https://buildlogs.centos.org/c7.1511.00/iputils/20151120190818/20121221-7.el7.x86_64/iputils-20121221-7.el7.x86_64.rpm
@@ -264,8 +264,8 @@ cd maldetect-* || exit
 sh ./install.sh
 ln -s /usr/local/cpanel/3rdparty/bin/clamscan /usr/local/sbin/clamscan
 ln -s /usr/local/cpanel/3rdparty/bin/freshclam /usr/local/sbin/freshclam
-maldet -d
-maldet -u
+/usr/local/sbin/maldet -d
+/usr/local/sbin/maldet -u
 
 # Takes too long, will just update it via cron at night.
 # freshclam
@@ -276,8 +276,8 @@ echo "Rando"
 echo "######################################################"
 sleep 1
 
-whmapi1 setminimumpasswordstrengths default=50
-whmapi1 set_tweaksetting key=smtpmailgidonly value=0
+/usr/sbin/whmapi1 setminimumpasswordstrengths default=50
+/usr/sbin/whmapi1 set_tweaksetting key=smtpmailgidonly value=0
 
 /scripts/install_lets_encrypt_autossl_provider
 
