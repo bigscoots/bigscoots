@@ -16,5 +16,6 @@ fi
 yum -y install e2fsprogs
 hostnamectl set-hostname $(grep -v '#\|local' /etc/hosts| awk '{print $2}')
 chattr +i /etc/hostname
+rm -rf /bigscoots
 git clone https://github.com/jcatello/bigscoots /bigscoots
 /bigscoots/bs_cpanel_install_centos7.sh
