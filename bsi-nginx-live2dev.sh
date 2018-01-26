@@ -101,13 +101,15 @@ sleep 1
 
 echo "Importing database has been completed."
 echo
-echo
+echo "Changing the database prefix in the dev wp-config.php"
+
+sed -i "/table_prefix/c\\$(grep _prefix "$livedocroot"/wp-config.php)" "$devdocroot"/wp-config.php
 
 sleep 1
 
+echo "Table prefix has been updated in $devdocroot/wp-config.php"
+echo
 echo "Changing all instances of $livesite to $devsite in the database."
-echo
-echo
 
 cd "$devdocroot/" || exit
 siteurl=$(wp option get siteurl --allow-root | sed -r 's/https?:\/\///g')
@@ -117,15 +119,13 @@ sleep 1
 
 echo "All instances have been changed."
 echo
-echo "Changing the database prefix in the dev wp-config.php"
-
-sed -i "/table_prefix/c\\$(grep _prefix "$livedocroot"/wp-config.php)" "$devdocroot"/wp-config.php
+echo 
 
 sleep 1
 
-echo "Table prefix has been updated in $devdocroot/wp-config.php"
-echo
 echo "Correcting all ownership and permissions."
+echo
+echo 
 
 chown -R nginx: /home/nginx/domains/
 
