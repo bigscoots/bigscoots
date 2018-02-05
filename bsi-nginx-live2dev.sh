@@ -103,7 +103,7 @@ echo "Importing database has been completed."
 echo
 echo "Changing the database prefix in the dev wp-config.php"
 
-sed -i "/table_prefix/c\\$(grep _prefix "$livedocroot"/wp-config.php)" "$devdocroot"/wp-config.php
+sed -i "/table_prefix/c\\$(grep _prefix "$livedocroot"/wp-config.php | grep -v WP_CACHE_KEY_SALT)" "$devdocroot"/wp-config.php
 
 sleep 1
 
