@@ -11,12 +11,12 @@ site=$(echo "$docroot" | sed -e "s/\/home\/nginx\/domains\///g" -e "s/\/public//
 currdate=$(date +%Y-%m-%d-%H%M)
 bfile=${site}_${currdate}
 
-# Remove old backups
-find /backup/$site/$frequency/ -type d -ctime +120 -exec rm -rf {} \;
-
 # Create the backup directory on the backup server
 echo "Creating the backup directory for $site on the backup server: /backup/$site/$frequency"
-mkdir /backup/$site/$frequency
+mkdir -p /backup/"$site"/"$frequency"
+
+# Remove old backups
+find /backup/"$site"/"$frequency"/ -type d -ctime +120 -exec rm -rf {} \;
 
 # Backup the database into the sites docroot
 echo "Taking a backup of the database $db for $site"
@@ -24,7 +24,7 @@ mysqldump "$db" --single-transaction --quick --opt --skip-lock-tables --routines
 
 # Tarbal the entire site including database directly onto the backup server
 echo "Now we are backing up the site files for $site"
-tar -zcvf /backup/$site/$frequency/$bfile.tar.gz "$docroot" ./ --exclude-from=/bigscoots/ngxbackup-excludes.txt
+tar -zcvf /backup/"$site"/"$frequency"/"$bfile".tar.gz "$docroot" ./ --exclude-from=/bigscoots/ngxbackup-excludes.txt --exclude="$docroot"/wp-content/uploads
 
 # Remove the database backup from the sites docroot
 echo "We are now removing he database backp from the source $docroot/$db.sql.gz"
@@ -32,7 +32,7 @@ rm -f "$docroot"/"$db".sql.gz
 
 # rsync the uploads directory if it was excluded
 echo "Running rsync for the $site"
-mkdir -p /backup/$site/rsync
-rsync -ah "$docroot"/ /backup/"$site"/rsync/
+mkdir -p /backup/"$site"/rsync
+rsync -ah --exclude-from=/bigscoots/ngxbackup-excludes.txt "$docroot"/ /backup/"$site"/rsync/
 
 # The end
