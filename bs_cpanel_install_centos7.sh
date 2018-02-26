@@ -282,6 +282,7 @@ sleep 1
 /usr/sbin/whmapi1 set_tweaksetting key=smtpmailgidonly value=0
 
 /scripts/install_lets_encrypt_autossl_provider
+/usr/local/cpanel/bin/update-roundcube-sqlite-db --force
 
 wget -O /usr/local/sbin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar ; chmod +x /usr/local/sbin/wp
 ln -s /usr/local/sbin/wp /usr/sbin/wp
