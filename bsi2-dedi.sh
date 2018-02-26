@@ -301,6 +301,8 @@ kcarectl --set-patch-type free --update
 sysctl -w fs.enforce_symlinksifowner=1
 sysctl -w fs.symlinkown_gid=99
 
+/usr/local/cpanel/bin/update-roundcube-sqlite-db --force
+
 echo
 echo "######################################################"
 echo "Completed - Server will reboot now."
