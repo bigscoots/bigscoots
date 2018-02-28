@@ -50,6 +50,12 @@ sleep 5
 PHPVER=$(curl -s http://php.net/downloads.php |grep -o "php-7.1.[0-9][0-9].tar.gz" | sed 's/php-//g; s/.tar.gz//g' | uniq)
 PHPVER_REPLACE=$(grep PHP_VERSION betainstaller.sh | sed 's/# //g' | sed "s/PHP_VERSION='[0-9].*'/PHP_VERSION='$PHPVER'/g")
 sed -i '/PHP_VERSION/c\'"$PHPVER_REPLACE" betainstaller.sh |grep PHP_VERSION
+mkdir -p /etc/centminmod
+
+{
+  echo NGXDYNAMIC_BROTLI='y'
+  echo NGINX_LIBBROTLI='y'
+} >> /etc/centminmod/custom_config.inc
 
 sh betainstaller.sh
 export EDITOR=nano
