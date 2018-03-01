@@ -1,0 +1,11 @@
+$redis_server = array(
+    'host'     => '127.0.0.1',
+    'port'     => 6379,
+    'auth'     => '',
+    'database' => 0, // Optionally use a specific numeric Redis database. Default is 0.
+);
+
+define('WP_CACHE_KEY_SALT', md5( DB_NAME . $table_prefix . FILE ) );
+define('WP_REDIS_MAXTTL', 900);
+define('WP_REDIS_SELECTIVE_FLUSH', true);
+define('WP_REDIS_DATABASE', 0);
