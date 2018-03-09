@@ -26,7 +26,7 @@ SUSPEND=no
 BACKUP_DIR=/vz/backup
 WORK_DIR=/vz/backup
 COMPRESS=no
-COMPACT=1
+COMPACT=0
 TTL=0
 
 ##
@@ -156,6 +156,17 @@ if grep -w "$CTID" <<< `$VZLIST_CMD -a -Hoctid` &> /dev/null; then
             echo "Compact log file: /tmp/vzpbackup_compact_$CTID_$TIMESTAMP.log"
         fi
 
+        while [ 1 ]
+        do
+        UUID=$($VZCTL_CMD snapshot-list $CTID -Ho UUID|head -1)
+        if [ "$UUID" = "" ]
+        then
+            break
+        else
+            $VZCTL_CMD snapshot-delete $CTID --id $UUID
+        fi
+        done
+
         echo "Backing up CTID: $CTID"
 
         ID=$(uuidgen)
@@ -198,7 +209,7 @@ if grep -w "$CTID" <<< `$VZLIST_CMD -a -Hoctid` &> /dev/null; then
             COMPRESS_SUFFIX=bz2
         else
             #tar -cvf - . | pigz -9 -p 4 | ssh bigscoots@int-backup2.bigscoots.com "cat > ~/vps/$(hostname | cut -d"." -f1)/vzpbackup_${CTID}_${HNAME}_${TIMESTAMP}.tar.gz"
-            tar -cvf - . | ssh bigscoots@int-backup3.bigscoots.com "pigz -9 > ~/vps/$(hostname | cut -d"." -f1)/vzpbackup_${CTID}_${HNAME}_${TIMESTAMP}.tar.gz"
+            tar -cvf - --exclude='./dump' --exclude='./root.hdd/root.hdd.*' . | ssh bigscoots@int-backup3.bigscoots.com "pigz -9 > ~/vps/$(hostname | cut -d"." -f1)/vzpbackup_${CTID}_${HNAME}_${TIMESTAMP}.tar.gz"
         fi
 
         echo "Removing backup config files: "
