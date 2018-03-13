@@ -46,6 +46,10 @@ chown -R nginx: /var/log/php-fpm
 nprestart
 crontab -l | { cat; echo "* * * * * /bigscoots/chkphpfpm_nginx"; } | crontab -
 crontab -l | { cat; echo "*/15 * * * * /bigscoots/mon_disk.sh"; } | crontab -
+mkdir ~/.ssh
+touch ~/.ssh/wpo_backups
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/wpo_backups
 sleep 2
 echo "nginx install for $HOSTNAME completed" | mail -s "nginx install for $HOSTNAME completed" monitor@bigscoots.com
 sleep 5
