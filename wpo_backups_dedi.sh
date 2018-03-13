@@ -1,3 +1,5 @@
+#!/bin/bash
+
 date=$(date "+%Y-%m-%dT%H_%M_%S")
 HOME=/home/nginx/domains/
 BKUSER=wpo$(awk '{print $1}' /proc/vz/veinfo)
