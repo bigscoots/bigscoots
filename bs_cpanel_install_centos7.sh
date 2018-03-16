@@ -290,7 +290,7 @@ echo "alias wp='/opt/cpanel/ea-php70/root/usr/bin/php /usr/local/sbin/wp --allow
 crontab -l | { cat; echo "* * * * * /bigscoots/chkphpfpm"; } | crontab -
 crontab -l | { cat; echo "*/15 * * * * /bigscoots/mon_disk.sh"; } | crontab -
 sed -i 's/export PATH/export PATH\nexport EDITOR=nano/g' /root/.bash_profile
-
+/sbin/csf -a 192.168.1.1/24
 
 echo
 echo "######################################################"
