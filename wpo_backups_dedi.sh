@@ -4,18 +4,18 @@ date=$(date "+%Y-%m-%dT%H_%M_%S")
 HOMEDIR=/home/nginx/domains/
 
 if [ ! -f "$HOMEDIR".rsync/exclude ]; then
-	mkdir -p "$HOMEDIR".rsync
+        mkdir -p "$HOMEDIR".rsync
 
-	{
-	echo "log"
-	echo "*/core.[0-9]*"
-	echo "*/error_log"
-	echo "*/wp-content/updraft"
-	echo "*/wp-content/cache"
-	
-	} > "$HOMEDIR".rsync/exclude
+        {
+        echo "log"
+        echo "*/core.[0-9]*"
+        echo "*/error_log"
+        echo "*/wp-content/updraft"
+        echo "*/wp-content/cache"
+
+        } > "$HOMEDIR".rsync/exclude
 else
-	:
+        :
 fi
 
 for wpinstall in $(find "$HOMEDIR"*/public/ -type f -name wp-config.php | sed 's/wp-config.php//g')
@@ -29,12 +29,11 @@ rsync -azP \
   --delete-excluded \
   --exclude-from="$HOMEDIR"/.rsync/exclude \
   --link-dest=../current \
-  "$HOMEDIR" /backup/incomplete_back-"$date" \
+  "$HOMEDIR" /backup/incomplete_back-"$date"
+
   mv /backup/incomplete_back-"$date" /backup/back-"$date" \
   && rm -f /backup/current \
   && ln -s /backup/back-"$date" /backup/current
-  
-  #!/bin/bash
 
 for wpinstall in $(find "$HOMEDIR"*/public/ -type f -name wp-config.php | sed 's/wp-config.php//g')
    do
