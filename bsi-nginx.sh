@@ -51,6 +51,8 @@ mkdir ~/.ssh
 touch ~/.ssh/wpo_backups
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/wpo_backups
+sed -i 's/#include \/usr\/local\/nginx\/conf\/cloudflare.conf;/include \/usr\/local\/nginx\/conf\/cloudflare.conf;/g' /usr/local/nginx/conf/nginx.conf
+/usr/local/src/centminmod/tools/csfcf.sh auto
 sleep 2
 echo "nginx install for $HOSTNAME completed" | mail -s "nginx install for $HOSTNAME completed" monitor@bigscoots.com
 sleep 5
