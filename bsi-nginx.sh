@@ -53,6 +53,17 @@ chmod 700 ~/.ssh
 chmod 600 ~/.ssh/wpo_backups
 sed -i 's/#include \/usr\/local\/nginx\/conf\/cloudflare.conf;/include \/usr\/local\/nginx\/conf\/cloudflare.conf;/g' /usr/local/nginx/conf/nginx.conf
 /usr/local/src/centminmod/tools/csfcf.sh auto
+
+if [ ! -d /etc/ssl/private ]; then
+    mkdir -p /etc/ssl/private
+  fi
+  if [[ ! -f /etc/ssl/private/pure-ftpd-dhparams.pem ]]; then
+    openssl dhparam -out /etc/ssl/private/pure-ftpd-dhparams.pem 2048 >/dev/null 2>&1
+    if [[ "$(ps aufx | grep pure-ftpd | grep -v grep | grep pure-ftpd  >/dev/null 2>&1; echo $?)" -eq '0' ]]; then
+      service pure-ftpd restart >/dev/null 2>&1
+    fi
+  fi
+  
 sleep 2
 echo "nginx install for $HOSTNAME completed" | mail -s "nginx install for $HOSTNAME completed" monitor@bigscoots.com
 sleep 5
