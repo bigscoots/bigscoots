@@ -8,11 +8,8 @@ databases=$(mysql -e "SHOW DATABASES;" | tr -d "| " | grep -Ev 'Database|informa
 for db in $databases; do
     if [[ "$db" != "information_schema" ]] && [[ "$db" != _* ]] && [[ "$db" != "performance_schema" ]] ; then
         echo "Dumping database: $db"
-#         mysqldump --skip-lock-tables --lock-tables=false --force --opt --databases $db > $OUTPUTTMP/`date +%m-%d-%Y-%H`.$db.sql
-        mysqldump $db --single-transaction --quick --opt --skip-lock-tables --routines --triggers | gzip -c | ssh 4532@int-backup.bigscoots.com "cat > ~/ngx.lexingtonoverstockwarehouse.com/databases/$(date +%m-%d-%Y-%H).$db.sql.gz"
-#         gzip $OUTPUTTMP/`date +%m-%d-%Y-%H`.$db.sql
-#         mv $OUTPUTTMP/*.sql.gz $OUTPUT/
+        mysqldump $db --single-transaction --quick --opt --skip-lock-tables --routines --triggers | gzip -c | ssh USER@int-backup.bigscoots.com "cat > ~/server.domain.com/databases/$(date +%m-%d-%Y-%H).$db.sql.gz"
     fi
 done
 
-ssh 4532@int-backup.bigscoots.com 'find ~/server.domain.com/databases/ -type f -ctime +3 -exec rm -rf {} \;'
+ssh USER@int-backup.bigscoots.com 'find ~/server.domain.com/databases/ -type f -ctime +3 -exec rm -rf {} \;'
