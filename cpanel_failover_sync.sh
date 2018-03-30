@@ -1,7 +1,7 @@
 #!/bin/bash
 
 liveserver=192.168.1.196
-sshport=2222`
+sshport=2222
 
  rm -f /tmp/remoteusers.txt /tmp/localusers.txt 
  ssh -p "$sshport" "$liveserver" "whmapi1 listaccts" |grep user: |awk '{print $2}' >> /tmp/remoteusers.txt 
