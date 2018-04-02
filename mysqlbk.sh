@@ -1,7 +1,4 @@
 #!/bin/bash
-OUTPUTTMP="/dbtmp"
-OUTPUT="/backup/databases"
-
 databases=$(mysql -e "SHOW DATABASES;" | tr -d "| " | grep -Ev 'Database|information_schema|performance_schema|mysql')
 
 
