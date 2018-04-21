@@ -20,6 +20,7 @@ if [ ! -f "$HOMEDIR".rsync/exclude ]; then
         echo "*/error_log"
         echo "*/wp-content/updraft"
         echo "*/wp-content/cache"
+        echo "*/wp-content/wpbackitup_backups"
 
         } > "$HOMEDIR".rsync/exclude
 else
