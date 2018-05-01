@@ -73,8 +73,10 @@ sleep 1
 rm -rf /usr/local/nginx/conf/conf.d/demodomain.com.conf /home/nginx/domains/demodomain.com
 sleep 1
 yum -y install redis --enablerepo=remi --disableplugin=priorities
+sleep 1
+sed -i '/^save/d' /etc/redis.conf
 chkconfig redis on
-service redis start
+service redis restart
 sleep 5
 cd /
 git clone https://github.com/jcatello/bigscoots
