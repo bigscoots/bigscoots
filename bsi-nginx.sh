@@ -52,8 +52,10 @@ crontab -l | { cat; echo "*/15 * * * * /bigscoots/mon_disk.sh"; } | crontab -
 crontab -l | { cat; echo "$(( ( RANDOM % 60 )  + 1 )) $(( ( RANDOM % 4 )  + 1 )) * * * /bigscoots/wpo_backups_ovz.sh"; } | crontab -
 mkdir ~/.ssh
 touch ~/.ssh/wpo_backups
+touch ~/.ssh/authorized_keys
 chmod 700 ~/.ssh
-chmod 600 ~/.ssh/wpo_backups
+chmod 600 ~/.ssh/wpo_backups ~/.ssh/authorized_keys
+
 sed -i 's/#include \/usr\/local\/nginx\/conf\/cloudflare.conf;/include \/usr\/local\/nginx\/conf\/cloudflare.conf;/g' /usr/local/nginx/conf/nginx.conf
 /usr/local/src/centminmod/tools/csfcf.sh auto
 
