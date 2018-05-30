@@ -29,6 +29,7 @@ while true; do
 # Log some basic info about the connection and process
  ps aux | awk "(\$2 ~ /$PID/)"'{print $0}' >> eitest-connection-log.txt;
  echo $connect >> eitest-connection-log.txt;
+ echo "asd" | mail -s "$HOSTNAME - eitest hit /root/bigscoots/eitest-files-$PID.log" monitor@bigscoots.com
  fi
 
 sleep 0.01
