@@ -3,7 +3,7 @@
 date=$(date "+%Y-%m-%dT%H_%M_%S")
 HOMEDIR=/home/nginx/domains/
 BKUSER=wpo$(awk '{print $1}' /proc/vz/veinfo)
-BKSVR=int-backup3.bigscoots.com
+BKSVR=backup3.bigscoots.com
 
 if ssh -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" 'uptime'; [ $? -eq 255 ]
 then
