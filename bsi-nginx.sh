@@ -50,6 +50,7 @@ crontab -l | { cat; echo "* * * * * /bigscoots/chkphpfpm_nginx"; } | crontab -
 crontab -l | { cat; echo "* * * * * /bigscoots/redischk.sh"; } | crontab -
 crontab -l | { cat; echo "*/15 * * * * /bigscoots/mon_disk.sh"; } | crontab -
 crontab -l | { cat; echo "$(( ( RANDOM % 60 )  + 1 )) $(( ( RANDOM % 4 )  + 1 )) * * * /bigscoots/wpo_backups_ovz.sh"; } | crontab -
+crontab -l | sed 's/.*autoprotect/#&/' | crontab -
 mkdir ~/.ssh
 touch ~/.ssh/wpo_backups
 touch ~/.ssh/authorized_keys
