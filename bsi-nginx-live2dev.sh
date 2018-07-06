@@ -136,6 +136,8 @@ echo
 
 sleep 1
 
+npreload
+
 echo "Syncing $livesite to $devsite has been completed."
 echo
 echo
