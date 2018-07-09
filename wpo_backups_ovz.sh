@@ -21,7 +21,10 @@ if [ ! -f "$HOMEDIR".rsync/exclude ]; then
         echo "*/wp-content/updraft"
         echo "*/wp-content/cache"
         echo "*/wp-content/wpbackitup_backups"
-
+        echo "*/wp-content/uploads/ithemes-security"
+        echo "*/wp-content/uploads/wpallimport"
+        echo "*/wp-content/uploads/ShortpixelBackups"
+       
         } > "$HOMEDIR".rsync/exclude
 else
         :
