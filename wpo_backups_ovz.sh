@@ -5,7 +5,7 @@ HOMEDIR=/home/nginx/domains/
 BKUSER=wpo$(awk '{print $1}' /proc/vz/veinfo)
 BKSVR=backup3.bigscoots.com
 
-if ssh -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" 'uptime'; [ $? -eq 255 ]
+if ssh -oStrictHostKeyChecking -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" 'uptime'; [ $? -eq 255 ]
 then
   echo "Mark for Justin" | mail -s "$HOSTNAME- WPO failed to SSH to backup server." monitor@bigscoots.com
   exit 1
@@ -37,13 +37,13 @@ for wpinstall in $(find /home/nginx/domains/*/public/ -type f -name wp-config.ph
 done
 
 rsync -azP \
-  -e "ssh -i $HOME/.ssh/wpo_backups" \
+  -e "ssh -oStrictHostKeyChecking=no -i $HOME/.ssh/wpo_backups" \
   --delete \
   --delete-excluded \
   --exclude-from="$HOMEDIR".rsync/exclude \
   --link-dest=../current \
   "$HOMEDIR" "$BKUSER"@"$BKSVR":incomplete_back-"$date" \
-  && ssh -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" \
+  && ssh -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" \
   "mv incomplete_back-$date back-$date \
   && rm -f current \
   && ln -s back-$date current"
