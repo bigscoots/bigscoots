@@ -36,7 +36,7 @@ ln -s /usr/local/bin/php /usr/sbin/php
 sleep 1
 rm -rf /usr/local/nginx/conf/conf.d/demodomain.com.conf /home/nginx/domains/demodomain.com
 sleep 1
-yum -y install redis --enablerepo=remi --disableplugin=priorities
+yum -y install redis lftp --enablerepo=remi --disableplugin=priorities
 sleep 1
 sed -i '/^save/d' /etc/redis.conf
 chkconfig redis on
@@ -59,6 +59,8 @@ chmod 600 ~/.ssh/wpo_backups ~/.ssh/authorized_keys
 
 sed -i 's/#include \/usr\/local\/nginx\/conf\/cloudflare.conf;/include \/usr\/local\/nginx\/conf\/cloudflare.conf;/g' /usr/local/nginx/conf/nginx.conf
 /usr/local/src/centminmod/tools/csfcf.sh auto
+echo "set ftp:ssl-allow false" >> /etc/lftp.conf
+
 
 if [ ! -d /etc/ssl/private ]; then
     mkdir -p /etc/ssl/private
