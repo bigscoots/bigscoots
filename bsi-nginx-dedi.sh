@@ -86,9 +86,10 @@ ln -s /usr/local/bin/php /usr/sbin/php
 sleep 1
 rm -rf /usr/local/nginx/conf/conf.d/demodomain.com.conf /home/nginx/domains/demodomain.com
 sleep 1
-yum -y install redis --enablerepo=remi --disableplugin=priorities
+yum -y install redis lftp --enablerepo=remi --disableplugin=priorities
 sleep 1
 sed -i '/^save/d' /etc/redis.conf
+echo "set ftp:ssl-allow false" >> /etc/lftp.conf
 chkconfig redis on
 service redis restart
 sleep 5
