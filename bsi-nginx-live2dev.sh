@@ -136,6 +136,7 @@ echo
 
 sleep 1
 
+redis-cli flushall
 npreload
 
 echo "Syncing $livesite to $devsite has been completed."
