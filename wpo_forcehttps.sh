@@ -4,7 +4,7 @@ if [ -z "$1" ]
 
 then
 
-for i in $(find /usr/local/nginx/conf/conf.d/ -type f -printf "%f\n" |grep -v 'phpmyadmin_ssl.conf\|virtual.conf\|.ssl.conf') ; do 
+for i in $(find /usr/local/nginx/conf/conf.d/ -type f -printf "%f\n" |grep -v 'phpmyadmin_ssl.conf\|virtual.conf\|.ssl.conf') ; do
 
 domain="${i//.conf/}"
 
@@ -14,8 +14,11 @@ cp /usr/local/nginx/conf/conf.d/"$domain".conf{,.bak}
 echo "  server {"
 echo "            listen   80;"
 echo "            server_name $domain www.$domain;"
+echo ""
+echo "       Location / {"
 echo "            return 301 https://$domain\$request_uri;"
 echo "       }"
+echo "}"
 
 
 } > /usr/local/nginx/conf/conf.d/"$domain.conf"
@@ -32,9 +35,11 @@ cp /usr/local/nginx/conf/conf.d/"$domain".conf{,.bak}
 echo "  server {"
 echo "            listen   80;"
 echo "            server_name $domain www.$domain;"
+echo ""
+echo "       Location / {"
 echo "            return 301 https://$domain\$request_uri;"
 echo "       }"
-
+echo "}"
 
 } > /usr/local/nginx/conf/conf.d/"$domain.conf"
 
