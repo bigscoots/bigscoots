@@ -94,7 +94,7 @@ echo "Importing database from $livedb to $devdb"
 echo
 echo
 
-mysqldump "$livedb" --single-transaction --quick --opt --skip-lock-tables --routines --triggers| mysql "$devdb"
+mysqldump "$livedb" --single-transaction --quick --opt --skip-lock-tables --routines --triggers| mysql -f "$devdb"
 
 
 sleep 1
