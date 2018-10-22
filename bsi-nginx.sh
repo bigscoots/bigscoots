@@ -101,6 +101,7 @@ echo ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAgEAjOtX/QuK+gv+yxQRvCRe3gFDvCR3qmjByRAbDq8
 cd /usr/local/src/centminmod/addons
 wget --no-check-certificate https://github.com/centminmod/phpmyadmin/raw/master/phpmyadmin.sh
 chmod +x phpmyadmin.sh
+sed -i 's/useradd -s/$(which useradd) -s/g' /usr/local/src/centminmod/addons/phpmyadmin.sh
 ./phpmyadmin.sh install
 
   
