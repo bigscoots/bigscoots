@@ -97,6 +97,13 @@ cd /
 git clone https://github.com/jcatello/bigscoots
 chown -R nginx: /var/log/php-fpm
 nprestart
+
+cd /usr/local/src/centminmod/addons
+wget --no-check-certificate https://github.com/centminmod/phpmyadmin/raw/master/phpmyadmin.sh
+chmod +x phpmyadmin.sh
+sed -i 's/useradd -s/$(which useradd) -s/g' /usr/local/src/centminmod/addons/phpmyadmin.sh
+./phpmyadmin.sh install
+
 crontab -l | { cat; echo "* * * * * /bigscoots/chkphpfpm_nginx"; } | crontab -
 crontab -l | { cat; echo "*/15 * * * * /bigscoots/mon_disk.sh"; } | crontab -
 sleep 2
