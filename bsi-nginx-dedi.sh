@@ -106,5 +106,6 @@ sed -i 's/useradd -s/$(which useradd) -s/g' /usr/local/src/centminmod/addons/php
 
 crontab -l | { cat; echo "* * * * * /bigscoots/chkphpfpm_nginx"; } | crontab -
 crontab -l | { cat; echo "*/15 * * * * /bigscoots/mon_disk.sh"; } | crontab -
+crontab -l | { cat; echo "0 */6 * * * /usr/bin/cmupdate 2>/dev/null"; } | crontab -
 sleep 2
 echo "nginx install for $HOSTNAME completed" | mail -s "nginx install for $HOSTNAME completed" monitor@bigscoots.com
