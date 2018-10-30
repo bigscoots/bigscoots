@@ -32,11 +32,11 @@ ssh -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" "ls -1d */$DOMAIN | sed 's/in
 
 else
 
-ssh -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" "ls -1d */$DOMAIN ; echo $DOMAIN";
+ssh -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" "ls -1d */$DOMAIN | sed 's/\/$DOMAIN//g'"
 
 fi
 
 echo
 echo "Example rsync command - You should run a backup before proceeding"
-echo "# rsync -ahv -e ssh -i $HOME/.ssh/wpo_backups --delete $BKUSER@$BKSVR:~/current/"
+echo "# rsync -ahv -e ssh -i $HOME/.ssh/wpo_backups --delete $BKUSER@$BKSVR:~/current/$DOMAIN/public/ $(pwd)/"
 echo
