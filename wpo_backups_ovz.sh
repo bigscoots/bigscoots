@@ -24,7 +24,7 @@ if [ ! -f "$HOMEDIR".rsync/exclude ]; then
         echo "*/wp-content/uploads/ithemes-security"
         echo "*/wp-content/uploads/wpallimport"
         echo "*/wp-content/uploads/ShortpixelBackups"
-       
+
         } > "$HOMEDIR".rsync/exclude
 else
         :
@@ -36,7 +36,7 @@ for wpinstall in $(find /home/nginx/domains/*/public/ -type f -name wp-config.ph
     /usr/bin/mysqldump "$dbname" | gzip > "$wpinstall$dbname".sql.gz
 done
 
-rsync -azP \
+rsync -ah --stats \
   -e "ssh -oStrictHostKeyChecking=no -i $HOME/.ssh/wpo_backups" \
   --delete \
   --delete-excluded \
@@ -47,6 +47,11 @@ rsync -azP \
   "mv incomplete_back-$date back-$date \
   && rm -f current \
   && ln -s back-$date current"
+
+ssh -oStrictHostKeyChecking=no -i /root/.ssh/wpo_backups "$BKUSER"@"$BKSVR" 'if [ ! -d "current" ]; then
+mv $(ls -td -- */ | head -n 1 | cut -d'/' -f1) $(ls -td -- */ | head -n 1 | cut -d'/' -f1 | sed 's/incomplete_//g')
+ln -s $(ls -td -- */ | head -n 1 | cut -d'/' -f1 | sed 's/incomplete_//g') current
+fi'
 
 for wpinstall in $(find /home/nginx/domains/*/public/ -type f -name wp-config.php | sed 's/wp-config.php//g')
    do
