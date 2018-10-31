@@ -34,7 +34,6 @@ timedatectl set-timezone America/Chicago
 rm -f /etc/csf/csf.error
 sed -i '/UDPFLOOD = /c\UDPFLOOD = "0"' /etc/csf/csf.conf
 csf -ra
-wget -O /usr/local/src/centminmod/inc/wpsetup.inc https://raw.githubusercontent.com/jcatello/centminmod/master/inc/wpsetup.inc
 touch /etc/centminmod/email-primary.ini
 touch /etc/centminmod/email-secondary.ini
 echo "root" > /etc/centminmod/email-primary.ini
@@ -105,6 +104,7 @@ wget --no-check-certificate https://github.com/centminmod/phpmyadmin/raw/master/
 chmod +x phpmyadmin.sh
 ./phpmyadmin.sh install
 
+wget -O /usr/local/src/centminmod/inc/wpsetup.inc https://raw.githubusercontent.com/jcatello/centminmod/master/inc/wpsetup.inc
   
 sleep 2
 echo "nginx install for $HOSTNAME completed" | mail -s "nginx install for $HOSTNAME completed" monitor@bigscoots.com
