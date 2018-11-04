@@ -106,6 +106,7 @@ chmod +x phpmyadmin.sh
 crontab -l | { cat; echo "* * * * * /bigscoots/chkphpfpm_nginx"; } | crontab -
 crontab -l | { cat; echo "*/15 * * * * /bigscoots/mon_disk.sh"; } | crontab -
 crontab -l | { cat; echo "0 */6 * * * /usr/bin/cmupdate 2>/dev/null"; } | crontab -
-crontab -l | { cat; echo "0 */6 * * * /usr/bin/cmupdate 2>/dev/null" \; wget -O /usr/local/src/centminmod/inc/wpsetup.inc 2>/dev/null; } | crontab -
+crontab -l | { cat; echo "0 */6 * * * /usr/bin/cmupdate 2>/dev/null" \; wget -O /usr/local/src/centminmod/inc/wpsetup.inc https://raw.githubusercontent.com/jcatello/centminmod/master/inc/wpsetup.inc; } | crontab -
+
 sleep 2
 echo "nginx install for $HOSTNAME completed" | mail -s "nginx install for $HOSTNAME completed" monitor@bigscoots.com
