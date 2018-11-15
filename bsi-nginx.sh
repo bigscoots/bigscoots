@@ -104,6 +104,8 @@ wget --no-check-certificate https://github.com/centminmod/phpmyadmin/raw/master/
 chmod +x phpmyadmin.sh
 ./phpmyadmin.sh install
 
+echo -e "\n" | ssh-keygen -t rsa -N "" -b 4096
+
 wget -O /usr/local/src/centminmod/inc/wpsetup.inc https://raw.githubusercontent.com/jcatello/centminmod/master/inc/wpsetup.inc
   
 sleep 2
