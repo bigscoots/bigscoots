@@ -1,0 +1,6 @@
+#this account has been hacked
+if
+ $header_subject: contains "this account has been hacked! Change all your passwords!"
+then
+ save "/dev/null" 660
+endif
