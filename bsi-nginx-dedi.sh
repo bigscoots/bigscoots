@@ -99,6 +99,16 @@ git clone https://github.com/jcatello/bigscoots
 chown -R nginx: /var/log/php-fpm
 nprestart
 
+if [ ! -d /etc/ssl/private ]; then
+    mkdir -p /etc/ssl/private
+  fi
+  if [[ ! -f /etc/ssl/private/pure-ftpd-dhparams.pem ]]; then
+    openssl dhparam -out /etc/ssl/private/pure-ftpd-dhparams.pem 2048 >/dev/null 2>&1
+    if [[ "$(ps aufx | grep pure-ftpd | grep -v grep | grep pure-ftpd  >/dev/null 2>&1; echo $?)" -eq '0' ]]; then
+      service pure-ftpd restart >/dev/null 2>&1
+    fi
+  fi
+
 cd /usr/local/src/centminmod/addons
 wget --no-check-certificate https://github.com/centminmod/phpmyadmin/raw/master/phpmyadmin.sh
 chmod +x phpmyadmin.sh
