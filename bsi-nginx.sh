@@ -104,6 +104,9 @@ wget --no-check-certificate https://github.com/centminmod/phpmyadmin/raw/master/
 chmod +x phpmyadmin.sh
 ./phpmyadmin.sh install
 
+sed -i 's/listen 443 ssl spdy/listen 443 ssl http2/g' /usr/local/nginx/conf/conf.d/phpmyadmin_ssl.conf
+sed -i 's/spdy_headers_comp/#spdy_headers_comp/g' /usr/local/nginx/conf/conf.d/phpmyadmin_ssl.conf
+
 echo -e "\n" | ssh-keygen -t rsa -N "" -b 4096
 
 wget -O /usr/local/src/centminmod/inc/wpsetup.inc https://raw.githubusercontent.com/jcatello/centminmod/master/inc/wpsetup.inc
