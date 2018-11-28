@@ -1,5 +1,20 @@
 #!/bin/bash
 
+if [ ! -f "/root/.wpocf" ] || [ ! -s "/root/.wpocf" ]
+ then
+    {
+        echo "\"cloudflare_username\": \"NA\","
+        echo "\"cloudflare_password\": \"NA\","
+        echo "\"cloudflare_userkey\": \"NA\","
+        echo "\"cloudflare_apikey\": \"NA\","
+        echo "\"cloudflare_nameserver_1\": \"NA.ns.cloudflare.com\","
+        echo "\"cloudflare_nameserver_2\": \"NA.ns.cloudflare.com\""
+    } >> /root/.wpocf
+
+  else
+    :
+ fi
+
 if [ -z "$1" ]
 
 then
