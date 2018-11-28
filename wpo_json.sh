@@ -17,13 +17,13 @@ grep -v "FTP Passive" "$vhostlog" | grep -C2 "FTP mode" > /tmp/tmpftp.txt
 
 ftphost=$(grep hostname /tmp/tmpftp.txt | grep -oE '[^ ]+$')
 ftpusername=$(grep username /tmp/tmpftp.txt | grep -oE '[^ ]+$')
-ftppassword=$(grep password /tmp/tmpftp.txt | grep -oE '[^ ]+$')
+ftppassword=$(grep password /tmp/tmpftp.txt | grep -oE '[^ ]+$' | sed 's/\\/\\\\/g' | sed 's/"/\\"/g')
 
 rm -f /tmp/tmpftp.txt
 
 sleep 1
 
-echo ; echo { ; echo "\"domain_name\": \"$domain\"," ; echo "\"server_ip\": \"$ftphost\"," ; echo "\"opcache_url\": \"https://$domain/$(grep -l "The servers opcache has been flushed" /home/nginx/domains/"$domain"/public/*.php | sed 's/\// /'g | grep -oE '[^ ]+$')\"," ; echo "\"phpMyAdmin_url\": \"$pmaurl\"," ; echo "\"phpMyAdmin_popup_username\": \"$pmauser\"," ; echo "\"phpMyAdmin_popup_password\": \"$pmapass\"," ; echo "\"phpMyAdmin_username\": \"$pmadbuser\"," ; echo "\"phpMyAdmin_password\": \"$pmadbpass\"," ; echo "\"ftp_host\": \"$ftphost\"," ; echo "\"ftp_port\": \"21\"," ; echo "\"ftp_mode\": \"FTP (explicit SSL)\"," ; echo "\"ftp_pasv\": \"Ensure is Checked/Enabled\"," ; echo "\"ftp_username\": \"$ftpusername\"," ; echo "\"ftp_password\": \"$ftppassword\"," ; echo ; echo } ; echo
+echo ; echo { ; echo "\"domain_name\": \"$domain\"," ; echo "\"server_ip\": \"$ftphost\"," ; echo "\"opcache_url\": \"https://$domain/$(grep -l "The servers opcache has been flushed" /home/nginx/domains/"$domain"/public/*.php | sed 's/\// /'g | grep -oE '[^ ]+$')\"," ; echo "\"phpMyAdmin_url\": \"$pmaurl\"," ; echo "\"phpMyAdmin_popup_username\": \"$pmauser\"," ; echo "\"phpMyAdmin_popup_password\": \"$pmapass\"," ; echo "\"phpMyAdmin_username\": \"$pmadbuser\"," ; echo "\"phpMyAdmin_password\": \"$pmadbpass\"," ; echo "\"ftp_host\": \"$ftphost\"," ; echo "\"ftp_port\": \"21\"," ; echo "\"ftp_mode\": \"FTP (explicit SSL)\"," ; echo "\"ftp_pasv\": \"Ensure is Checked/Enabled\"," ; echo "\"ftp_username\": \"$ftpusername\"," ; echo "\"ftp_password\": \"$ftppassword\"," ; cat /root/.wpocf ; echo } ; echo
 
 done
 
