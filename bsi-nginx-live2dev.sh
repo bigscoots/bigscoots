@@ -67,7 +67,6 @@ echo
 
 mkdir -p "${devdocroot//public/backup}/$(date +%Y-%m-%d)"
 mysqldump "$devdb" --single-transaction --quick --opt --skip-lock-tables --routines --triggers | gzip > "${devdocroot//public/backup}/$(date +%Y-%m-%d)/$devdb$(date +%H%M).sql.gz"
-
 sleep 1
 
 echo "Backed up $devdb to ${devdocroot//public/backup}/$(date +%Y-%m-%d)/$devdb$(date +%H%M).sql.gz"
@@ -113,7 +112,8 @@ echo "Changing all instances of $livesite to $devsite in the database."
 
 cd "$devdocroot/" || exit
 siteurl=$(wp option get siteurl --allow-root | sed -r 's/https?:\/\///g')
-wp --allow-root search-replace "$siteurl" "$devsite" --skip-plugins --skip-themes --skip-columns=guid
+wp search-replace "//$siteurl" "//$devsite" --recurse-objects --skip-columns=guid --skip-tables=wp_users --allow-root
+
 
 sleep 1
 
