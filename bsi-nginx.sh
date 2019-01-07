@@ -110,7 +110,14 @@ sed -i 's/spdy_headers_comp/#spdy_headers_comp/g' /usr/local/nginx/conf/conf.d/p
 echo -e "\n" | ssh-keygen -t rsa -N "" -b 4096
 
 wget -O /usr/local/src/centminmod/inc/wpsetup.inc https://raw.githubusercontent.com/jcatello/centminmod/master/inc/wpsetup.inc
-  
+
+cd /usr/local/nginx/conf/
+git clone https://github.com/maximejobin/rocket-nginx.git
+cd rocket-nginx
+cp rocket-nginx.ini.disabled rocket-nginx.ini
+php rocket-parser.php
+sed -i '/rediscache_/a\ \ #include /usr/local/nginx/conf/rocket-nginx/default.conf\;'
+
 sleep 2
 echo "nginx install for $HOSTNAME completed" | mail -s "nginx install for $HOSTNAME completed" monitor@bigscoots.com
 sleep 5
