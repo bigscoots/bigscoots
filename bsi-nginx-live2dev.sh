@@ -110,8 +110,9 @@ echo "Table prefix has been updated in $devdocroot/wp-config.php"
 echo
 echo "Changing all instances of $livesite to $devsite in the database."
 
-cd "$devdocroot/" || exit
+cd "$livedocroot/" || exit
 siteurl=$(wp option get siteurl --allow-root | sed -r 's/https?:\/\///g')
+cd "$devdocroot/" || exit
 wp search-replace "//$siteurl" "//$devsite" --recurse-objects --skip-columns=guid --skip-tables=wp_users --allow-root
 
 
@@ -119,13 +120,13 @@ sleep 1
 
 echo "All instances have been changed."
 echo
-echo 
+echo
 
 sleep 1
 
 echo "Correcting all ownership and permissions."
 echo
-echo 
+echo
 
 chown -R nginx: /home/nginx/domains/
 
