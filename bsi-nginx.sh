@@ -115,7 +115,7 @@ cd /usr/local/nginx/conf/
 git clone https://github.com/maximejobin/rocket-nginx.git
 cd rocket-nginx
 cp rocket-nginx.ini.disabled rocket-nginx.ini
-php rocket-parser.php
+/usr/local/bin/php rocket-parser.php
 sed -i '/rediscache_/a\ \ #include /usr/local/nginx/conf/rocket-nginx/default.conf\;'
 
 sleep 2
