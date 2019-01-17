@@ -33,6 +33,8 @@ timedatectl set-timezone America/Chicago
 # UDPFLOOD has to be disbaled in virtuozzo7 https://bugs.openvz.org/browse/OVZ-6659
 rm -f /etc/csf/csf.error
 sed -i '/UDPFLOOD = /c\UDPFLOOD = "0"' /etc/csf/csf.conf
+sed -i '/PORTFLOOD = "21/c\PORTFLOOD = ""' /etc/csf/csf.conf
+sed -i '/LF_FTPD = "3"/c\LF_FTPD = "25"' /etc/csf/csf.conf
 csf -ra
 touch /etc/centminmod/email-primary.ini
 touch /etc/centminmod/email-secondary.ini
