@@ -75,6 +75,9 @@ mkdir -p /etc/centminmod
 sh betainstaller.sh
 export EDITOR=nano
 timedatectl set-timezone America/Chicago
+sed -i '/UDPFLOOD = /c\UDPFLOOD = "0"' /etc/csf/csf.conf
+sed -i '/PORTFLOOD = "21/c\PORTFLOOD = ""' /etc/csf/csf.conf
+sed -i '/LF_FTPD = "3"/c\LF_FTPD = "25"' /etc/csf/csf.conf
 csf -ra
 wget -O /usr/local/src/centminmod/inc/wpsetup.inc https://raw.githubusercontent.com/jcatello/centminmod/master/inc/wpsetup.inc
 touch /etc/centminmod/email-primary.ini
