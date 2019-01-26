@@ -78,7 +78,9 @@ timedatectl set-timezone America/Chicago
 sed -i '/UDPFLOOD = /c\UDPFLOOD = "0"' /etc/csf/csf.conf
 sed -i '/PORTFLOOD = "21/c\PORTFLOOD = ""' /etc/csf/csf.conf
 sed -i '/LF_FTPD = "3"/c\LF_FTPD = "25"' /etc/csf/csf.conf
+sed -i '/^TLS/c\TLS 1' /etc/pure-ftpd/pure-ftpd.conf
 csf -ra
+/bin/systemctl restart pure-ftpd.service
 wget -O /usr/local/src/centminmod/inc/wpsetup.inc https://raw.githubusercontent.com/jcatello/centminmod/master/inc/wpsetup.inc
 touch /etc/centminmod/email-primary.ini
 touch /etc/centminmod/email-secondary.ini
