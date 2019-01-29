@@ -38,6 +38,7 @@ done
 
 rsync -ah --stats \
   -e "ssh -oStrictHostKeyChecking=no -i $HOME/.ssh/wpo_backups" \
+  --ignore-errors \
   --delete \
   --delete-excluded \
   --exclude-from="$HOMEDIR".rsync/exclude \
