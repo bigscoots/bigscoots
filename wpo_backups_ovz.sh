@@ -5,7 +5,7 @@ HOMEDIR=/home/nginx/domains/
 BKUSER=wpo$(awk '{print $1}' /proc/vz/veinfo)
 BKSVR=backup3.bigscoots.com
 
-if ssh -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" 'uptime'; [ $? -eq 255 ]
+if ssh -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" 'uptime' >/dev/null; [ $? -eq 255 ]
 then
   echo "Mark for Justin" | mail -s "$HOSTNAME- WPO failed to SSH to backup server." monitor@bigscoots.com
   exit 1
@@ -30,6 +30,9 @@ else
         :
 fi
 
+
+case $1 in
+manual)
 for wpinstall in $(find /home/nginx/domains/*/public/ -type f -name wp-config.php | sed 's/wp-config.php//g')
    do
     dbname=$(grep DB_NAME "$wpinstall"/wp-config.php | grep -v WP_CACHE_KEY_SALT | cut -d \' -f 4)
@@ -45,14 +48,28 @@ rsync -ah --stats \
   --link-dest=../current \
   "$HOMEDIR" "$BKUSER"@"$BKSVR":incomplete_back-"$date" \
   && ssh -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" \
+  "mv incomplete_back-$date back-manual-$date \
+  && rm -f current \
+  && ln -s back-manual-$date current"
+
+;;
+*)
+rsync -ah --stats \
+  -e "ssh -oStrictHostKeyChecking=no -i $HOME/.ssh/wpo_backups" \
+  --ignore-errors \
+  --delete \
+  --delete-excluded \
+  --exclude-from="$HOMEDIR".rsync/exclude \
+  --link-dest=../current \
+  "$HOMEDIR" "$BKUSER"@"$BKSVR":incomplete_back-"$date" \
+  && ssh -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" \
   "mv incomplete_back-$date back-$date \
   && rm -f current \
   && ln -s back-$date current"
 
-ssh -oStrictHostKeyChecking=no -i /root/.ssh/wpo_backups "$BKUSER"@"$BKSVR" 'if [ ! -d "current" ]; then
-mv $(ls -td -- */ | head -n 1 | cut -d'/' -f1) $(ls -td -- */ | head -n 1 | cut -d'/' -f1 | sed 's/incomplete_//g')
-ln -s $(ls -td -- */ | head -n 1 | cut -d'/' -f1 | sed 's/incomplete_//g') current
-fi'
+;;
+esac
+
 
 for wpinstall in $(find /home/nginx/domains/*/public/ -type f -name wp-config.php | sed 's/wp-config.php//g')
    do
