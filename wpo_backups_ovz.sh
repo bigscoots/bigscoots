@@ -48,9 +48,9 @@ rsync -ah --stats \
   --link-dest=../current \
   "$HOMEDIR" "$BKUSER"@"$BKSVR":incomplete_back-"$date" \
   && ssh -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" \
-  "mv incomplete_back-$date back-manual-$date \
+  "mv incomplete_back-$date manual-$date \
   && rm -f current \
-  && ln -s back-manual-$date current"
+  && ln -s manual-$date current"
 
 ;;
 *)
