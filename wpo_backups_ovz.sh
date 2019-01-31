@@ -76,6 +76,27 @@ done
   fi
 
 ;;
+delete)
+
+  if [[ $2 == manual-* ]]; then
+
+ mkdir -p "$HOMEDIR"/.empty
+ rsync -a --stats \
+ -e "ssh -oStrictHostKeyChecking=no -i $HOME/.ssh/wpo_backups" \
+ --ignore-errors \
+ --delete \
+ "$HOMEDIR"/.empty/ "$BKUSER"@"$BKSVR":$2/"$(dirname $PWD | sed 's/\// /g' | awk '{print $4}')"
+
+ ssh -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" "rmdir -p $2/$(dirname $PWD | sed 's/\// /g' | awk '{print $4}')"
+
+
+else
+
+  echo "Make sure to specify a manual backup folder name."
+
+fi
+
+;;
 *)
 rsync -ah --stats \
   -e "ssh -oStrictHostKeyChecking=no -i $HOME/.ssh/wpo_backups" \
