@@ -33,13 +33,34 @@ fi
 
 case $1 in
 manual)
+
+  if [[ $2 == manual-* ]]; then
+
+  dbname=$(grep DB_NAME wp-config.php | grep -v WP_CACHE_KEY_SALT | cut -d \' -f 4)
+  /usr/bin/mysqldump "$dbname" | gzip > "$dbname".sql.gz
+
+  rsync -ah --stats \
+  -e "ssh -oStrictHostKeyChecking=no -i $HOME/.ssh/wpo_backups" \
+  --ignore-errors \
+  --delete \
+  --delete-excluded \
+  --exclude-from="$HOMEDIR".rsync/exclude \
+  --link-dest=../current \
+  "$(dirname $PWD)" "$BKUSER"@"$BKSVR":incomplete_back-"$date" \
+  && ssh -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" \
+  "mv incomplete_back-$date $2 \
+  && rm -f current \
+  && ln -s $2 current"
+
+  else
+
 for wpinstall in $(find /home/nginx/domains/*/public/ -type f -name wp-config.php | sed 's/wp-config.php//g')
    do
     dbname=$(grep DB_NAME "$wpinstall"/wp-config.php | grep -v WP_CACHE_KEY_SALT | cut -d \' -f 4)
     /usr/bin/mysqldump "$dbname" | gzip > "$wpinstall$dbname".sql.gz
 done
 
-rsync -ah --stats \
+  rsync -ah --stats \
   -e "ssh -oStrictHostKeyChecking=no -i $HOME/.ssh/wpo_backups" \
   --ignore-errors \
   --delete \
@@ -51,6 +72,8 @@ rsync -ah --stats \
   "mv incomplete_back-$date manual-$date \
   && rm -f current \
   && ln -s manual-$date current"
+
+  fi
 
 ;;
 *)
