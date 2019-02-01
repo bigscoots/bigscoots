@@ -7,8 +7,8 @@
 # CHANGE THESE #
 ##            ##
 
-livesite=domain.com
-devsite=dev.domain.com
+livesite="$1"
+devsite="$2"
 
 ##                           ##
 # NO MORE CHANGING BELOW HERE #
