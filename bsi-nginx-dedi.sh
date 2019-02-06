@@ -9,8 +9,9 @@ cd /etc/sysconfig/network-scripts/ || exit
 systemctl stop NetworkManager.service
 systemctl disable NetworkManager.service
 
-grep -q '^NM_CONTROLLED' ifcfg-eth* && sed -i 's/^NM_CONTROLLED=yes/NM_CONTROLLED=no/' ifcfg-eth* || echo 'NM_CONTROLLED=no' | tee -a ifcfg-eth* >/dev/null
-grep -q '^ONBOOT' ifcfg-eth0 && sed -i 's/^ONBOOT=no/ONBOOT=yes/' ifcfg-eth0 || echo 'ONBOOT=yes' | tee -a ifcfg-eth0 >/dev/null
+# not needed anymore because of port bonding
+# grep -q '^NM_CONTROLLED' ifcfg-eth* && sed -i 's/^NM_CONTROLLED=yes/NM_CONTROLLED=no/' ifcfg-eth* || echo 'NM_CONTROLLED=no' | tee -a ifcfg-eth* >/dev/null
+# grep -q '^ONBOOT' ifcfg-eth0 && sed -i 's/^ONBOOT=no/ONBOOT=yes/' ifcfg-eth0 || echo 'ONBOOT=yes' | tee -a ifcfg-eth0 >/dev/null
 
 # Disabale SELinux and Configure time
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
@@ -75,17 +76,20 @@ mkdir -p /etc/centminmod
 sh betainstaller.sh
 export EDITOR=nano
 timedatectl set-timezone America/Chicago
+
 sed -i '/UDPFLOOD = /c\UDPFLOOD = "0"' /etc/csf/csf.conf
 sed -i '/PORTFLOOD = "21/c\PORTFLOOD = ""' /etc/csf/csf.conf
 sed -i '/LF_FTPD = "3"/c\LF_FTPD = "25"' /etc/csf/csf.conf
 sed -i '/^TLS/c\TLS 1' /etc/pure-ftpd/pure-ftpd.conf
 csf -ra
 /bin/systemctl restart pure-ftpd.service
+
 wget -O /usr/local/src/centminmod/inc/wpsetup.inc https://raw.githubusercontent.com/jcatello/centminmod/master/inc/wpsetup.inc
 touch /etc/centminmod/email-primary.ini
 touch /etc/centminmod/email-secondary.ini
 echo "root" > /etc/centminmod/email-primary.ini
 echo "root" > /etc/centminmod/email-secondary.ini
+
 sed -i '/#root/c\root: /dev/null' /etc/aliases
 newaliases
 ln -s /usr/local/bin/php /usr/sbin/php
@@ -104,6 +108,16 @@ git clone https://github.com/jcatello/bigscoots
 chown -R nginx: /var/log/php-fpm
 nprestart
 
+crontab -l | { cat; echo "* * * * * /bigscoots/chkphpfpm_nginx"; } | crontab -
+crontab -l | { cat; echo "*/15 * * * * /bigscoots/mon_disk.sh"; } | crontab -
+crontab -l | { cat; echo "0 */6 * * * /usr/bin/cmupdate 2>/dev/null" \; wget -O /usr/local/src/centminmod/inc/wpsetup.inc https://raw.githubusercontent.com/jcatello/centminmod/master/inc/wpsetup.inc; } | crontab -
+crontab -l | sed 's/.*autoprotect/#&/' | crontab -
+
+sed -i 's/#include \/usr\/local\/nginx\/conf\/cloudflare.conf;/include \/usr\/local\/nginx\/conf\/cloudflare.conf;/g' /usr/local/nginx/conf/nginx.conf
+/usr/local/src/centminmod/tools/csfcf.sh auto
+echo "set ftp:ssl-allow false" >> /etc/lftp.conf
+
+
 if [ ! -d /etc/ssl/private ]; then
     mkdir -p /etc/ssl/private
   fi
@@ -119,9 +133,14 @@ wget --no-check-certificate https://github.com/centminmod/phpmyadmin/raw/master/
 chmod +x phpmyadmin.sh
 ./phpmyadmin.sh install
 
-crontab -l | { cat; echo "* * * * * /bigscoots/chkphpfpm_nginx"; } | crontab -
-crontab -l | { cat; echo "*/15 * * * * /bigscoots/mon_disk.sh"; } | crontab -
-crontab -l | { cat; echo "0 */6 * * * /usr/bin/cmupdate 2>/dev/null" \; wget -O /usr/local/src/centminmod/inc/wpsetup.inc https://raw.githubusercontent.com/jcatello/centminmod/master/inc/wpsetup.inc; } | crontab -
+echo -e "\n" | ssh-keygen -t rsa -N "" -b 4096
+
+cd /usr/local/nginx/conf/
+git clone https://github.com/maximejobin/rocket-nginx.git
+cd rocket-nginx
+cp rocket-nginx.ini.disabled rocket-nginx.ini
+/usr/local/bin/php rocket-parser.php
+sed -i '/rediscache_/a\ \ #include /usr/local/nginx/conf/rocket-nginx/default.conf\;'
 
 sleep 2
 echo "nginx install for $HOSTNAME completed" | mail -s "nginx install for $HOSTNAME completed" monitor@bigscoots.com
