@@ -48,9 +48,9 @@ manual)
   --link-dest=../current \
   "$(dirname $PWD)" "$BKUSER"@"$BKSVR":incomplete_back-"$date" \
   && ssh -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" \
-  "mv incomplete_back-$date $2 \
+  mv "incomplete_back-$date $2 \
   && rm -f current \
-  && ln -s $2 current"
+  && ln -s manual-$date current"
 
   else
 
