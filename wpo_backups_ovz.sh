@@ -50,7 +50,7 @@ manual)
   && ssh -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" \
   mv "incomplete_back-$date $2 \
   && rm -f current \
-  && ln -s manual-$date current"
+  && ln -s $2 current"
 
   else
 
