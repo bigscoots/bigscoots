@@ -106,7 +106,10 @@ sleep 5
 cd /
 git clone https://github.com/jcatello/bigscoots
 chown -R nginx: /var/log/php-fpm
-nprestart
+nprestartwww
+
+sed -i '/inet_protocols/c\inet_protocols = ipv4' /etc/postfix/main.cf
+service postfix restart
 
 crontab -l | { cat; echo "* * * * * /bigscoots/chkphpfpm_nginx"; } | crontab -
 crontab -l | { cat; echo "*/15 * * * * /bigscoots/mon_disk.sh"; } | crontab -
