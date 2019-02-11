@@ -128,7 +128,7 @@ echo "Correcting all ownership and permissions."
 echo
 echo
 
-chown -R nginx: /home/nginx/domains/
+chown -R nginx: /home/nginx/domains/$devsite
 
 echo "Done."
 echo
