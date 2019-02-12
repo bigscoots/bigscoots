@@ -72,8 +72,9 @@ echo
 echo "Restoring backup database..."
 
 "$MYSQLADMIN" create "$dbname"
-"$GUNZIP" "$dbname".sql.gz
+"$GUNZIP" -f "$dbname".sql.gz
 "$MYSQL" "$dbname" < "$dbname".sql
+rm -f "$dbname".sql
 
 echo
 echo "Setting proper permissions..."
