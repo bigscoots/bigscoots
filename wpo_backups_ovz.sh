@@ -4,6 +4,7 @@ date=$(date "+%Y-%m-%dT%H_%M_%S")
 HOMEDIR=/home/nginx/domains/
 BKUSER=wpo$(awk '{print $1}' /proc/vz/veinfo)
 BKSVR=backup3.bigscoots.com
+BSPATH=/root/.bigscoots
 
 if ssh -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" 'uptime' >/dev/null; [ $? -eq 255 ]
 then
@@ -11,8 +12,8 @@ then
   exit 1
 fi
 
-if [ ! -f "$HOMEDIR".rsync/exclude ]; then
-        mkdir -p "$HOMEDIR".rsync
+if [ ! -f "$BSPATH"/rsync/exclude ]; then
+        mkdir -p "$BSPATH"/rsync/exclude
 
         {
         echo "log"
@@ -25,7 +26,7 @@ if [ ! -f "$HOMEDIR".rsync/exclude ]; then
         echo "*/wp-content/uploads/wpallimport"
         echo "*/wp-content/uploads/ShortpixelBackups"
 
-        } > "$HOMEDIR".rsync/exclude
+        } > "$BSPATH"/rsync/exclude
 else
         :
 fi
@@ -44,7 +45,7 @@ manual)
   --ignore-errors \
   --delete \
   --delete-excluded \
-  --exclude-from="$HOMEDIR".rsync/exclude \
+  --exclude-from="$BSPATH"/rsync/exclude \
   --link-dest=../current \
   "$(dirname $PWD)" "$BKUSER"@"$BKSVR":incomplete_back-"$date" \
   && ssh -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" \
@@ -65,7 +66,7 @@ done
   --ignore-errors \
   --delete \
   --delete-excluded \
-  --exclude-from="$HOMEDIR".rsync/exclude \
+  --exclude-from="$BSPATH"/rsync/exclude \
   --link-dest=../current \
   "$HOMEDIR" "$BKUSER"@"$BKSVR":incomplete_back-"$date" \
   && ssh -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" \
@@ -103,7 +104,7 @@ rsync -ah --stats \
   --ignore-errors \
   --delete \
   --delete-excluded \
-  --exclude-from="$HOMEDIR".rsync/exclude \
+  --exclude-from="$BSPATH"/rsync/exclude \
   --link-dest=../current \
   "$HOMEDIR" "$BKUSER"@"$BKSVR":incomplete_back-"$date" \
   && ssh -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" \
