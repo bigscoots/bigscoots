@@ -13,7 +13,7 @@ then
 fi
 
 if [ ! -f "$BSPATH"/rsync/exclude ]; then
-        mkdir -p "$BSPATH"/rsync/exclude
+        mkdir -p "$BSPATH"/rsync
 
         {
         echo "log"
