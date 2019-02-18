@@ -99,6 +99,13 @@ fi
 
 ;;
 *)
+
+for wpinstall in $(find /home/nginx/domains/*/public/ -type f -name wp-config.php | sed 's/wp-config.php//g')
+   do
+    dbname=$(grep DB_NAME "$wpinstall"/wp-config.php | grep -v WP_CACHE_KEY_SALT | cut -d \' -f 4)
+    /usr/bin/mysqldump "$dbname" | gzip > "$wpinstall$dbname".sql.gz
+done
+
 rsync -ah --stats \
   -e "ssh -oStrictHostKeyChecking=no -i $HOME/.ssh/wpo_backups" \
   --ignore-errors \
