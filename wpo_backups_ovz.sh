@@ -1,10 +1,11 @@
 #!/bin/bash
 
+sleep 10
+
 date=$(date "+%Y-%m-%dT%H_%M_%S")
 HOMEDIR=/home/nginx/domains/
 BKUSER=wpo$(awk '{print $1}' /proc/vz/veinfo)
 BKSVR=backup3.bigscoots.com
-BSPATH=/root/.bigscoots
 
 if ssh -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" 'uptime' >/dev/null; [ $? -eq 255 ]
 then
@@ -12,8 +13,8 @@ then
   exit 1
 fi
 
-if [ ! -f "$BSPATH"/rsync/exclude ]; then
-        mkdir -p "$BSPATH"/rsync
+if [ ! -f "$HOMEDIR".rsync/exclude ]; then
+        mkdir -p "$HOMEDIR".rsync
 
         {
         echo "log"
@@ -26,7 +27,7 @@ if [ ! -f "$BSPATH"/rsync/exclude ]; then
         echo "*/wp-content/uploads/wpallimport"
         echo "*/wp-content/uploads/ShortpixelBackups"
 
-        } > "$BSPATH"/rsync/exclude
+        } > "$HOMEDIR".rsync/exclude
 else
         :
 fi
@@ -45,7 +46,7 @@ manual)
   --ignore-errors \
   --delete \
   --delete-excluded \
-  --exclude-from="$BSPATH"/rsync/exclude \
+  --exclude-from="$HOMEDIR".rsync/exclude \
   --link-dest=../current \
   "$(dirname $PWD)" "$BKUSER"@"$BKSVR":incomplete_back-"$date" \
   && ssh -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" \
@@ -66,7 +67,7 @@ done
   --ignore-errors \
   --delete \
   --delete-excluded \
-  --exclude-from="$BSPATH"/rsync/exclude \
+  --exclude-from="$HOMEDIR".rsync/exclude \
   --link-dest=../current \
   "$HOMEDIR" "$BKUSER"@"$BKSVR":incomplete_back-"$date" \
   && ssh -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" \
@@ -99,19 +100,12 @@ fi
 
 ;;
 *)
-
-for wpinstall in $(find /home/nginx/domains/*/public/ -type f -name wp-config.php | sed 's/wp-config.php//g')
-   do
-    dbname=$(grep DB_NAME "$wpinstall"/wp-config.php | grep -v WP_CACHE_KEY_SALT | cut -d \' -f 4)
-    /usr/bin/mysqldump "$dbname" | gzip > "$wpinstall$dbname".sql.gz
-done
-
 rsync -ah --stats \
   -e "ssh -oStrictHostKeyChecking=no -i $HOME/.ssh/wpo_backups" \
   --ignore-errors \
   --delete \
   --delete-excluded \
-  --exclude-from="$BSPATH"/rsync/exclude \
+  --exclude-from="$HOMEDIR".rsync/exclude \
   --link-dest=../current \
   "$HOMEDIR" "$BKUSER"@"$BKSVR":incomplete_back-"$date" \
   && ssh -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" \
