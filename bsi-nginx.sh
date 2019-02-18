@@ -33,7 +33,11 @@ timedatectl set-timezone America/Chicago
 # UDPFLOOD has to be disbaled in virtuozzo7 https://bugs.openvz.org/browse/OVZ-6659
 rm -f /etc/csf/csf.error
 sed -i '/UDPFLOOD = /c\UDPFLOOD = "0"' /etc/csf/csf.conf
+sed -i '/PORTFLOOD = "21/c\PORTFLOOD = ""' /etc/csf/csf.conf
+sed -i '/LF_FTPD = "3"/c\LF_FTPD = "25"' /etc/csf/csf.conf
+sed -i '/^TLS/c\TLS 1' /etc/pure-ftpd/pure-ftpd.conf
 csf -ra
+/bin/systemctl restart pure-ftpd.service
 touch /etc/centminmod/email-primary.ini
 touch /etc/centminmod/email-secondary.ini
 echo "root" > /etc/centminmod/email-primary.ini
@@ -54,10 +58,14 @@ cd /
 git clone https://github.com/jcatello/bigscoots
 chown -R nginx: /var/log/php-fpm
 nprestart
+
+sed -i '/inet_protocols/c\inet_protocols = ipv4' /etc/postfix/main.cf
+service postfix restart
+
 crontab -l | { cat; echo "* * * * * /bigscoots/chkphpfpm_nginx"; } | crontab -
 crontab -l | { cat; echo "* * * * * /bigscoots/redischk.sh"; } | crontab -
 crontab -l | { cat; echo "0 */8 * * * /bigscoots/mon_disk.sh"; } | crontab -
-crontab -l | { cat; echo "0 */6 * * * /usr/bin/cmupdate 2>/dev/null" \; wget -O /usr/local/src/centminmod/inc/wpsetup.inc 2>/dev/null; } | crontab -
+crontab -l | { cat; echo "0 */6 * * * /usr/bin/cmupdate 2>/dev/null" \; wget -O /usr/local/src/centminmod/inc/wpsetup.inc https://raw.githubusercontent.com/jcatello/centminmod/master/inc/wpsetup.inc; } | crontab -
 crontab -l | { cat; echo "$(( ( RANDOM % 60 )  + 1 )) $(( ( RANDOM % 4 )  + 1 )) * * * /bigscoots/wpo_backups_ovz.sh"; } | crontab -
 crontab -l | sed 's/.*autoprotect/#&/' | crontab -
 mkdir ~/.ssh
@@ -104,8 +112,20 @@ wget --no-check-certificate https://github.com/centminmod/phpmyadmin/raw/master/
 chmod +x phpmyadmin.sh
 ./phpmyadmin.sh install
 
+sed -i 's/listen 443 ssl spdy/listen 443 ssl http2/g' /usr/local/nginx/conf/conf.d/phpmyadmin_ssl.conf
+sed -i 's/spdy_headers_comp/#spdy_headers_comp/g' /usr/local/nginx/conf/conf.d/phpmyadmin_ssl.conf
+
+echo -e "\n" | ssh-keygen -t rsa -N "" -b 4096
+
 wget -O /usr/local/src/centminmod/inc/wpsetup.inc https://raw.githubusercontent.com/jcatello/centminmod/master/inc/wpsetup.inc
-  
+
+cd /usr/local/nginx/conf/
+git clone https://github.com/maximejobin/rocket-nginx.git
+cd rocket-nginx
+cp rocket-nginx.ini.disabled rocket-nginx.ini
+/usr/local/bin/php rocket-parser.php
+sed -i '/rediscache_/a\ \ #include /usr/local/nginx/conf/rocket-nginx/default.conf\;'
+
 sleep 2
 echo "nginx install for $HOSTNAME completed" | mail -s "nginx install for $HOSTNAME completed" monitor@bigscoots.com
 sleep 5

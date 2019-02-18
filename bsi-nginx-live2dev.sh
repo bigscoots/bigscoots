@@ -7,8 +7,8 @@
 # CHANGE THESE #
 ##            ##
 
-livesite=domain.com
-devsite=dev.domain.com
+livesite="$1"
+devsite="$2"
 
 ##                           ##
 # NO MORE CHANGING BELOW HERE #
@@ -27,7 +27,7 @@ echo
 
 sleep 3
 
-rsync -ahv --delete --exclude wp-config.php --exclude wp-content/updraft --exclude wp-content/cache/ --exclude wp-content/wpbackitup_backups "$livedocroot/" "$devdocroot/"
+rsync -ahv --delete --exclude wp-snapshots --exclude wp-content/ai1wm-backups --exclude wp-config.php --exclude 'wp-content/uploads/backupbuddy*' --exclude wp-content/uploads/ShortpixelBackups --exclude wp-content/backup-db --exclude wp-content/updraft --exclude wp-content/cache/ --exclude wp-content/wpbackitup_backups "$livedocroot/" "$devdocroot/"
 
 sleep 3
 
@@ -67,7 +67,6 @@ echo
 
 mkdir -p "${devdocroot//public/backup}/$(date +%Y-%m-%d)"
 mysqldump "$devdb" --single-transaction --quick --opt --skip-lock-tables --routines --triggers | gzip > "${devdocroot//public/backup}/$(date +%Y-%m-%d)/$devdb$(date +%H%M).sql.gz"
-
 sleep 1
 
 echo "Backed up $devdb to ${devdocroot//public/backup}/$(date +%Y-%m-%d)/$devdb$(date +%H%M).sql.gz"
@@ -111,23 +110,25 @@ echo "Table prefix has been updated in $devdocroot/wp-config.php"
 echo
 echo "Changing all instances of $livesite to $devsite in the database."
 
-cd "$devdocroot/" || exit
+cd "$livedocroot/" || exit
 siteurl=$(wp option get siteurl --allow-root | sed -r 's/https?:\/\///g')
-wp --allow-root search-replace "$siteurl" "$devsite" --skip-plugins --skip-themes --skip-columns=guid
+cd "$devdocroot/" || exit
+wp search-replace "//$siteurl" "//$devsite" --recurse-objects --skip-columns=guid --skip-tables=wp_users --allow-root
+
 
 sleep 1
 
 echo "All instances have been changed."
 echo
-echo 
+echo
 
 sleep 1
 
 echo "Correcting all ownership and permissions."
 echo
-echo 
+echo
 
-chown -R nginx: /home/nginx/domains/
+chown -R nginx: /home/nginx/domains/$devsite
 
 echo "Done."
 echo
