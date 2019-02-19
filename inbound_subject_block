@@ -4,3 +4,10 @@ if
 then
  save "/dev/null" 660
 endif
+
+#My bitcoin wallet address
+if
+ $message_body contains "My bitcoin wallet address"
+then
+ save "/dev/null" 660
+endif
