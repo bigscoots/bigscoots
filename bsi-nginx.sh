@@ -36,6 +36,7 @@ sed -i '/UDPFLOOD = /c\UDPFLOOD = "0"' /etc/csf/csf.conf
 sed -i '/PORTFLOOD = "21/c\PORTFLOOD = ""' /etc/csf/csf.conf
 sed -i '/LF_FTPD = "3"/c\LF_FTPD = "25"' /etc/csf/csf.conf
 sed -i '/^TLS/c\TLS 1' /etc/pure-ftpd/pure-ftpd.conf
+echo "67.202.70.147 # WPO NEXUS" >> /etc/csf/csf.allow
 csf -ra
 /bin/systemctl restart pure-ftpd.service
 touch /etc/centminmod/email-primary.ini
