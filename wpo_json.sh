@@ -21,7 +21,7 @@ then
 
 for domain in $(\ls /home/nginx/domains/) ; do
 
-pmaurl=$(grep "https://$HOSTNAME/[0-9]" /root/centminlogs/centminmod_phpmyadmin_install_*.log | sed -r "s/\x1B\[([0-9]{1,3}((;[0-9]{1,3})*)?)?[m|K]//g" | tr -d " \t\n\r")
+pmaurl=$(grep "https://$HOSTNAME/[0-9]" /root/centminlogs/centminmod_phpmyadmin_install_*.log | sed -r "s/\x1B\[([0-9]{1,3}((;[0-9]{1,3})*)?)?[m|K]//g" | sed 's/$/\//g' | tr -d " \t\n\r")
 pmauser=$(grep Username: /root/centminlogs/centminmod_phpmyadmin_install_*.log | awk '{print $2}')
 pmapass=$(grep Password: /root/centminlogs/centminmod_phpmyadmin_install_*.log | awk '{print $2}')
 pmadbuser=$(grep DB_USER /home/nginx/domains/"$domain"/public/wp-config.php | grep -v WP_CACHE_KEY_SALT | cut -d \' -f 4)
