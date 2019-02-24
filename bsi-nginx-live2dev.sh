@@ -113,7 +113,7 @@ echo "Changing all instances of $livesite to $devsite in the database."
 cd "$livedocroot/" || exit
 siteurl=$(wp option get siteurl --allow-root | sed -r 's/https?:\/\///g')
 cd "$devdocroot/" || exit
-wp search-replace "//$siteurl" "//$devsite" --recurse-objects --skip-columns=guid --skip-tables=wp_users --allow-root
+wp search-replace "//$siteurl" "//$devsite" --recurse-objects --skip-columns=guid --skip-tables=wp_users --allow-root --skip-plugins --skip-themes
 
 
 sleep 1
