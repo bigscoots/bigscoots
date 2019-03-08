@@ -63,7 +63,7 @@ nprestart
 sed -i '/inet_protocols/c\inet_protocols = ipv4' /etc/postfix/main.cf
 service postfix restart
 
-crontab -l | { cat; echo "* * * * * /bigscoots/chkphpfpm_nginx"; } | crontab -
+# crontab -l | { cat; echo "* * * * * /bigscoots/chkphpfpm_nginx"; } | crontab -
 crontab -l | { cat; echo "* * * * * /bigscoots/redischk.sh"; } | crontab -
 crontab -l | { cat; echo "0 */8 * * * /bigscoots/mon_disk.sh"; } | crontab -
 crontab -l | { cat; echo "0 */6 * * * /usr/bin/cmupdate 2>/dev/null ; /bigscoots/wpo_update.sh 2>/dev/null ; wget -O /usr/local/src/centminmod/inc/wpsetup.inc https://raw.githubusercontent.com/jcatello/centminmod/master/inc/wpsetup.inc"; } | crontab -
