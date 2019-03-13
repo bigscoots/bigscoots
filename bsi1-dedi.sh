@@ -14,6 +14,35 @@ ntpdate pool.ntp.org
 sysctl -w net.ipv6.conf.default.disable_ipv6=0
 sysctl -w net.ipv6.conf.all.disable_ipv6=0
 
+# Check for raid
+
+grep Personalities /proc/mdstat | grep raid 2>/dev/null
+if [ "$?" -eq "0" ]; then
+  rm -f /etc/cron.daily/raid
+  kill -9 "$(pgrep mdadm)"
+  sed -i '/MAILADDR/c\MAILADDR monitor@bigscoots.com' /etc/mdadm.conf
+  echo "DEVICE partitions" >> /etc/mdadm.conf
+  echo "/sbin/mdadm --monitor --scan --daemonize" >> /etc/rc.local
+  /sbin/mdadm --monitor /dev/md125 --test &
+  sleep 5 ; kill -9 "$(pgrep mdadm)"
+  /sbin/mdadm --monitor --scan --daemonize
+    elif [ "$?" -eq "1" ]; then
+      lshw -C storage | grep "vendor: LSI" 2>/dev/null 
+        if [ "$?" -eq "0" ]; then
+          mkdir -p /tmp/lsi
+          cd /tmp/lsi || exit
+          wget https://s3.amazonaws.com/uploads.hipchat.com/31137/205915/00YwNVPnAIC4dp9/8.07.14_MegaCLI.zip
+          unzip ./*MegaCLI.zip
+          rpm -ivh ./*inux/MegaCli-*.noarch.rpm
+          ln -s /opt/MegaRAID/MegaCli/MegaCli64 /sbin/
+          ln -s /opt/MegaRAID/MegaCli/MegaCli64 /usr/local/sbin/
+          cd ~ || exit ; wget https://www.bigscoots.com/downloads/lsi.zip ; unzip lsi.zip
+          chmod +x lsi.sh
+          (crontab -l ; echo "0 * * * * ~/lsi.sh checkNemail") | crontab - .
+          rm -f /etc/cron.daily/raid
+        fi
+fi
+
 mkdir ~/.ssh
 touch ~/.ssh/authorized_keys
 chmod 700 ~/.ssh 
