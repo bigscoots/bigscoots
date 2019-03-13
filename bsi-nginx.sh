@@ -9,13 +9,12 @@ yum clean all
 yum -y update
 sleep 2
 cd /home
-curl -o betainstaller.sh -L https://centminmod.com/betainstaller.sh
 
 sleep 5
 
-PHPVER=$(curl -s http://php.net/downloads.php |grep -o "php-7.2.[0-9]*.tar.gz" | sed 's/php-//g; s/.tar.gz//g' | uniq)
-PHPVER_REPLACE=$(grep PHP_VERSION betainstaller.sh | sed 's/# //g' | sed "s/PHP_VERSION='[0-9].*'/PHP_VERSION='$PHPVER'/g")
-sed -i '/PHP_VERSION/c\'"$PHPVER_REPLACE" betainstaller.sh
+#PHPVER=$(curl -s http://php.net/downloads.php |grep -o "php-7.2.[0-9]*.tar.gz" | sed 's/php-//g; s/.tar.gz//g' | uniq)
+#PHPVER_REPLACE=$(grep PHP_VERSION betainstaller.sh | sed 's/# //g' | sed "s/PHP_VERSION='[0-9].*'/PHP_VERSION='$PHPVER'/g")
+#sed -i '/PHP_VERSION/c\'"$PHPVER_REPLACE" betainstaller.sh
 
 sleep 3
 
@@ -25,9 +24,29 @@ sed -i 's/#UseDNS yes/UseDNS no/g' /etc/ssh/sshd_config
 # sed -i 's/ChallengeResponseAuthentication yes/ChallengeResponseAuthentication no/g' /etc/ssh/sshd_config
 sed -i 's/#PermitRootLogin yes/PermitRootLogin without-password/g' /etc/ssh/sshd_config
 
+mkdir -p /etc/centminmod
+
 sleep 1
 
-sh betainstaller.sh
+{
+  echo NGXDYNAMIC_BROTLI='y'
+  echo NGINX_LIBBROTLI='y'
+  echo ZSTD_LOGROTATE_NGINX='y'
+  echo ZSTD_LOGROTATE_PHPFPM='y'
+  echo MARIADB_INSTALLTENTHREE='y'
+  echo PHP_BROTLI='y'
+  echo PHP_LZFOUR='y'
+  echo PHP_LZF='y'
+  echo PHP_PGO='y'
+  echo PHP_ZSTD='y'
+} >> /etc/centminmod/custom_config.inc
+
+curl -O https://centminmod.com/betainstaller72.sh && chmod 0700 betainstaller72.sh && bash betainstaller72.sh
+
+echo "LETSENCRYPT_DETECT='y'" >> /etc/centminmod/custom_config.inc
+echo "DUALCERTS='y'" >> /etc/centminmod/custom_config.inc
+
+
 export EDITOR=nano
 timedatectl set-timezone America/Chicago
 # UDPFLOOD has to be disbaled in virtuozzo7 https://bugs.openvz.org/browse/OVZ-6659
