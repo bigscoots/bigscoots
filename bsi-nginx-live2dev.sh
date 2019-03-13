@@ -27,7 +27,7 @@ echo
 
 sleep 3
 
-rsync -ahv --delete --exclude wp-snapshots --exclude wp-content/ai1wm-backups --exclude wp-config.php --exclude 'wp-content/uploads/backupbuddy*' --exclude wp-content/uploads/ShortpixelBackups --exclude wp-content/backup-db --exclude wp-content/updraft --exclude wp-content/cache/ --exclude wp-content/wpbackitup_backups "$livedocroot/" "$devdocroot/"
+rsync -ahv --delete --exclude wp-content/uploads/backup-guard --exclude wp-snapshots --exclude wp-content/ai1wm-backups --exclude wp-config.php --exclude 'wp-content/uploads/backupbuddy*' --exclude wp-content/uploads/ShortpixelBackups --exclude wp-content/backup-db --exclude wp-content/updraft --exclude wp-content/cache/ --exclude wp-content/wpbackitup_backups "$livedocroot/" "$devdocroot/"
 
 sleep 3
 
