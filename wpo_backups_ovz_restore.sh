@@ -81,6 +81,14 @@ echo "Restoring backup database..."
 rm -f "$dbname".sql
 
 echo
+echo "Checking if Cloudflare plugin exists, reinstalling if so."
+
+if [ -d wp-content/plugins/cloudflare ]; then
+  wp plugin delete cloudflare
+  wp plugin install cloudflare
+fi
+
+echo
 echo "Setting proper permissions..."
 
 "$CHOWN" -R nginx: $(pwd)
@@ -160,6 +168,14 @@ echo "Restoring backup database..."
 "$GUNZIP" -f "$dbname".sql.gz
 "$MYSQL" "$dbname" < "$dbname".sql
 rm -f "$dbname".sql
+
+echo
+echo "Checking if Cloudflare plugin exists, reinstalling if so."
+
+if [ -d wp-content/plugins/cloudflare ]; then
+  wp plugin delete cloudflare
+  wp plugin install cloudflare
+fi
 
 echo
 echo "Setting proper permissions..."
