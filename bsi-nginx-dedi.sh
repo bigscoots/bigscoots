@@ -145,7 +145,7 @@ sleep 5
 cd /
 git clone https://github.com/jcatello/bigscoots
 chown -R nginx: /var/log/php-fpm
-nprestartwww
+nprestart
 
 sed -i '/inet_protocols/c\inet_protocols = ipv4' /etc/postfix/main.cf
 service postfix restart
