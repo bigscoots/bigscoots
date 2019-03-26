@@ -84,8 +84,8 @@ echo
 echo "Checking if Cloudflare plugin exists, reinstalling if so."
 
 if [ -d wp-content/plugins/cloudflare ]; then
-  wp plugin delete cloudflare
-  wp plugin install cloudflare
+  wp plugin delete cloudflare --allow-root --skip-plugins --skip-themes
+  wp plugin install cloudflare --allow-root --skip-plugins --skip-themes
 fi
 
 echo
@@ -173,8 +173,8 @@ echo
 echo "Checking if Cloudflare plugin exists, reinstalling if so."
 
 if [ -d wp-content/plugins/cloudflare ]; then
-  wp plugin delete cloudflare
-  wp plugin install cloudflare
+  wp plugin delete cloudflare --allow-root --skip-plugins --skip-themes
+  wp plugin install cloudflare --allow-root --skip-plugins --skip-themes
 fi
 
 echo
