@@ -28,7 +28,7 @@ done
 
 else
 
-domain="${1//.conf/}"
+domain="$1"
 
 cp /usr/local/nginx/conf/conf.d/"$domain".conf{,.bak}
 
