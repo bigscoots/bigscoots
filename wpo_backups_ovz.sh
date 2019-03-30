@@ -213,7 +213,7 @@ delete)
  --delete \
  "$HOMEDIR"/.empty/ /backup/$2/"$(dirname $PWD | sed 's/\// /g' | awk '{print $4}')"
 
- echo rmdir -p "/backup/$2/$(dirname $PWD | sed 's/\// /g' | awk '{print $4}')"
+ rm -rf "/backup/$2"
 
 
 else
