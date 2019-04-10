@@ -85,7 +85,7 @@ if [ -d "wp-content/plugins/wp-rocket" ]; then
 
 else
 
-wp plugin install cache-enabler webp-express --activate --allow-root --skip-plugins --skip-themes ; wp plugin delete comet-cache sg-cachepress wp-hummingbird wp-super-cache w3-total-cache nginx-helper wp-redis wp-fastest-cache --allow-root --skip-plugins --skip-themes ; chown -R nginx: .
+wp plugin install cache-enabler --activate --allow-root --skip-plugins --skip-themes ; wp plugin delete comet-cache sg-cachepress wp-hummingbird wp-super-cache w3-total-cache nginx-helper wp-redis wp-fastest-cache --allow-root --skip-plugins --skip-themes ; chown -R nginx: .
 
 sed -i '/location \/ {/i \ \ #if ($http_accept ~* "webp"){\n  #rewrite ^/(.*).(jpe\?g|png)\$ \/wp-content\/plugins\/webp-express\/wod\/webp-on-demand.php?wp-content=wp-content break;\n  #}\n \n  #include /usr/local/nginx/conf/webplocations.conf; \n' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
 
