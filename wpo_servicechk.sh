@@ -18,5 +18,9 @@ fi
 ps -ef | grep redis |grep -v grep > /dev/null
 if [ $? != 0 ]
 then
-       /etc/init.d/redis start > /dev/null 
+   if [ -f /etc/init.d/redis ]; then
+   /etc/init.d/redis start > /dev/null
+     else
+      systemctl start redis > /dev/null
+   fi
 fi
