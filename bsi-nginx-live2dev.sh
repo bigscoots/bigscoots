@@ -124,18 +124,49 @@ echo
 
 sleep 1
 
+	if [ -n "$3" ] && [ -n "$4" ]; then
+
+	echo "htpasswd detected, applying now."
+	echo
+	echo
+
+        if  ! grep -q wpolocksite /usr/local/nginx/conf/conf.d/"$2".ssl.conf ; then
+
+        /usr/local/nginx/conf/htpasswd.sh create /home/nginx/domains/"$2"/wpolocksite "$3" "$4"
+        sed -i "/location \/ {/a \  auth_basic_user_file /home/nginx/domains/$2/wpolocksite;" /usr/local/nginx/conf/conf.d/"$2".ssl.conf
+        sed -i "/location \/ {/a \  auth_basic \"Private\";" /usr/local/nginx/conf/conf.d/"$2".ssl.conf
+
+        echo "htpasswd applied"
+		echo
+		echo
+
+		sleep 1
+
+        else
+
+        /usr/local/nginx/conf/htpasswd.sh create /home/nginx/domains/"$2"/wpolocksite "$3" "$4"
+
+		echo "htpasswd applied"
+		echo
+		echo
+
+		sleep 1
+
+        fi
+
+	fi
+
+sleep 1
+
 echo "Correcting all ownership and permissions."
 echo
 echo
 
 chown -R nginx: /home/nginx/domains/$devsite
 
-echo "Done."
+echo "Done. Reloading nginx and flushing Redis cache."
 echo
 echo
-
-
-sleep 1
 
 redis-cli flushall
 npreload
