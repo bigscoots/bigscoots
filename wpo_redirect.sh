@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 # domain.com domain.com predef add rule1,2,3,4,5,etc 301,302
@@ -51,9 +52,9 @@ if [[ $2 == manual ]]; then
 		code="$6"
 
 		if [[ $code == 301 ]]; then
-			ngxcode="permanent\;"
+			ngxcode="permanent;"
 		elif [[ $code == 302 ]]; then
-			ngxcode="redirect\;"
+			ngxcode="redirect;"
 		fi
 
 		echo "rewrite ^/$source/?$ $target $ngxcode # $uuid" >> "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
