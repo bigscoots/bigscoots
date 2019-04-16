@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# domain.com domain.com predef add source target 
+# domain.com domain.com predef add rule1,2,3,4,5,etc code
 # domain.com domain.com manual add source target code
 
 # Redirects
