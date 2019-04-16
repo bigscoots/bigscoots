@@ -6,7 +6,7 @@
 # Redirects
 
 
-domain="justintest.bigscoots-staging.com"
+domain="$1"
 
 # Checks global
 
