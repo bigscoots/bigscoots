@@ -1,13 +1,30 @@
-for wpinstall in $(find "$(pwd)"/ -type f -name wp-config.php | sed 's/wp-config.php//g') 
-  
-  do
-  
-  echo "$wpinstall"
-  
-  dbname=$(grep DB_NAME "$wpinstall"/wp-config.php | grep -v WP_CACHE_KEY_SALT | grep -v '^//' | cut -d \' -f 4 )
-  dbuser=$(grep DB_USER "$wpinstall"/wp-config.php | grep -v WP_CACHE_KEY_SALT | grep -v '^//' | cut -d \' -f 4 ) 
-  dbpass=$(grep DB_PASSWORD "$wpinstall"/wp-config.php | grep -v WP_CACHE_KEY_SALT | grep -v '^//' | cut -d \' -f 4 )
-  dbhost=$(grep DB_HOST "$wpinstall"/wp-config.php | grep -v WP_CACHE_KEY_SALT | grep -v '^//' | cut -d \' -f 4 | sed 's/:/ /g' | awk '{print $1}')
+#!/bin/bash
+
+exit_on_error() {
+    exit_code=$1
+    last_command=${@:2}
+    if [ $exit_code -ne 0 ]; then
+        >&2 echo "\"${last_command}\" command failed with exit code ${exit_code}."
+        exit $exit_code
+    fi
+}
+
+  if hash wp 2>/dev/null; then
+  echo found wp-cli
+
+  dbname=$(wp --allow-root --skip-plugins --skip-themes config get DB_NAME)
+  dbuser=$(wp --allow-root --skip-plugins --skip-themes config get DB_USER)
+  dbpass=$(wp --allow-root --skip-plugins --skip-themes config get DB_PASSWORD)
+  dbhost=$(wp --allow-root --skip-plugins --skip-themes config get DB_HOST)
+
+  else
+
+  dbname=$(grep DB_NAME wp-config.php | grep -v WP_CACHE_KEY_SALT | grep -v '^//' | cut -d \' -f 4 )
+  dbuser=$(grep DB_USER wp-config.php | grep -v WP_CACHE_KEY_SALT | grep -v '^//' | cut -d \' -f 4 )
+  dbpass=$(grep DB_PASSWORD wp-config.php | grep -v WP_CACHE_KEY_SALT | grep -v '^//' | cut -d \' -f 4 )
+  dbhost=$(grep DB_HOST wp-config.php | grep -v WP_CACHE_KEY_SALT | grep -v '^//' | cut -d \' -f 4 | sed 's/:/ /g' | awk '{print $1}')
+
+  fi
 
   echo "Database Name: $dbname"
   echo "Database User: $dbuser"
@@ -15,23 +32,20 @@ for wpinstall in $(find "$(pwd)"/ -type f -name wp-config.php | sed 's/wp-config
   echo "Creating database: $dbname"
 
   mysql -e "CREATE DATABASE $dbname;"
-  
+
   echo "Assigning Database User: $dbuser to Database: $dbname using Password: $dbpass"
   /usr/bin/mysql -e "grant all privileges on $dbname.* to '$dbuser'@'localhost' identified by '$dbpass';"
 
-done
+mysql $(grep DB_NAME wp-config.php | grep -v WP_CACHE_KEY_SALT | cut -d \' -f 4) < bigscoots.sql >/dev/null 2>&1
+exit_on_error $? MySQL Import
 
-# Use if using the migrated wp-config.php, this will create the database,user,pass and assign user to db. END
-
-
-mysql $(grep DB_NAME wp-config.php | grep -v WP_CACHE_KEY_SALT | cut -d \' -f 4) < bigscoots.sql
 mv bigscoots.sql ../
 
 # remove unnecessary files
 
 rm -rfv wp-content/mu-plugins/SupportCenterMUAutoloader.php  wp-content/mu-plugins/et-safe-mode  wp-content/mu-plugins/wp-stack-cache.php wp-content/plugins/mojo-marketplace-wp-plugin wp-content/mu-plugins/force-strong-passwords wp-content/mu-plugins/mu-plugin.php wp-content/mu-plugins/slt-force-strong-passwords.php wp-content/mu-plugins/stop-long-comments.php wp-content/mu-plugins/wpengine-common wp-content/object-cache.php wp-content/mu-plugins/endurance-* wp-content/mu-plugins/liquidweb_mwp.php wp-content/mu-plugins/lw-varnish-cache-purger.php wp-content/mu-plugins/lw_disable_nags.php wp-content/mu-plugins/kinsta-mu-plugins* wp-content/cache wp-content/object-cache.php wp-content/db.php
 
-sed -i '/^[[:blank:]]*\*/d;s/\/\*\*.*//;/^$/d' wp-config.php 
+sed -i '/^[[:blank:]]*\*/d;s/\/\*\*.*//;/^$/d' wp-config.php
 
 # remove unnecessary files
 
@@ -56,36 +70,36 @@ if [ -d "wp-content/plugins/wp-rocket" ]; then
   cd "$bringmeback" || exit
 
     for i in wpsupercache_ wpcacheenabler_ rediscache_
-      do 
+      do
         sed -iE "/$i/s/#\?include /#include /g" /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
     done
         sed -iE '/rocket-nginx\/default.conf/s/#\?include/include/g' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
-  
+
     if grep -q "rocket-nginx/default.conf" /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf ; then
     for i in wpsupercache_ wpcacheenabler_ rediscache_
-      do 
+      do
         sed -iE "/$i/s/#\?include /#include /g" /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
     done
       sed -iE '/rocket-nginx\/default.conf/s/#\?include /include /g' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
     else
       sed -i '/rediscache_/a\ \ include /usr/local/nginx/conf/rocket-nginx/default.conf\;' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
-    fi 
+    fi
 
   elif grep -q "rocket-nginx/default.conf" /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf ; then
     for i in wpsupercache_ wpcacheenabler_ rediscache_
-      do 
+      do
         sed -iE "/$i/s/#\?include /#include /g" /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
     done
       sed -iE '/rocket-nginx\/default.conf/s/#\?include /include /g' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
     else
       sed -i '/rediscache_/a\ \ include /usr/local/nginx/conf/rocket-nginx/default.conf\;' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
-    fi 
+    fi
 
     sed -iE 's/#\?try_files /#try_files /g ; s/#try_files \$uri \$uri\/ \/index.php?q/try_files \$uri \$uri\/ \/index.php?q/g' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
 
 else
 
-wp plugin install cache-enabler --activate --allow-root --skip-plugins --skip-themes ; wp plugin delete comet-cache sg-cachepress wp-hummingbird wp-super-cache w3-total-cache nginx-helper wp-redis wp-fastest-cache --allow-root --skip-plugins --skip-themes ; chown -R nginx: .
+wp plugin install cache-enabler --activate --allow-root --skip-plugins --skip-themes ; wp --allow-root --skip-plugins --skip-themes plugin delete comet-cache sg-cachepress wp-hummingbird wp-super-cache w3-total-cache nginx-helper wp-redis wp-fastest-cache --allow-root --skip-plugins --skip-themes ; chown -R nginx: .
 
 sed -i '/location \/ {/i \ \ #if ($http_accept ~* "webp"){\n  #rewrite ^/(.*).(jpe\?g|png)\$ \/wp-content\/plugins\/webp-express\/wod\/webp-on-demand.php?wp-content=wp-content break;\n  #}\n \n  #include /usr/local/nginx/conf/webplocations.conf; \n' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
 
@@ -114,6 +128,8 @@ sed -i 's=#include /usr/local/nginx/conf/cloudflare.conf;=include /usr/local/ngi
 
 # Add to the end of the wpconfig.php for object cache
 
+if [ ! -f bigscoots.html ]; then
+
 {
   echo "Congratulations! If you can see this, you are seeing your site load on a BigScoots server."
   echo "<p>"
@@ -121,7 +137,11 @@ sed -i 's=#include /usr/local/nginx/conf/cloudflare.conf;=include /usr/local/ngi
 } >> bigscoots.html
 chown nginx: bigscoots.html
 
-opcachephp=$(cat /dev/urandom | tr -cd 'a-f0-9' | head -c 32).php ; 
+fi
+
+if ! grep -q 'The servers opcache has been flushed' *.php ; then
+
+opcachephp=$(cat /dev/urandom | tr -cd 'a-f0-9' | head -c 32).php ;
 {
   echo "<?php"
   echo "echo 'The servers opcache has been flushed.';"
@@ -130,6 +150,8 @@ opcachephp=$(cat /dev/urandom | tr -cd 'a-f0-9' | head -c 32).php ;
 
 } >> "$opcachephp"
 chown nginx: "$opcachephp"
+
+fi
 
 touch apple-touch-icon-120x120-precomposed.png
 touch apple-touch-icon-120x120.png
