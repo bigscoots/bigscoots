@@ -130,21 +130,16 @@ wget https://download.configserver.com/cmc.tgz
 wget https://download.configserver.com/cse.tgz
 wget https://download.configserver.com/cmq.tgz
 wget https://download.configserver.com/cmm.tgz
-wget http://download.ndchost.com/accountdnscheck/latest-accountdnscheck
-wget https://s3.amazonaws.com/uploads.hipchat.com/31137/205915/8wnl7tivlp88pfm/rkhunter-1.4.0.tar.gz
-sh latest-accountdnscheck
 tar -zxvf csf.tgz
 tar -zxvf cmc.tgz
 tar -zxvf cse.tgz
 tar -zxvf cmq.tgz
 tar -zxvf cmm.tgz
-tar -zxvf rkhunter-1.4.0.tar.gz
 cd cmc || exit ; sh install.sh ; cd ..
 cd cse || exit; sh install.sh ; cd ..
 cd cmq || exit ; sh install.sh ; cd ..
 cd cmm || exit ; sh install.sh ; cd ..
 cd csf || exit ; sh install.cpanel.sh ; cd ..
-cd rkhunter-1.4.0 || exit ; ./installer.sh --install
 
 echo
 echo "######################################################"
