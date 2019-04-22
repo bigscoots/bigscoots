@@ -56,7 +56,7 @@ if [[ $2 == manual ]]; then
                         ngxcode="redirect;"
                 fi
 
-                echo "rewrite ^/$source/?$ $target $ngxcode # $uuid" >> "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
+                echo "rewrite ^/$source $target $ngxcode # $uuid" >> "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
                 echo "$uuid"
 
         fi
