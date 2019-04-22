@@ -70,6 +70,46 @@ manual)
                 fi
         fi
 
+        if [[ $3 == modify ]]
+        then
+        	uuid="$4"
+        	source="$5"
+            target="$6"
+            code="$7"
+
+            	if [[ $code == 301 ]]
+            	then
+                	ngxcode="permanent;"
+            	elif [[ $code == 302 ]]
+           		then
+                	ngxcode="redirect;"
+            	fi
+
+            	if ! grep -q "$uuid" "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
+            	then 
+            		echo "rewrite ^/$source $target $ngxcode # $uuid" >> "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
+                	nginx -t > /dev/null 2>&1
+                		if [ $? -eq 0 ]
+                		then
+                			npreload > /dev/null 2>&1
+                			echo "$uuid"
+                		else
+                			sed -i "/$uuid/d" "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf" ; exit 1
+                		fi
+            	else
+    				sed -i "/$uuid/c rewrite ^/$source $target $ngxcode # $uuid" "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
+            		nginx -t > /dev/null 2>&1
+            		if [ $? -eq 0 ]
+            		then
+            			npreload > /dev/null 2>&1
+            			echo "$uuid"
+            		else
+            			sed -i "/$uuid/d" "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf" ; exit 1
+            		fi
+        		fi
+    	fi
+
+
 ;;
 remove)
 	
