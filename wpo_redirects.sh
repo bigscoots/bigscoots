@@ -18,7 +18,8 @@ fi
 
 # Checks for manual entry
 
-if [[ $2 == manual ]]; then
+case $2 in
+manual)
 
         if ! grep -q wpo_manual_redirects.conf /usr/local/nginx/conf/conf.d/"$domain".ssl.conf; then
 
@@ -50,17 +51,36 @@ if [[ $2 == manual ]]; then
                 target="$5"
                 code="$6"
 
-                if [[ $code == 301 ]]; then
-                        ngxcode="permanent;"
-                elif [[ $code == 302 ]]; then
-                        ngxcode="redirect;"
+                if [[ $code == 301 ]]
+                then
+                    ngxcode="permanent;"
+                elif [[ $code == 302 ]]
+               	then
+                    ngxcode="redirect;"
                 fi
 
-                echo "rewrite ^/$source $target $ngxcode # $uuid" >> "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
-                nginx -t > /dev/null 2>&1 || sed -i "/$uuid/d" "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf" ; exit 1
-                npreload
-                echo "$uuid"
-
+				echo "rewrite ^/$source $target $ngxcode # $uuid" >> "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
+                nginx -t > /dev/null 2>&1
+                if [ $? -eq 0 ]
+                then
+                	npreload > /dev/null 2>&1
+                	echo "$uuid"
+                else
+                	sed -i "/$uuid/d" "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf" ; exit 1
+                fi
         fi
 
-fi
+;;
+remove)
+	
+	uuid=$3
+	sed -i "/$uuid/d" "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
+	nginx -t > /dev/null 2>&1
+                if [ $? -eq 0 ]
+                then
+                	npreload > /dev/null 2>&1
+                else
+                exit 1
+            	fi
+;;
+esac
