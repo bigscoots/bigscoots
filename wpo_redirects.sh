@@ -57,6 +57,8 @@ if [[ $2 == manual ]]; then
                 fi
 
                 echo "rewrite ^/$source $target $ngxcode # $uuid" >> "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
+                nginx -t > /dev/null 2>&1 || sed -i "/$uuid/d" "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf" ; exit 1
+                npreload
                 echo "$uuid"
 
         fi
