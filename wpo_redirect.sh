@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 # domain.com domain.com predef add rule1,2,3,4,5,etc 301,302
@@ -13,7 +12,7 @@ domain="$1"
 
 if [ ! -d "/usr/local/nginx/conf/wpincludes/$domain" ]; then
 
-	mkdir -p "/usr/local/nginx/conf/wpincludes/$domain"
+        mkdir -p "/usr/local/nginx/conf/wpincludes/$domain"
 
 fi
 
@@ -21,44 +20,45 @@ fi
 
 if [[ $2 == manual ]]; then
 
-	if ! grep -q wpo_manual_redirects.conf /usr/local/nginx/conf/conf.d/"$domain".ssl.conf; then
+        if ! grep -q wpo_manual_redirects.conf /usr/local/nginx/conf/conf.d/"$domain".ssl.conf; then
 
-	sed -i "/location \/ {/a \  include \/usr\/local\/nginx\/conf\/wpincludes\/$domain\/wpo_manual_redirects.conf;" /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
+        sed -i "/location \/ {/a \  include \/usr\/local\/nginx\/conf\/wpincludes\/$domain\/wpo_manual_redirects.conf;" /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
 
-	fi
+        fi
 
-	if ! grep -q wpo_manual_redirects.conf /usr/local/nginx/conf/conf.d/"$domain".conf; then
+        if ! grep -q wpo_manual_redirects.conf /usr/local/nginx/conf/conf.d/"$domain".conf; then
 
-	sed -i "/location \/ {/a \            include \/usr\/local\/nginx\/conf\/wpincludes\/$domain\/wpo_manual_redirects.conf;" /usr/local/nginx/conf/conf.d/"$domain".conf
+        sed -i "/location \/ {/a \            include \/usr\/local\/nginx\/conf\/wpincludes\/$domain\/wpo_manual_redirects.conf;" /usr/local/nginx/conf/conf.d/"$domain".conf
 
-	fi
+        fi
 
-	touch "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
+        touch "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
 
-	# adding the redirect
+        # adding the redirect
 
-	if [[ $3 == add ]]; then
+        if [[ $3 == add ]]; then
 
-		uuid=$(uuidgen -r | sed 's/-//g')
-		n=0
-   		until [ $n -ge 10 ]
-   		do
-      		grep -q "$uuid" /usr/local/nginx/conf/wpincludes/"$domain"/wpo_manual_redirects.conf && break
-     		n=$((n+1))
-      	done
+                uuid=$(uuidgen -r | sed 's/-//g')
+                n=0
+                until [ $n -ge 10 ]
+                do
+                grep -q "$uuid" /usr/local/nginx/conf/wpincludes/"$domain"/wpo_manual_redirects.conf && break
+                n=$((n+1))
+        done
 
-		source="$4"
-		target="$5"
-		code="$6"
+                source="$4"
+                target="$5"
+                code="$6"
 
-		if [[ $code == 301 ]]; then
-			ngxcode="permanent;"
-		elif [[ $code == 302 ]]; then
-			ngxcode="redirect;"
-		fi
+                if [[ $code == 301 ]]; then
+                        ngxcode="permanent;"
+                elif [[ $code == 302 ]]; then
+                        ngxcode="redirect;"
+                fi
 
-		echo "rewrite ^/$source/?$ $target $ngxcode # $uuid" >> "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
+                echo "rewrite ^/$source/?$ $target $ngxcode # $uuid" >> "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
+                echo "$uuid"
 
-	fi
+        fi
 
 fi
