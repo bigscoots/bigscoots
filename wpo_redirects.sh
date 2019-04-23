@@ -55,72 +55,72 @@ manual)
                 then
                     ngxcode="permanent;"
                 elif [[ $code == 302 ]]
-               	then
+                then
                     ngxcode="redirect;"
                 fi
 
-				echo "rewrite ^/$source $target $ngxcode # $uuid" >> "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
+                                echo "rewrite ^/$source $target $ngxcode # $uuid" >> "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
                 nginx -t > /dev/null 2>&1
                 if [ $? -eq 0 ]
                 then
-                	npreload > /dev/null 2>&1
-                	echo "$uuid"
+                        npreload > /dev/null 2>&1
+                        echo -n "$uuid"
                 else
-                	sed -i "/$uuid/d" "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf" ; exit 1
+                        sed -i "/$uuid/d" "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf" ; exit 1
                 fi
         fi
 
         if [[ $3 == modify ]]
         then
-        	uuid="$4"
-        	source="$5"
+                uuid="$4"
+                source="$5"
             target="$6"
             code="$7"
 
-            	if [[ $code == 301 ]]
-            	then
-                	ngxcode="permanent;"
-            	elif [[ $code == 302 ]]
-           		then
-                	ngxcode="redirect;"
-            	fi
+                if [[ $code == 301 ]]
+                then
+                        ngxcode="permanent;"
+                elif [[ $code == 302 ]]
+                        then
+                        ngxcode="redirect;"
+                fi
 
-            	if ! grep -q "$uuid" "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
-            	then 
-            		echo "rewrite ^/$source $target $ngxcode # $uuid" >> "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
-                	nginx -t > /dev/null 2>&1
-                		if [ $? -eq 0 ]
-                		then
-                			npreload > /dev/null 2>&1
-                			echo "$uuid"
-                		else
-                			sed -i "/$uuid/d" "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf" ; exit 1
-                		fi
-            	else
-    				sed -i "/$uuid/c rewrite ^/$source $target $ngxcode # $uuid" "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
-            		nginx -t > /dev/null 2>&1
-            		if [ $? -eq 0 ]
-            		then
-            			npreload > /dev/null 2>&1
-            			echo "$uuid"
-            		else
-            			sed -i "/$uuid/d" "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf" ; exit 1
-            		fi
-        		fi
-    	fi
+                if ! grep -q "$uuid" "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
+                then
+                        echo "rewrite ^/$source $target $ngxcode # $uuid" >> "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
+                        nginx -t > /dev/null 2>&1
+                                if [ $? -eq 0 ]
+                                then
+                                        npreload > /dev/null 2>&1
+                                        echo -n "$uuid"
+                                else
+                                        sed -i "/$uuid/d" "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf" ; exit 1
+                                fi
+                else
+                                sed -i "/$uuid/c rewrite ^/$source $target $ngxcode # $uuid" "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
+                        nginx -t > /dev/null 2>&1
+                        if [ $? -eq 0 ]
+                        then
+                                npreload > /dev/null 2>&1
+                                echo -n "$uuid"
+                        else
+                                sed -i "/$uuid/d" "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf" ; exit 1
+                        fi
+                        fi
+        fi
 
 
 ;;
 remove)
-	
-	uuid=$3
-	sed -i "/$uuid/d" "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
-	nginx -t > /dev/null 2>&1
+
+        uuid=$3
+        sed -i "/$uuid/d" "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf"
+        nginx -t > /dev/null 2>&1
                 if [ $? -eq 0 ]
                 then
-                	npreload > /dev/null 2>&1
+                        npreload > /dev/null 2>&1
                 else
                 exit 1
-            	fi
+                fi
 ;;
 esac
