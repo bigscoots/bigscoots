@@ -15,7 +15,7 @@ exit_on_error() {
   dbname=$(wp --allow-root --skip-plugins --skip-themes config get DB_NAME)
   dbuser=$(wp --allow-root --skip-plugins --skip-themes config get DB_USER)
   dbpass=$(wp --allow-root --skip-plugins --skip-themes config get DB_PASSWORD)
-  dbhost=$(wp --allow-root --skip-plugins --skip-themes config get DB_HOST)
+  wp --allow-root --skip-plugins --skip-themes config set DB_HOST localhost
 
   else
 
@@ -36,7 +36,7 @@ exit_on_error() {
   echo "Assigning Database User: $dbuser to Database: $dbname using Password: $dbpass"
   /usr/bin/mysql -e "grant all privileges on $dbname.* to '$dbuser'@'localhost' identified by '$dbpass';"
 
-mysql $(grep DB_NAME wp-config.php | grep -v WP_CACHE_KEY_SALT | cut -d \' -f 4) < bigscoots.sql >/dev/null 2>&1
+wp db import bigscoots.sql >/dev/null 2>&1
 exit_on_error $? MySQL Import
 
 mv bigscoots.sql ../
