@@ -16,6 +16,10 @@ exit_on_error() {
   dbuser=$(wp --allow-root --skip-plugins --skip-themes config get DB_USER)
   dbpass=$(wp --allow-root --skip-plugins --skip-themes config get DB_PASSWORD)
   wp --allow-root --skip-plugins --skip-themes config set DB_HOST localhost
+  wp --allow-root --skip-plugins --skip-themes config delete FS_METHOD
+  wp --allow-root --skip-plugins --skip-themes config delete FS_CHMOD_DIR
+  wp --allow-root --skip-plugins --skip-themes config delete FS_CHMOD_FILE
+  sed -i '/gd-config.php/d' wp-config.php
 
   else
 
