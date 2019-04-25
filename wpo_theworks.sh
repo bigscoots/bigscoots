@@ -36,7 +36,7 @@ exit_on_error() {
   echo "Assigning Database User: $dbuser to Database: $dbname using Password: $dbpass"
   /usr/bin/mysql -e "grant all privileges on $dbname.* to '$dbuser'@'localhost' identified by '$dbpass';"
 
-wp db import bigscoots.sql >/dev/null 2>&1
+wp --allow-root --skip-plugins --skip-themes db import bigscoots.sql
 exit_on_error $? MySQL Import
 
 mv bigscoots.sql ../
