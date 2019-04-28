@@ -3,11 +3,21 @@
 exit_on_error() {
     exit_code=$1
     last_command=${@:2}
-    if [ $exit_code -ne 0 ]; then
+    if [ "$exit_code" -ne 0 ]; then
         >&2 echo "\"${last_command}\" command failed with exit code ${exit_code}."
-        exit $exit_code
+        exit "$exit_code"
     fi
 }
+
+if [[ $1 == fresh ]];then
+
+  DOMAIN=$(echo "$(pwd)"| sed "s=/home/nginx/domains/==g ; s=/public==g")
+
+  wp --allow-root --skip-plugins --skip-themes search-replace http: https:
+  /bigscoots/wpo_forcehttps.sh "$DOMAIN"
+  nginx -t
+
+else
 
   if hash wp 2>/dev/null; then
   echo found wp-cli
@@ -44,6 +54,8 @@ wp --allow-root --skip-plugins --skip-themes db import bigscoots.sql
 exit_on_error $? MySQL Import
 
 mv bigscoots.sql ../
+
+fi
 
 # remove unnecessary files
 
@@ -167,5 +179,5 @@ touch apple-touch-icon-precomposed.png
 touch apple-touch-icon.png
 
 chown -R nginx: /home/nginx/domains &
-find -type f -exec chmod 644 {} \; &
-find -type d -exec chmod 755 {} \; &
+find . -type f -exec chmod 644 {} \; &
+find . -type d -exec chmod 755 {} \; &
