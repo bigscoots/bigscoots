@@ -94,16 +94,16 @@ if [ -d "wp-content/plugins/wp-rocket" ]; then
 
     for i in wpsupercache_ wpcacheenabler_ rediscache_
       do
-        sed -iE "/$i/s/#\?include /#include /g" /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
+        sed -i "/$i/s/#\?include /#include /g" /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
     done
-        sed -iE '/rocket-nginx\/default.conf/s/#\?include/include/g' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
+        sed -i '/rocket-nginx\/default.conf/s/#\?include/include/g' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
 
     if grep -q "rocket-nginx/default.conf" /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf ; then
     for i in wpsupercache_ wpcacheenabler_ rediscache_
       do
-        sed -iE "/$i/s/#\?include /#include /g" /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
+        sed -i "/$i/s/#\?include /#include /g" /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
     done
-      sed -iE '/rocket-nginx\/default.conf/s/#\?include /include /g' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
+      sed -i '/rocket-nginx\/default.conf/s/#\?include /include /g' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
     else
       sed -i '/rediscache_/a\ \ include /usr/local/nginx/conf/rocket-nginx/default.conf\;' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
     fi
@@ -111,14 +111,14 @@ if [ -d "wp-content/plugins/wp-rocket" ]; then
   elif grep -q "rocket-nginx/default.conf" /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf ; then
     for i in wpsupercache_ wpcacheenabler_ rediscache_
       do
-        sed -iE "/$i/s/#\?include /#include /g" /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
+        sed -i "/$i/s/#\?include /#include /g" /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
     done
-      sed -iE '/rocket-nginx\/default.conf/s/#\?include /include /g' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
+      sed -i '/rocket-nginx\/default.conf/s/#\?include /include /g' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
     else
       sed -i '/rediscache_/a\ \ include /usr/local/nginx/conf/rocket-nginx/default.conf\;' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
     fi
 
-    sed -iE 's/#\?try_files /#try_files /g ; s/#try_files \$uri \$uri\/ \/index.php?q/try_files \$uri \$uri\/ \/index.php?q/g' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
+    sed -i 's/#\?try_files /#try_files /g ; s/#try_files \$uri \$uri\/ \/index.php?q/try_files \$uri \$uri\/ \/index.php?q/g' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
 
 else
 
