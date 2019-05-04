@@ -46,11 +46,15 @@ else
   dbhost=$(grep DB_HOST wp-config.php | grep -v WP_CACHE_KEY_SALT | grep -v '^//' | cut -d \' -f 4 | sed 's/:/ /g' | awk '{print $1}')
 
   fi
-
+  
+  echo
+  echo
   echo "Database Name: $dbname"
   echo "Database User: $dbuser"
   echo "Database Password: $dbpass"
   echo "Creating database: $dbname"
+  echo
+  echo
 
   mysql -e "CREATE DATABASE $dbname;"
 
