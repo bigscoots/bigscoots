@@ -176,6 +176,18 @@ chown nginx: "$opcachephp"
 
 fi
 
+{
+echo     allow 192.0.64.0/18\;
+echo 	 deny all\;
+} >> /usr/local/nginx/conf/xmlrpcblock.conf
+
+for i in $(ls /home/nginx/domains/ -1) 
+	do
+		if ! grep -q "xmlrpcblock.conf" /usr/local/nginx/conf/conf.d/"$i".ssl.conf ; then
+		sed -i '/xmlrpc/a \    include /usr/local/nginx/conf/xmlrpcblock.conf;' /usr/local/nginx/conf/conf.d/"$i".ssl.conf
+		fi
+	done
+
 touch apple-touch-icon-120x120-precomposed.png
 touch apple-touch-icon-120x120.png
 touch apple-touch-icon-152x152-precomposed.png
