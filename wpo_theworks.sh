@@ -19,11 +19,15 @@ if [[ $1 == fresh ]];then
   wp --allow-root --skip-plugins --skip-themes search-replace http: https:
   /bigscoots/wpo_forcehttps.sh "$DOMAIN"
   nginx -t
-
+   
+  echo
+  echo
   echo "Wordpress Admin URL: https://$DOMAIN/wp-login.php"
   echo "Wordpress Admin User: $wpuser"
   echo "Wordpress Admin Pass: $wpuserpass"
-
+  echo
+  echo
+  
 else
 
   if hash wp 2>/dev/null; then
