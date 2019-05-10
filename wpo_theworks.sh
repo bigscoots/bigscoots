@@ -9,7 +9,29 @@ exit_on_error() {
     fi
 }
 
-if [[ $1 == fresh ]];then
+if [[ $1 == wpe ]]; then
+
+  unzip site-archive-*.zip
+
+  DB_CHARSET=$(wp --allow-root --skip-plugins --skip-themes config get DB_CHARSET)
+  DB_COLLATE=$(wp --allow-root --skip-plugins --skip-themes config get DB_COLLATE)
+  TABLE_PREFIX=$(wp --allow-root --skip-plugins --skip-themes config get table_prefix)
+
+  mv wp-config.php wp-config.php.wpe
+  mv ../wp-config.php .
+  mv wp-content/mysql.sql bigscoots.sql
+  wp --allow-root --skip-plugins --skip-themes config set DB_CHARSET "$DB_CHARSET"
+  wp --allow-root --skip-plugins --skip-themes config set DB_COLLATE "$DB_COLLATE"
+  wp --allow-root --skip-plugins --skip-themes config set table_prefix "$TABLE_PREFIX"
+  wp --allow-root --skip-plugins --skip-themes config set DB_HOST localhost
+  wp --allow-root --skip-plugins --skip-themes db reset --yes
+  wp --allow-root --skip-plugins --skip-themes db import bigscoots.sql
+  mv bigscoots.sql ../
+fi
+  
+
+
+if [[ $1 == fresh ]]; then
 
   DOMAIN=$(echo "$(pwd)"| sed "s=/home/nginx/domains/==g ; s=/public==g")
   wpuser=$(wp --allow-root --skip-plugins --skip-themes user list --role=administrator --field=user_login)
@@ -47,8 +69,7 @@ else
   dbname=$(grep DB_NAME wp-config.php | grep -v WP_CACHE_KEY_SALT | grep -v '^//' | cut -d \' -f 4 )
   dbuser=$(grep DB_USER wp-config.php | grep -v WP_CACHE_KEY_SALT | grep -v '^//' | cut -d \' -f 4 )
   dbpass=$(grep DB_PASSWORD wp-config.php | grep -v WP_CACHE_KEY_SALT | grep -v '^//' | cut -d \' -f 4 )
-  dbhost=$(grep DB_HOST wp-config.php | grep -v WP_CACHE_KEY_SALT | grep -v '^//' | cut -d \' -f 4 | sed 's/:/ /g' | awk '{print $1}')
-
+  
   fi
   
   echo
