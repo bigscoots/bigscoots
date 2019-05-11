@@ -9,6 +9,15 @@ exit_on_error() {
     fi
 }
 
+if [[ $1 == cpanel ]]; then
+  backup=$(*.tar.gz)
+  tar -zxvf "$backup".tar.gz
+  DB_NAME=$(wp --allow-root config get DB_NAME --path="$backup"/homedir/public_html/)
+  mv "$backup"/mysql/"$DB_NAME".sql bigscoots.sql
+  mv "$backup"/homedir/public_html/* .
+  mv "$backup"/homedir/public_html/.htaccess .
+fi
+
 if [[ $1 == wpe ]]; then
 
   unzip site-archive-*.zip
@@ -25,8 +34,6 @@ if [[ $1 == wpe ]]; then
   wp --allow-root --skip-plugins --skip-themes config set table_prefix "$TABLE_PREFIX"
   wp --allow-root --skip-plugins --skip-themes config set DB_HOST localhost
   wp --allow-root --skip-plugins --skip-themes db reset --yes
-  wp --allow-root --skip-plugins --skip-themes db import bigscoots.sql
-  mv bigscoots.sql ../
 fi
   
 
