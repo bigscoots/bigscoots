@@ -10,12 +10,13 @@ exit_on_error() {
 }
 
 if [[ $1 == cpanel ]]; then
-  backup=$(*.tar.gz)
+  backup=$(echo *.tar.gz | sed 's/.tar.gz//g')
   tar -zxvf "$backup".tar.gz
   DB_NAME=$(wp --allow-root config get DB_NAME --path="$backup"/homedir/public_html/)
   mv "$backup"/mysql/"$DB_NAME".sql bigscoots.sql
   mv "$backup"/homedir/public_html/* .
   mv "$backup"/homedir/public_html/.htaccess .
+  wp --allow-root --skip-plugins --skip-themes config set DB_HOST localhost
 fi
 
 if [[ $1 == wpe ]]; then
