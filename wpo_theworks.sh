@@ -60,6 +60,9 @@ if [[ $1 == fresh ]]; then
   
 else
 
+  sed -i '/gd-config.php/d' wp-config.php
+  sed -i '/SiteGround/d' wp-config.php
+
   if hash wp 2>/dev/null; then
   echo found wp-cli
 
@@ -70,8 +73,7 @@ else
   wp --allow-root --skip-plugins --skip-themes config delete FS_METHOD
   wp --allow-root --skip-plugins --skip-themes config delete FS_CHMOD_DIR
   wp --allow-root --skip-plugins --skip-themes config delete FS_CHMOD_FILE
-  sed -i '/gd-config.php/d' wp-config.php
-
+  
   else
 
   dbname=$(grep DB_NAME wp-config.php | grep -v WP_CACHE_KEY_SALT | grep -v '^//' | cut -d \' -f 4 )
