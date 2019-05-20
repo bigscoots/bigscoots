@@ -12,6 +12,8 @@ exit_on_error() {
 if [[ $1 == cpanel ]]; then
   backup=$(echo *.tar.gz | sed 's/.tar.gz//g')
   tar -zxvf "$backup".tar.gz
+  sed -i '/gd-config.php/d' "$backup"/homedir/public_html/wp-config.php
+  sed -i '/SiteGround/d' "$backup"/homedir/public_html/wp-config.php
   DB_NAME=$(wp --allow-root config get DB_NAME --path="$backup"/homedir/public_html/)
   mv "$backup"/mysql/"$DB_NAME".sql bigscoots.sql
   mv "$backup"/homedir/public_html/* .
