@@ -32,7 +32,7 @@ grep -v "FTP Passive" "$vhostlog" | grep -C2 "FTP mode" > /tmp/tmpftp.txt
 
 ftphost=$(grep hostname /tmp/tmpftp.txt | grep -oE '[^ ]+$')
 ftpusername=$(grep username /tmp/tmpftp.txt | grep -oE '[^ ]+$')
-ftppassword=$(grep password /tmp/tmpftp.txt | grep -oE '[^ ]+$' | sed 's/\\/\\\\/g' | sed 's/"/\\"/g')
+ftppassword=$(grep "FTP password auto generated:" "$vhostlog" | grep -oE '[^ ]+$' | sed 's/\\/\\\\/g' | sed 's/"/\\"/g')
 
 bkuser=$(echo wpo$(awk '{print $1}' /proc/vz/veinfo))
 
