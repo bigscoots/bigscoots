@@ -150,7 +150,7 @@ nprestart
 sed -i '/inet_protocols/c\inet_protocols = ipv4' /etc/postfix/main.cf
 service postfix restart
 
-crontab -l | { cat; echo "* * * * * /bigscoots/chkphpfpm_nginx"; } | crontab -
+# crontab -l | { cat; echo "* * * * * /bigscoots/chkphpfpm_nginx"; } | crontab -
 crontab -l | { cat; echo "0 */8 * * * /bigscoots/wpo_backups_ovz.sh"; } | crontab -
 crontab -l | { cat; echo "*/15 * * * * /bigscoots/mon_disk.sh"; } | crontab -
 crontab -l | { cat; echo "* * * * * /bigscoots/wpo_servicechk.sh"; } | crontab -
