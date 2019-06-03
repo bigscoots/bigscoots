@@ -31,7 +31,7 @@ if [ "$?" -eq "0" ]; then
         if [ "$?" -eq "0" ]; then
           mkdir -p /tmp/lsi
           cd /tmp/lsi || exit
-          wget https://s3.amazonaws.com/uploads.hipchat.com/31137/205915/00YwNVPnAIC4dp9/8.07.14_MegaCLI.zip
+          wget https://docs.broadcom.com/docs-and-downloads/raid-controllers/raid-controllers-common-files/8-07-14_MegaCLI.zip
           unzip ./*MegaCLI.zip
           rpm -ivh ./*inux/MegaCli-*.noarch.rpm
           ln -s /opt/MegaRAID/MegaCli/MegaCli64 /sbin/
