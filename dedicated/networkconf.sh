@@ -60,7 +60,7 @@ echo SLAVE=yes
 
 {
 echo DEVICE=bond0
-echo ipaddress="$ipaddress"
+echo IPADDR="$ipaddress"
 echo NETMASK="$ipnetmask"
 echo GATEWAY="$ipgateway"
 echo TYPE=Bond
