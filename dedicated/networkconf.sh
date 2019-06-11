@@ -2,11 +2,17 @@
 
 if [ -z "$1" ]
 then
-      echo "" | mail -s "new wpo dedi install done $HOSTNAME -  $ipaddr - failed no IP found." monitor@bigscoots.com
+      echo "" | mail -s "PXE Dedi Install - done $HOSTNAME -  $ipaddr - failed no IP found." monitor@bigscoots.com
       exit
 fi
 
 ipaddr=$1
+
+if [[ "$ipaddr" == *.1 ]]
+then
+      echo "" | mail -s "PXE Dedi Install - $HOSTNAME Network setup failed - The IP ends in .1 VERY BAD, check conf." monitor@bigscoots.com
+      exit
+fi
 
 if [[ $ipaddr == *"50.31.98"* ]] || [[ $ipaddr == *"50.31.99"* ]] ; then
 
