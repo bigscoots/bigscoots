@@ -1,12 +1,12 @@
 #!/bin/bash
 
-if [ -z "$2" ]
+if [ -z "$1" ]
 then
       echo "" | mail -s "new wpo dedi install done $HOSTNAME -  $ipaddr - failed no IP found." monitor@bigscoots.com
       exit
 fi
 
-ipaddr=$2
+ipaddr=$1
 
 if [[ $ipaddr == *"50.31.98"* ]] || [[ $ipaddr == *"50.31.99"* ]] ; then
 
@@ -15,7 +15,7 @@ ipnetmask=252.255.254.0
 
 else
 
-ipgateway=$(awk -F"." '{print $1"."$2"."$3".1"}'<<<$ipaddr)
+ipgateway=$(awk -F"." '{print $1"."$2"."$3".1"}'<<<"$ipaddr")
 ipnetmask=255.255.255.0
 
 fi
@@ -30,7 +30,7 @@ sed -i 's/^/#/' /etc/sysconfig/network-scripts/ifcfg-eth0
 sed -i 's/^/#/' /etc/sysconfig/network-scripts/ifcfg-eth1
 
 {
-echo 
+echo
 echo DEVICE=eth0
 echo TYPE=Ethernet
 echo ONBOOT=yes
@@ -40,7 +40,7 @@ echo SLAVE=yes
 } >> /etc/sysconfig/network-scripts/ifcfg-eth0
 
 {
-echo 
+echo
 echo DEVICE=eth1
 echo TYPE=Ethernet
 echo ONBOOT=yes
