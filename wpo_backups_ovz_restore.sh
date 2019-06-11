@@ -33,6 +33,9 @@ then
   exit 1
 fi
 
+# h - used for listing available backups in format for WPO panel
+# /bigscoots/wpo_backups_ovz_restore.sh h [daily/manual]
+
 case $1 in
 h)
 
@@ -43,9 +46,15 @@ if [ -z "$2" ]; then
 
 fi
 
+# /bigscoots/wpo_backups_ovz_restore.sh h daily
+# This will list out backups in WPO panel format for daily backups
+
 if [ $2 = "daily" ]; then
 
 ssh -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" "ls -1d */$DOMAIN | sed 's/incomplete_back-//g ; s/back-//g ; s/T/ /g ; s/_/:/g ; s/\/$DOMAIN//g' | grep -v 'current\|manual' | sed 's/$/;/g'"
+
+# /bigscoots/wpo_backups_ovz_restore.sh h manual
+# This will list out backups in WPO panel format for manual backups
 
 elif [ $2 = "manual" ]; then
 
