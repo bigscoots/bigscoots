@@ -36,6 +36,13 @@ fi
 case $1 in
 h)
 
+if [ -z "$2" ]; then
+
+ echo "/bigscoots/wpo_backups_ovz_restore.sh h [daily/manual] required"
+ exit
+
+fi
+
 if [ $2 = "daily" ]; then
 
 ssh -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" "ls -1d */$DOMAIN | sed 's/incomplete_back-//g ; s/back-//g ; s/T/ /g ; s/_/:/g ; s/\/$DOMAIN//g' | grep -v 'current\|manual' | sed 's/$/;/g'"
@@ -46,6 +53,9 @@ ssh -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" "ls -1d */$DOMAIN | sed 's/in
 
 fi
 
+# /bigscoots/wpo_backups_ovz_restore.sh hh 
+# this will list out all backups for the current wordpress install, must be in the public directory.
+
 ;;
 hh)
 ssh -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" "ls -1d */$DOMAIN | sed 's/\/$DOMAIN//g' |grep -v current"
@@ -54,9 +64,13 @@ echo "Example rsync command - You should run a backup before proceeding"
 echo "# rsync -ahv -e \"ssh -i $HOME/.ssh/wpo_backups\" --delete $BKUSER@$BKSVR:$(ssh -i $HOME/.ssh/wpo_backups $BKUSER@$BKSVR 'echo $HOME')/$(ssh -i $HOME/.ssh/wpo_backups $BKUSER@$BKSVR "ls -1d */$DOMAIN | sed 's/\/$DOMAIN//g' |grep -v current" | tail -1)/$DOMAIN/public/ $(pwd)/"
 echo
 
+# /bigscoots/wpo_backups_ovz_restore.sh restore ${BACKUP}
+# This will restore the current site from the date specified, must be in the public directory.
+# Backup name example: back-2019-06-11T02_18_01
+
 ;;
 restore)
-dbname=$(grep DB_NAME wp-config.php | grep -v WP_CACHE_KEY_SALT | cut -d \' -f 4)
+dbname=$(wp --allow-root --skip-plugins --skip-themes config get DB_NAME)
 
 echo "Restoring files..."
 
