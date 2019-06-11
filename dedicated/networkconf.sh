@@ -6,22 +6,22 @@ then
       exit
 fi
 
-ipaddr=$1
+ipaddress=$1
 
-if [[ "$ipaddr" == *.1 ]]
+if [[ "$ipaddress" == *.1 ]]
 then
       echo "" | mail -s "PXE Dedi Install - $HOSTNAME Network setup failed - The IP ends in .1 VERY BAD, check conf." monitor@bigscoots.com
       exit
 fi
 
-if [[ $ipaddr == *"50.31.98"* ]] || [[ $ipaddr == *"50.31.99"* ]] ; then
+if [[ $ipaddress == *"50.31.98"* ]] || [[ $ipaddress == *"50.31.99"* ]] ; then
 
 ipgateway=50.31.98.1
 ipnetmask=252.255.254.0
 
 else
 
-ipgateway=$(awk -F"." '{print $1"."$2"."$3".1"}'<<<"$ipaddr")
+ipgateway=$(awk -F"." '{print $1"."$2"."$3".1"}'<<<"$ipaddress")
 ipnetmask=255.255.255.0
 
 fi
@@ -60,7 +60,7 @@ echo SLAVE=yes
 
 {
 echo DEVICE=bond0
-echo IPADDR="$ipaddr"
+echo ipaddress="$ipaddress"
 echo NETMASK="$ipnetmask"
 echo GATEWAY="$ipgateway"
 echo TYPE=Bond
