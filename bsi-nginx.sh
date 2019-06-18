@@ -2,8 +2,8 @@
 
 sleep 5
 yum -y install e2fsprogs
-chattr -i /etc/hostname
-hostnamectl set-hostname "wpo.$(echo $HOSTNAME | sed 's/www.//g')"
+# chattr -i /etc/hostname
+# hostnamectl set-hostname "wpo.$(echo $HOSTNAME | sed 's/www.//g')"
 chattr +i /etc/hostname
 yum clean all
 yum -y update
