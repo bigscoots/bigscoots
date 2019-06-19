@@ -20,7 +20,8 @@ if [ ! -f "$BSPATH"/rsync/exclude ]; then
         mkdir -p "$BSPATH"/rsync
 
         {
-        echo "log"
+        echo "log/access.log*"
+        echo "log/error.log*"
         echo "*/core.[0-9]*"
         echo "*/error_log"
         echo "*/wp-content/updraft"
@@ -144,7 +145,8 @@ if [ ! -f "$BSPATH"/rsync/exclude ]; then
         mkdir -p "$BSPATH"/rsync
 
         {
-        echo "log"
+        echo "log/access.log*"
+        echo "log/error.log*"
         echo "*/core.[0-9]*"
         echo "*/error_log"
         echo "*/wp-content/updraft"
