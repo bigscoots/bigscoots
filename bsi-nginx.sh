@@ -79,8 +79,9 @@ git clone https://github.com/jcatello/bigscoots
 chown -R nginx: /var/log/php-fpm
 nprestart
 
-sed -i '/inet_protocols/c\inet_protocols = ipv4' /etc/postfix/main.cf
-service postfix restart
+postconf -e inet_protocols=ipv4
+postfix reload
+/bin/systemctl restart postfix.service
 
 # crontab -l | { cat; echo "* * * * * /bigscoots/chkphpfpm_nginx"; } | crontab -
 crontab -l | { cat; echo "* * * * * /bigscoots/wpo_servicechk.sh"; } | crontab -
