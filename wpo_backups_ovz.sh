@@ -20,6 +20,7 @@ if [ ! -f "$BSPATH"/rsync/exclude ]; then
         mkdir -p "$BSPATH"/rsync
 
         {
+        echo ".infected_*"
         echo "log/access.log*"
         echo "log/error.log*"
         echo "*/core.[0-9]*"
