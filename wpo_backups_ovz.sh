@@ -43,7 +43,7 @@ manual)
 
   if [[ $2 == manual-* ]]; then
 
-  dbname=$(grep DB_NAME wp-config.php | grep -v WP_CACHE_KEY_SALT | cut -d \' -f 4)
+  dbname=$(wp --allow-root --skip-plugins --skip-themes config get DB_NAME)
   /usr/bin/mysqldump "$dbname" | gzip > "$dbname".sql.gz
 
   rsync -ah --stats \
@@ -63,7 +63,7 @@ manual)
 
 for wpinstall in $(find /home/nginx/domains/*/public/ -type f -name wp-config.php | sed 's/wp-config.php//g')
    do
-    dbname=$(grep DB_NAME "$wpinstall"/wp-config.php | grep -v WP_CACHE_KEY_SALT | cut -d \' -f 4)
+    dbname=$(wp --allow-root --skip-plugins --skip-themes config get DB_NAME --path="$wpinstall")
     /usr/bin/mysqldump "$dbname" | gzip > "$wpinstall$dbname".sql.gz
 done
 
@@ -108,7 +108,7 @@ fi
 
 for wpinstall in $(find /home/nginx/domains/*/public/ -type f -name wp-config.php | sed 's/wp-config.php//g')
    do
-    dbname=$(grep DB_NAME "$wpinstall"/wp-config.php | grep -v WP_CACHE_KEY_SALT | cut -d \' -f 4)
+    dbname=$(wp --allow-root --skip-plugins --skip-themes config get DB_NAME --path="$wpinstall")
     /usr/bin/mysqldump "$dbname" | gzip > "$wpinstall$dbname".sql.gz
 done
 
@@ -131,7 +131,7 @@ esac
 
 for wpinstall in $(find /home/nginx/domains/*/public/ -type f -name wp-config.php | sed 's/wp-config.php//g')
    do
-    dbname=$(grep DB_NAME "$wpinstall"/wp-config.php | grep -v WP_CACHE_KEY_SALT | cut -d \' -f 4)
+    dbname=$(wp --allow-root --skip-plugins --skip-themes config get DB_NAME --path="$wpinstall")
     rm -f "$wpinstall$dbname".sql.gz
 done
 
@@ -168,7 +168,7 @@ manual)
 
   if [[ $2 == manual-* ]]; then
 
-  dbname=$(grep DB_NAME wp-config.php | grep -v WP_CACHE_KEY_SALT | cut -d \' -f 4)
+  dbname=$(wp --allow-root --skip-plugins --skip-themes config get DB_NAME)
   /usr/bin/mysqldump "$dbname" | gzip > "$dbname".sql.gz
 
   rsync -ah --stats \
@@ -187,7 +187,7 @@ manual)
 
 for wpinstall in $(find /home/nginx/domains/*/public/ -type f -name wp-config.php | sed 's/wp-config.php//g')
    do
-    dbname=$(grep DB_NAME "$wpinstall"/wp-config.php | grep -v WP_CACHE_KEY_SALT | cut -d \' -f 4)
+    dbname=$(wp --allow-root --skip-plugins --skip-themes config get DB_NAME --path="$wpinstall")
     /usr/bin/mysqldump "$dbname" | gzip > "$wpinstall$dbname".sql.gz
 done
 
@@ -230,7 +230,7 @@ fi
 
 for wpinstall in $(find /home/nginx/domains/*/public/ -type f -name wp-config.php | sed 's/wp-config.php//g')
    do
-    dbname=$(grep DB_NAME "$wpinstall"/wp-config.php | grep -v WP_CACHE_KEY_SALT | cut -d \' -f 4)
+    dbname=$(wp --allow-root --skip-plugins --skip-themes config get DB_NAME --path="$wpinstall")
     /usr/bin/mysqldump "$dbname" | gzip > "$wpinstall$dbname".sql.gz
 done
 
@@ -252,7 +252,7 @@ esac
 
 for wpinstall in $(find /home/nginx/domains/*/public/ -type f -name wp-config.php | sed 's/wp-config.php//g')
    do
-    dbname=$(grep DB_NAME "$wpinstall"/wp-config.php | grep -v WP_CACHE_KEY_SALT | cut -d \' -f 4)
+    dbname=$(wp --allow-root --skip-plugins --skip-themes config get DB_NAME --path="$wpinstall")
     rm -f "$wpinstall$dbname".sql.gz
 done
 
