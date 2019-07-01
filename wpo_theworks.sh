@@ -77,9 +77,16 @@ else
   dbuser=$(wp --allow-root --skip-plugins --skip-themes config get DB_USER)
   dbpass=$(wp --allow-root --skip-plugins --skip-themes config get DB_PASSWORD)
   wp --allow-root --skip-plugins --skip-themes config set DB_HOST localhost
+  
+  if grep -q FS_METHOD wp-config.php; then
   wp --allow-root --skip-plugins --skip-themes config delete FS_METHOD
+  fi 
+  if grep -q FS_CHMOD_DIR wp-config.php; then
   wp --allow-root --skip-plugins --skip-themes config delete FS_CHMOD_DIR
+  fi
+  if grep -q FS_CHMOD_FILE wp-config.php; then
   wp --allow-root --skip-plugins --skip-themes config delete FS_CHMOD_FILE
+  fi
   
   else
 
