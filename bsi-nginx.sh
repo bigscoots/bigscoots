@@ -1,5 +1,5 @@
 ##!/bin/bash
-
+test
 sleep 5
 yum -y install e2fsprogs
 # chattr -i /etc/hostname
