@@ -36,8 +36,9 @@ cd /etc/sysconfig/network-scripts/ || exit
 systemctl stop NetworkManager.service
 systemctl disable NetworkManager.service
 
-grep -q '^NM_CONTROLLED' ifcfg-eth* && sed -i 's/^NM_CONTROLLED=yes/NM_CONTROLLED=no/' ifcfg-eth* || echo 'NM_CONTROLLED=no' | tee -a ifcfg-eth* >/dev/null
-grep -q '^ONBOOT' ifcfg-eth0 && sed -i 's/^ONBOOT=no/ONBOOT=yes/' ifcfg-eth0 || echo 'ONBOOT=yes' | tee -a ifcfg-eth0 >/dev/null
+# Handled by kickstart now.
+# grep -q '^NM_CONTROLLED' ifcfg-eth* && sed -i 's/^NM_CONTROLLED=yes/NM_CONTROLLED=no/' ifcfg-eth* || echo 'NM_CONTROLLED=no' | tee -a ifcfg-eth* >/dev/null
+# grep -q '^ONBOOT' ifcfg-eth0 && sed -i 's/^ONBOOT=no/ONBOOT=yes/' ifcfg-eth0 || echo 'ONBOOT=yes' | tee -a ifcfg-eth0 >/dev/null
 
 echo
 echo "######################################################"
@@ -72,7 +73,7 @@ echo > /etc/wwwacct.conf
 echo "$EMAIL" > /root/.forward
 
 mkdir -p /root/cpanel_profile
-cp -rf /bigscoots/cpanel.config /root/cpanel_profile/cpanel.config
+# cp -rf /bigscoots/cpanel.config /root/cpanel_profile/cpanel.config
 cp -rf /bigscoots/bigscoots.json /etc/cpanel_initial_install_ea4_profile.json
 
 echo
