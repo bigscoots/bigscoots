@@ -146,6 +146,8 @@ cp rocket-nginx.ini.disabled rocket-nginx.ini
 /usr/local/bin/php rocket-parser.php
 sed -i '/rediscache_/a\ \ #include /usr/local/nginx/conf/rocket-nginx/default.conf\;'
 
+/root/tools/phpmyadmin_update.sh
+
 sleep 2
 echo "nginx install for $HOSTNAME completed" | mail -s "nginx install for $HOSTNAME completed" monitor@bigscoots.com
 sleep 5
