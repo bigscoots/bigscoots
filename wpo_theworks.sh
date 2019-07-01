@@ -62,6 +62,11 @@ if [[ $1 == fresh ]]; then
   
 else
 
+  if [ ! -f wp-config.php ]; then
+  echo "wp-config.php doesn't exist, quitting."
+  exit 1
+  fi
+  
   sed -i '/gd-config.php/d' wp-config.php
   sed -i '/SiteGround/d' wp-config.php
 
