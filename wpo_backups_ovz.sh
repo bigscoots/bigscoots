@@ -4,6 +4,7 @@ date=$(date "+%Y-%m-%dT%H_%M_%S")
 HOMEDIR=/home/nginx/domains/
 BKSVR=backup3.bigscoots.com
 BSPATH=/root/.bigscoots
+PATH=/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/root/bin
 
 if [ -f /proc/vz/veinfo ];
 then
