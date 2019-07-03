@@ -4,7 +4,7 @@ if [ -z "$1" ]
 
 then
 
-for i in $(find /usr/local/nginx/conf/conf.d/ -type f -printf "%f\n" |grep -v 'phpmyadmin_ssl.conf\|virtual.conf\|.ssl.conf') ; do
+for i in $(find /usr/local/nginx/conf/conf.d/ -type f -printf "%f\n" |grep -v 'phpmyadmin_ssl.conf\|virtual.conf\|.ssl.conf\|.bak') ; do
 
 domain="${i//.conf/}"
 
