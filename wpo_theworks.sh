@@ -38,7 +38,7 @@ if [[ $1 == wpe ]]; then
   wp --allow-root --skip-plugins --skip-themes config set DB_HOST localhost
   wp --allow-root --skip-plugins --skip-themes db reset --yes
 fi
-  
+
 
 
 if [[ $1 == fresh ]]; then
@@ -51,7 +51,7 @@ if [[ $1 == fresh ]]; then
   wp --allow-root --skip-plugins --skip-themes search-replace http: https:
   /bigscoots/wpo_forcehttps.sh "$DOMAIN"
   nginx -t
-   
+
   echo
   echo
   echo "Wordpress Admin URL: https://$DOMAIN/wp-login.php"
@@ -59,14 +59,14 @@ if [[ $1 == fresh ]]; then
   echo "Wordpress Admin Pass: $wpuserpass"
   echo
   echo
-  
+
 else
 
   if [ ! -f wp-config.php ]; then
   echo "wp-config.php doesn't exist, quitting."
   exit 1
   fi
-  
+
   sed -i '/gd-config.php/d' wp-config.php
   sed -i '/SiteGround/d' wp-config.php
 
@@ -77,25 +77,25 @@ else
   dbuser=$(wp --allow-root --skip-plugins --skip-themes config get DB_USER)
   dbpass=$(wp --allow-root --skip-plugins --skip-themes config get DB_PASSWORD)
   wp --allow-root --skip-plugins --skip-themes config set DB_HOST localhost
-  
+
   if grep -q FS_METHOD wp-config.php; then
   wp --allow-root --skip-plugins --skip-themes config delete FS_METHOD
-  fi 
+  fi
   if grep -q FS_CHMOD_DIR wp-config.php; then
   wp --allow-root --skip-plugins --skip-themes config delete FS_CHMOD_DIR
   fi
   if grep -q FS_CHMOD_FILE wp-config.php; then
   wp --allow-root --skip-plugins --skip-themes config delete FS_CHMOD_FILE
   fi
-  
+
   else
 
   dbname=$(grep DB_NAME wp-config.php | grep -v WP_CACHE_KEY_SALT | grep -v '^//' | cut -d \' -f 4 )
   dbuser=$(grep DB_USER wp-config.php | grep -v WP_CACHE_KEY_SALT | grep -v '^//' | cut -d \' -f 4 )
   dbpass=$(grep DB_PASSWORD wp-config.php | grep -v WP_CACHE_KEY_SALT | grep -v '^//' | cut -d \' -f 4 )
-  
+
   fi
-  
+
   echo
   echo
   echo "Database Name: $dbname"
@@ -105,7 +105,9 @@ else
   echo
   echo
 
-  mysql -e "CREATE DATABASE $dbname;"
+  if [ ! -d /var/lib/mysql/"$dbname" ] ; then
+    mysql -e "CREATE DATABASE $dbname;"
+  fi
 
   echo "Assigning Database User: $dbuser to Database: $dbname using Password: $dbpass"
   /usr/bin/mysql -e "grant all privileges on $dbname.* to '$dbuser'@'localhost' identified by '$dbpass';"
@@ -231,15 +233,15 @@ fi
 
 {
 echo     allow 192.0.64.0/18\;
-echo 	 deny all\;
+echo     deny all\;
 } >> /usr/local/nginx/conf/xmlrpcblock.conf
 
-for i in $(ls /home/nginx/domains/ -1) 
-	do
-		if ! grep -q "xmlrpcblock.conf" /usr/local/nginx/conf/conf.d/"$i".ssl.conf ; then
-		sed -i '/xmlrpc/a \    include /usr/local/nginx/conf/xmlrpcblock.conf;' /usr/local/nginx/conf/conf.d/"$i".ssl.conf
-		fi
-	done
+for i in $(ls /home/nginx/domains/ -1)
+        do
+                if ! grep -q "xmlrpcblock.conf" /usr/local/nginx/conf/conf.d/"$i".ssl.conf ; then
+                sed -i '/xmlrpc/a \    include /usr/local/nginx/conf/xmlrpcblock.conf;' /usr/local/nginx/conf/conf.d/"$i".ssl.conf
+                fi
+        done
 
 touch apple-touch-icon-120x120-precomposed.png
 touch apple-touch-icon-120x120.png
