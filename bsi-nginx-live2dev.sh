@@ -14,6 +14,11 @@ devsite="$2"
 # NO MORE CHANGING BELOW HERE #
 ##                           ##
 
+if [ ! -d "/home/nginx/domains/$livesite" ] && [ ! -d "/home/nginx/domains/$devsite" ]; then
+    echo "Domain doesn't exist." 
+    exit
+fi
+
 livedocroot=/home/nginx/domains/$livesite/public
 devdocroot=/home/nginx/domains/$devsite/public
 livedb=$(grep DB_NAME "$livedocroot"/wp-config.php | grep -v WP_CACHE_KEY_SALT | cut -d \' -f 4)
