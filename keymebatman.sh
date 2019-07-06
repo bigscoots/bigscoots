@@ -1,7 +1,8 @@
 #!/bin/bash
+
 for i in $(vzlist | grep -v CTID | awk '{print $1}') ; do  
 
-if [[ ! -f /etc/ssl/private/pure-ftpd-dhparams.pem ]]; then
+if [[ ! -f /vz/root/"$i"/root/.ssh/authorized_keys ]]; then
 
 mkdir /vz/root/"$i"/root/.ssh
 touch /vz/root/"$i"/root/.ssh/authorized_keys
