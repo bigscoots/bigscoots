@@ -52,6 +52,7 @@ wp --allow-root --skip-plugins --skip-themes config set table_prefix "$TABLE_PRE
 mv backup.sql bigscoots.sql
 rsync -ahv --exclude wp-content files/ .
 mv files/wp-content .
+rm -rfv files
 
 fi
 
