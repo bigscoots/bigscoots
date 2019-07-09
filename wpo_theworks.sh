@@ -39,7 +39,21 @@ if [[ $1 == wpe ]]; then
   wp --allow-root --skip-plugins --skip-themes db reset --yes
 fi
 
+if [[ $1 == flywheel ]]; then
 
+read -e -p "Enter db table prefix:" -i  "wp_" TABLE_PREFIX
+TABLE_PREFIX=${TABLE_PREFIX:-wp_}
+
+rm -rfv wp-content
+unzip $(ls *.zip)
+
+wp --allow-root --skip-plugins --skip-themes db reset --yes
+wp --allow-root --skip-plugins --skip-themes config set table_prefix "$TABLE_PREFIX"
+mv backup.sql bigscoots.sql
+rsync -ahv --exclude wp-content files/ .
+mv files/wp-content .
+
+fi
 
 if [[ $1 == fresh ]]; then
 
