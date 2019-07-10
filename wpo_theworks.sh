@@ -251,7 +251,7 @@ echo     allow 192.0.64.0/18\;
 echo     deny all\;
 } >> /usr/local/nginx/conf/xmlrpcblock.conf
 
-for i in $(ls /home/nginx/domains/ -1)
+for i in $(ls /home/nginx/domains/ -1 | grep -v domains.txt)
         do
                 if ! grep -q "xmlrpcblock.conf" /usr/local/nginx/conf/conf.d/"$i".ssl.conf ; then
                 sed -i '/xmlrpc/a \    include /usr/local/nginx/conf/xmlrpcblock.conf;' /usr/local/nginx/conf/conf.d/"$i".ssl.conf
