@@ -1,15 +1,14 @@
 #!/bin/bash
-# <3 Tim
 
 if [ -z "$1" ]; then
   echo "Requires a domain."
   exit 1
 fi
 
-if [ -z "$2" ]; then
-  echo "Requires fresh or existing."
-  exit 1
-fi
+# if [ -z "$2" ]; then
+#   echo "Requires fresh or existing."
+#   exit 1
+# fi
 
 domain="$1"
 
@@ -22,8 +21,9 @@ if [ "$2" == fresh ]; then
   /root/auto_reply_justin_stoleit "$domain"
   cd /home/nginx/domains/"$domain"/public || exit
   bash /bigscoots/wpo_theworks.sh fresh
-fi
 
-if [ "$2" == existing ]; then
+else
+
   /root/auto_reply_justin_stoleit "$domain"
+
 fi
