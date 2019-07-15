@@ -287,7 +287,7 @@ if [[ "$wprocket" == "y" ]]; then
   echo "Correct path should now be set in wp-content/advanced-cache.php"
 
   echo
-  echo "wprocket is detected check /usr/local/nginx/conf/conf.d/""$i"".ssl.conf for proper config"
+  echo "wprocket is detected check /usr/local/nginx/conf/conf.d/$i.ssl.conf for proper config"
   echo
 
 fi
