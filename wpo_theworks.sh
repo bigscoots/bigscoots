@@ -152,6 +152,8 @@ sed -i '/^[[:blank:]]*\*/d;s/\/\*\*.*//;/^$/d' wp-config.php
 
 if [ -d "wp-content/plugins/wp-rocket" ]; then
 
+  wprocket=1
+
   if [ ! -d "/usr/local/nginx/conf/rocket-nginx" ]; then
 
   bringmeback=$(pwd)
@@ -266,6 +268,29 @@ touch apple-touch-icon-76x76-precomposed.png
 touch apple-touch-icon-76x76.png
 touch apple-touch-icon-precomposed.png
 touch apple-touch-icon.png
+
+if [ "$wprocket" -eq 1 ]; then
+
+  echo "Removing old wp-content/advanced-cache.php"
+  echo
+
+  rm -f wp-content/advanced-cache.php
+
+  echo "Deactivating wp-rocket"
+  echo
+  wp plugin --allow-root --skip-plugins --skip-themes deactivate wp-rocket
+
+  echo "Activating wp-rocket"
+  echo
+  wp plugin --allow-root --skip-plugins --skip-themes activate wp-rocket
+
+  echo "Correct path should now be set in wp-content/advanced-cache.php"
+
+  echo
+  echo "wprocket is detected check /usr/local/nginx/conf/conf.d/"$i".ssl.conf for proper config"
+  echo
+
+fi
 
 chown -R nginx: /home/nginx/domains &
 find . -type f -exec chmod 644 {} \; &
