@@ -18,12 +18,12 @@ if [ -d /home/nginx/domains/"$domain" ]; then
 fi
 
 if [ "$2" == fresh ]; then
-  /root/auto_reply_justin_stoleit "$domain"
+  /bigscoots/wpo/manage/expect/createdomain "$domain"
   cd /home/nginx/domains/"$domain"/public || exit
   bash /bigscoots/wpo_theworks.sh fresh
 
 else
 
-  /root/auto_reply_justin_stoleit "$domain"
+  /bigscoots/wpo/manage/expect/createdomain "$domain"
 
 fi
