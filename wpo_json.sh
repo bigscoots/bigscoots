@@ -31,7 +31,7 @@ vhostlog=$(grep -rl "FTP username created for $domain" /root/centminlogs/*wordpr
 grep -v "FTP Passive" "$vhostlog" | grep -C2 "FTP mode" > /tmp/tmpftp.txt
 
 ftphost=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
-ftpusername=$(grep username /tmp/tmpftp.txt | grep -oE '[^ ]+$')
+ftpusername=$(grep "FTP username created for $domain" "$vhostlog" | grep -oE '[^ ]+$')
 ftppassword=$(grep "FTP password auto generated:" "$vhostlog" | grep -oE '[^ ]+$' | sed 's/\\/\\\\/g' | sed 's/"/\\"/g')
 
 bkuser=$(echo wpo$(awk '{print $1}' /proc/vz/veinfo))
