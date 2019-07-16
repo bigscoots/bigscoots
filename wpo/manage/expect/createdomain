@@ -26,6 +26,8 @@ send -- "\r"
 send -- "\r"
 send -- "\r"
 
-send -- "24\r"
+expect "vhost for $domain wordpress setup successfully"
+send \x03
 
-expect eof
+# send -- "24\r"
+# expect eof
