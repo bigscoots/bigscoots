@@ -189,5 +189,20 @@ cp rocket-nginx.ini.disabled rocket-nginx.ini
 /usr/local/bin/php rocket-parser.php
 sed -i '/rediscache_/a\ \ #include /usr/local/nginx/conf/rocket-nginx/default.conf\;'
 
+opcachephp=$(cat /dev/urandom | tr -cd 'a-f0-9' | head -c 32).php ;
+{
+  echo "<?php"
+  echo "echo 'The servers opcache has been flushed.';"
+  echo "opcache_reset();"
+  echo "?>"
+
+} >> "/usr/local/nginx/html/$opcachephp"
+chown nginx: "/usr/local/nginx/html/$opcachephp"
+
+sed -i 's/return 302/#return 302/g' /usr/local/nginx/conf/conf.d/phpmyadmin_ssl.conf
+sed -i 's/#include \/usr\/local\/nginx\/conf\/php.conf/include \/usr\/local\/nginx\/conf\/php.conf/g' /usr/local/nginx/conf/conf.d/phpmyadmin_ssl.conf
+
+npreload
+
 sleep 2
 echo "nginx install for $HOSTNAME completed" | mail -s "nginx install for $HOSTNAME completed" monitor@bigscoots.com
