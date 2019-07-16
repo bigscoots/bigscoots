@@ -1,0 +1,31 @@
+#!/usr/bin/expect -f
+
+set domain [lindex $argv 0]
+
+set timeout -1
+
+spawn centmin
+
+send -- "22\r"
+send -- "\r"
+
+expect "Enter vhost domain name you want to add"
+
+send -- "$domain\r"
+
+send -- "\r"
+send -- "\r"
+send -- "\r"
+send -- "\r"
+send -- "\r"
+send -- "\r"
+send -- "\r"
+send -- "\r"
+send -- "\r"
+send -- "\r"
+send -- "\r"
+send -- "\r"
+
+send -- "24\r"
+
+expect eof
