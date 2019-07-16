@@ -19,6 +19,24 @@ if [ -z "$1" ]
 
 then
 
+grep -l "The servers opcache has been flushed" /usr/local/nginx/html/*.php | sed 's/\// /'g | grep -oE '[^ ]+$' > /dev/null
+opcachechk=$?
+if [ "$opcachechk" -ne 0 ]; then
+    opcachephp=$(cat /dev/urandom | tr -cd 'a-f0-9' | head -c 32).php ;
+{
+  echo "<?php"
+  echo "echo 'The servers opcache has been flushed.';"
+  echo "opcache_reset();"
+  echo "?>"
+
+} >> "/usr/local/nginx/html/$opcachephp"
+chown nginx: "/usr/local/nginx/html/$opcachephp"
+
+sed -i 's/return 302/#return 302/g' /usr/local/nginx/conf/conf.d/phpmyadmin_ssl.conf
+sed -i 's/#include \/usr\/local\/nginx\/conf\/php.conf/include \/usr\/local\/nginx\/conf\/php.conf/g' /usr/local/nginx/conf/conf.d/phpmyadmin_ssl.conf
+
+fi
+
 for domain in $(\ls /home/nginx/domains/) ; do
 
 pmaurl=$(grep "https://$HOSTNAME/[0-9]" /root/centminlogs/centminmod_phpmyadmin_install_*.log | sed -r "s/\x1B\[([0-9]{1,3}((;[0-9]{1,3})*)?)?[m|K]//g" | sed 's/$/\//g' | tr -d " \t\n\r")
@@ -40,7 +58,7 @@ rm -f /tmp/tmpftp.txt
 
 sleep 1
 
-echo ; echo { ; echo "\"domain_name\": \"$domain\"," ; echo "\"backup_user\": \"$bkuser\"," ; echo "\"server_ip\": \"$ftphost\"," ; echo "\"opcache_url\": \"https://$HOSTNAME/$(grep -l "The servers opcache has been flushed" /usr/local/nginx/html/*.php | sed 's/\// /'g | grep -oE '[^ ]+$')\"," ; echo "\"phpMyAdmin_url\": \"$pmaurl\"," ; echo "\"phpMyAdmin_popup_username\": \"$pmauser\"," ; echo "\"phpMyAdmin_popup_password\": \"$pmapass\"," ; echo "\"phpMyAdmin_username\": \"$pmadbuser\"," ; echo "\"phpMyAdmin_password\": \"$pmadbpass\"," ; echo "\"ftp_host\": \"$ftphost\"," ; echo "\"ftp_port\": \"21\"," ; echo "\"ftp_mode\": \"FTP (explicit SSL)\"," ; echo "\"ftp_pasv\": \"Ensure is Checked/Enabled\"," ; echo "\"ftp_username\": \"$ftpusername\"," ; echo "\"ftp_password\": \"$ftppassword\"," ; cat /root/.wpocf ; echo } ; echo
+echo ; echo { ; echo "\"domain_name\": \"$domain\"," ; echo "\"backup_user\": \"$bkuser\"," ; echo "\"server_ip\": \"$ftphost\"," ; echo "\"opcache_url\": \"https://$domain/$(grep -l "The servers opcache has been flushed" /home/nginx/domains/"$domain"/public/*.php | sed 's/\// /'g | grep -oE '[^ ]+$')\"," ; echo "\"phpMyAdmin_url\": \"$pmaurl\"," ; echo "\"phpMyAdmin_popup_username\": \"$pmauser\"," ; echo "\"phpMyAdmin_popup_password\": \"$pmapass\"," ; echo "\"phpMyAdmin_username\": \"$pmadbuser\"," ; echo "\"phpMyAdmin_password\": \"$pmadbpass\"," ; echo "\"ftp_host\": \"$ftphost\"," ; echo "\"ftp_port\": \"21\"," ; echo "\"ftp_mode\": \"FTP (explicit SSL)\"," ; echo "\"ftp_pasv\": \"Ensure is Checked/Enabled\"," ; echo "\"ftp_username\": \"$ftpusername\"," ; echo "\"ftp_password\": \"$ftppassword\"," ; cat /root/.wpocf ; echo } ; echo
 
 done
 
