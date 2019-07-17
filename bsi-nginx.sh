@@ -83,6 +83,9 @@ postconf -e inet_protocols=ipv4
 postfix reload
 /bin/systemctl restart postfix.service
 
+sed -i '/SystemMaxUse/c\SystemMaxUse=500M'  /etc/systemd/journald.conf 
+systemctl restart systemd-journald
+
 # crontab -l | { cat; echo "* * * * * /bigscoots/chkphpfpm_nginx"; } | crontab -
 crontab -l | { cat; echo "* * * * * /bigscoots/wpo_servicechk.sh"; } | crontab -
 # crontab -l | { cat; echo "0 */8 * * * /bigscoots/mon_disk.sh"; } | crontab -
