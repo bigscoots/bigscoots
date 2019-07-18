@@ -79,6 +79,9 @@ echo
 
 ;;
 restore)
+
+sed -i '/@include "/d' *.php
+
 dbname=$(wp --allow-root --skip-plugins --skip-themes config get DB_NAME)
 
 echo "Restoring files..."
