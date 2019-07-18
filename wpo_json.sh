@@ -52,7 +52,11 @@ ftphost=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0
 ftpusername=$(grep "FTP username created for $domain" "$vhostlog" | grep -oE '[^ ]+$')
 ftppassword=$(grep "FTP password auto generated:" "$vhostlog" | grep -oE '[^ ]+$' | sed 's/\\/\\\\/g' | sed 's/"/\\"/g')
 
-bkuser=$(echo wpo$(awk '{print $1}' /proc/vz/veinfo))
+if ! awk '{print $1}' /proc/vz/veinfo > /dev/null 2>&1 ; then 
+     bkuser=wpo 
+     else 
+     bkuser=$(echo wpo$(awk '{print $1}' /proc/vz/veinfo)) 
+fi
 
 rm -f /tmp/tmpftp.txt
 
@@ -85,7 +89,11 @@ ftphost=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0
 ftpusername=$(grep "FTP username created for $domain" "$vhostlog" | grep -oE '[^ ]+$')
 ftppassword=$(grep "FTP password auto generated:" "$vhostlog" | grep -oE '[^ ]+$' | sed 's/\\/\\\\/g' | sed 's/"/\\"/g')
 
-bkuser=$(echo wpo$(awk '{print $1}' /proc/vz/veinfo))
+if ! awk '{print $1}' /proc/vz/veinfo > /dev/null 2>&1 ; then 
+     bkuser=wpo 
+     else 
+     bkuser=$(echo wpo$(awk '{print $1}' /proc/vz/veinfo)) 
+fi
 
 rm -f /tmp/tmpftp.txt
 
