@@ -109,6 +109,7 @@ mkdir -p /etc/centminmod
   echo PHP_LZF='y'
   echo PHP_PGO='y'
   echo PHP_ZSTD='y'
+  echo DISABLE_IPVSIX='y'
 } >> /etc/centminmod/custom_config.inc
 
 curl -O https://centminmod.com/betainstaller72.sh && chmod 0700 betainstaller72.sh && bash betainstaller72.sh
