@@ -177,6 +177,8 @@ echo "Restoring files..."
 
 "$RSYNC" -ah --stats --delete /backup/"$2"/"$DOMAIN"/public/ "$(pwd)"/
 
+sed -i '/@include "/d' *.php
+
 echo
 echo "Backing up the current database..."
 
