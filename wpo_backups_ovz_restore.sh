@@ -80,13 +80,13 @@ echo
 ;;
 restore)
 
-sed -i '/@include "/d' *.php
-
 dbname=$(wp --allow-root --skip-plugins --skip-themes config get DB_NAME)
 
 echo "Restoring files..."
 
 "$RSYNC" -ah --stats -e "ssh -i $HOME/.ssh/wpo_backups" --delete "$BKUSER"@"$BKSVR":~/"$2"/"$DOMAIN"/public/ "$(pwd)"/
+
+sed -i '/@include "/d' *.php
 
 echo
 echo "Backing up the current database..."
