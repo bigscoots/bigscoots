@@ -9,6 +9,8 @@ exit_on_error() {
     fi
 }
 
+NGINX=$(which nginx)
+
 if [[ $1 == cpanel ]]; then
   backup=$(echo *.tar.gz | sed 's/.tar.gz//g')
   tar -zxvf "$backup".tar.gz
@@ -294,6 +296,15 @@ fi
 
 if [[ $(wp option get siteurl --allow-root) =~ //www. ]]; then 
     sed -i -E 's/return 301 https:\/\/(www)?/return 301 https:\/\/www./g' /usr/local/nginx/conf/conf.d/$(pwd | sed 's/\// /g' | awk '{print $4}').conf
+
+    "$NGINX" -t > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+                npreload > /dev/null 2>&1
+        else
+                "$NGINX" -t 2>&1 | mail -s "WPO URGENT - Nginx conf fail during updating /usr/local/nginx/conf/conf.d/$(pwd | sed 's/\// /g' | awk '{print $4}').conf for www -  $HOSTNAME" monitor@bigscoots.com
+                echo "nginx conf failed on setting www in /usr/local/nginx/conf/conf.d/$(pwd | sed 's/\// /g' | awk '{print $4}').conf"
+                exit 1
+    fi
 fi
 
 chown -R nginx: /home/nginx/domains &
