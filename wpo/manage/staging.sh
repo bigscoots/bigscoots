@@ -5,7 +5,7 @@
 sourcedomain="$1"
 destinationdomain="$2"
 sourcedomainsize="$(du -s /home/nginx/domains/"$sourcedomain" | awk '{print $1}')"
-freespace="$(df / --output=avail | grep -v Avail)"
+freespace="$(df -k / | tr -s ' ' | cut -d" " -f 4 | grep -v Available)"
 percentofreespace=$((sourcedomainsize*100/freespace))
 
 if [ ! -d /home/nginx/domains/"$destinationdomain" ] ; then
