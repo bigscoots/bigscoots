@@ -294,6 +294,18 @@ if [[ "$wprocket" == "y" ]]; then
 
 fi
 
+if [[ $(wp option get siteurl --allow-root) =~ https:// ]]; then
+    /bigscoots/wpo_forcehttps.sh $(pwd | sed 's/\// /g' | awk '{print $4}')
+   
+    "$NGINX" -t > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+                npreload > /dev/null 2>&1
+        else
+                "$NGINX" -t 2>&1 | mail -s "WPO URGENT - Nginx conf fail forcing https /usr/local/nginx/conf/conf.d/$(pwd | sed 's/\// /g' | awk '{print $4}').conf for www -  $HOSTNAME" monitor@bigscoots.com
+                echo "nginx conf fail forcing https in /usr/local/nginx/conf/conf.d/$(pwd | sed 's/\// /g' | awk '{print $4}').conf"
+    fi
+fi   
+
 if [[ $(wp option get siteurl --allow-root) =~ //www. ]]; then 
     sed -i -E 's/return 301 https:\/\/(www)?/return 301 https:\/\/www./g' /usr/local/nginx/conf/conf.d/$(pwd | sed 's/\// /g' | awk '{print $4}').conf
 
@@ -303,7 +315,6 @@ if [[ $(wp option get siteurl --allow-root) =~ //www. ]]; then
         else
                 "$NGINX" -t 2>&1 | mail -s "WPO URGENT - Nginx conf fail during updating /usr/local/nginx/conf/conf.d/$(pwd | sed 's/\// /g' | awk '{print $4}').conf for www -  $HOSTNAME" monitor@bigscoots.com
                 echo "nginx conf failed on setting www in /usr/local/nginx/conf/conf.d/$(pwd | sed 's/\// /g' | awk '{print $4}').conf"
-                exit 1
     fi
 fi
 
