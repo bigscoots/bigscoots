@@ -14,8 +14,10 @@ devsite="$2"
 # NO MORE CHANGING BELOW HERE #
 ##                           ##
 
+NGINX=$(which nginx)
+
 if [ ! -d "/home/nginx/domains/$livesite" ] && [ ! -d "/home/nginx/domains/$devsite" ]; then
-    echo "Domain doesn't exist." 
+    echo "Domain doesn't exist."
     exit
 fi
 
@@ -129,11 +131,11 @@ echo
 
 sleep 1
 
-	if [ -n "$3" ] && [ -n "$4" ]; then
+        if [ -n "$3" ] && [ -n "$4" ]; then
 
-	echo "htpasswd detected, applying now."
-	echo
-	echo
+        echo "htpasswd detected, applying now."
+        echo
+        echo
 
         if  ! grep -q wpolocksite /usr/local/nginx/conf/conf.d/"$2".ssl.conf ; then
 
@@ -142,24 +144,24 @@ sleep 1
         sed -i "/location \/ {/a \  auth_basic \"Private\";" /usr/local/nginx/conf/conf.d/"$2".ssl.conf
 
         echo "htpasswd applied"
-		echo
-		echo
+                echo
+                echo
 
-		sleep 1
+                sleep 1
 
         else
 
         /usr/local/nginx/conf/htpasswd.sh create /home/nginx/domains/"$2"/wpolocksite "$3" "$4"
 
-		echo "htpasswd applied"
-		echo
-		echo
+                echo "htpasswd applied"
+                echo
+                echo
 
-		sleep 1
+                sleep 1
 
         fi
 
-	fi
+        fi
 
 sleep 1
 
@@ -175,12 +177,12 @@ echo
 
 redis-cli flushall
 
-nginx -t > /dev/null 2>&1
+"$NGINX" -t > /dev/null 2>&1
     if [ $? -eq 0 ]; then
-		npreload > /dev/null 2>&1
-	else
-		nginx -t 2>&1 | mail -s "WPO URGENT - Nginx conf fail during staging request -  $HOSTNAME" monitor@bigscoots.com
-		exit 1
+                npreload > /dev/null 2>&1
+        else
+                "$NGINX" -t 2>&1 | mail -s "WPO URGENT - Nginx conf fail during staging request -  $HOSTNAME" monitor@bigscoots.com
+                exit 1
     fi
 
 echo "Syncing $livesite to $devsite has been completed."
