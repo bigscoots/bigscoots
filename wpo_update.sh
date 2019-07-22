@@ -42,5 +42,23 @@ fupdate() {
 ######################################################
 fupdate
 
+if [[ ! -f /etc/centminmod/email-primary.ini ]]; then
+	touch /etc/centminmod/email-primary.ini
+	echo "root" > /etc/centminmod/email-primary.ini
+fi
+
+if [[ ! -f /etc/centminmod/email-secondary.ini ]]; then
+	touch /etc/centminmod/email-secondary.ini
+	echo "root" > /etc/centminmod/email-secondary.ini
+fi
+
+ if ! grep -q @ /etc/centminmod/email-primary.ini ; then
+ 	echo "root" > /etc/centminmod/email-primary.ini
+ fi
+
+ if ! grep -q @ /etc/centminmod/email-secondary.ini ; then
+ 	echo "root" > /etc/centminmod/email-secondary.ini
+ fi
+
 exit
 
