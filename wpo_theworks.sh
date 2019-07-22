@@ -292,6 +292,10 @@ if [[ "$wprocket" == "y" ]]; then
 
 fi
 
+if [[ $(wp option get siteurl --allow-root) =~ //www. ]]; then 
+    sed -i -E 's/return 301 https:\/\/(www)?/return 301 https:\/\/www./g' /usr/local/nginx/conf/conf.d/$(pwd | sed 's/\// /g' | awk '{print $4}').conf
+fi
+
 chown -R nginx: /home/nginx/domains &
 find . -type f -exec chmod 644 {} \; &
 find . -type d -exec chmod 755 {} \; &
