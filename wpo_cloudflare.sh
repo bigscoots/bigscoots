@@ -1,4 +1,4 @@
-#! /bin/bash
+ #! /bin/bash
 
 if [[ ! -s /root/.wpocf ]]; then
 
@@ -30,13 +30,13 @@ if [[ ! -s /root/.wpocf ]]; then
     -d "zone_name=$i"
     done | grep -oh "\w*.ns.cloudflare.com\w*")
 
-  echo "\"cloudflare_username\": \"$cfemail\"," >> /root/.wpocf  ; echo "\"cloudflare_password\": \"$cfpass\"," >> /root/.wpocf  ; echo "\"cloudflare_userkey\": \"$cfuserkey\"," >> /root/.wpocf  ; echo "\"cloudflare_apikey\": \"$cfapikey\"," >> /root/.wpocf  ; read -r ns1 ns2 <<<$(echo $nameservers) >> /root/.wpocf  ; echo "\"cloudflare_nameserver_1\": \"$ns1\"," >> /root/.wpocf  ; echo "\"cloudflare_nameserver_2\": \"$(echo $ns2 | awk '{print $1}')\"" >> /root/.wpocf ; echo ; cat /root/.wpocf
+  echo "\"cloudflare\": {" >> /root/.wpocf ; echo "\"username\": \"$cfemail\"," >> /root/.wpocf  ; echo "\"password\": \"$cfpass\"," >> /root/.wpocf  ; echo "\"userkey\": \"$cfuserkey\"," >> /root/.wpocf  ; echo "\"apikey\": \"$cfapikey\"," >> /root/.wpocf  ; read -r ns1 ns2 <<<$(echo $nameservers) >> /root/.wpocf  ; echo "\"nameserver1\": \"$ns1\"," >> /root/.wpocf  ; echo "\"nameserver2\": \"$(echo $ns2 | awk '{print $1}')\"" >> /root/.wpocf ; echo ; cat /root/.wpocf
   fi
 
 else
 
   if ! grep -q NA.ns.cloudflare.com /root/.wpocf ; then
-    cfuserkey=$(grep cloudflare_userkey /root/.wpocf | sed 's/"//g; s/,//g' | awk '{print $2}')
+    cfuserkey=$(grep userkey /root/.wpocf | sed 's/"//g; s/,//g' | awk '{print $2}')
 
     nameservers=$(for i in $(\ls /home/nginx/domains/)  ; do
     curl -s https://api.cloudflare.com/host-gw.html \
