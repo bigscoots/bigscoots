@@ -263,7 +263,7 @@ if [[ "$wprocket" == "y" ]]; then
   wp plugin --allow-root --skip-plugins --skip-themes deactivate wp-rocket
   wp plugin --allow-root --skip-plugins --skip-themes activate wp-rocket
 
-  echo "wprocket is detected check /usr/local/nginx/conf/conf.d/$i.ssl.conf for proper config" | mail -s "WPO  $i  $HOSTNAME - wprocket is detected check config"
+  echo "wprocket is detected check /usr/local/nginx/conf/conf.d/$i.ssl.conf for proper config" | mail -s "WPO  $i  $HOSTNAME - wprocket is detected check config" monitor@bigscoots.com
 
 fi
 
