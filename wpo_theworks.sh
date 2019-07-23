@@ -84,7 +84,6 @@ else
   sed -i '/SiteGround/d' wp-config.php
 
   if hash wp 2>/dev/null; then
-  echo found wp-cli
 
   dbname=$(wp --allow-root --skip-plugins --skip-themes config get DB_NAME)
   dbuser=$(wp --allow-root --skip-plugins --skip-themes config get DB_USER)
@@ -109,20 +108,10 @@ else
 
   fi
 
-  echo
-  echo
-  echo "Database Name: $dbname"
-  echo "Database User: $dbuser"
-  echo "Database Password: $dbpass"
-  echo "Creating database: $dbname"
-  echo
-  echo
-
   if [ ! -d /var/lib/mysql/"$dbname" ] ; then
     mysql -e "CREATE DATABASE $dbname;"
   fi
 
-  echo "Assigning Database User: $dbuser to Database: $dbname using Password: $dbpass"
   /usr/bin/mysql -e "grant all privileges on $dbname.* to '$dbuser'@'localhost' identified by '$dbpass';"
 
 wp --allow-root --skip-plugins --skip-themes db import bigscoots.sql
@@ -192,7 +181,7 @@ if [ -d "wp-content/plugins/wp-rocket" ]; then
 
 else
 
-wp plugin install cache-enabler --activate --allow-root --skip-plugins --skip-themes ; wp --allow-root --skip-plugins --skip-themes plugin delete comet-cache sg-cachepress wp-hummingbird wp-super-cache w3-total-cache nginx-helper wp-redis wp-fastest-cache --allow-root --skip-plugins --skip-themes ; chown -R nginx: .
+wp plugin install cache-enabler --activate --allow-root --skip-plugins --skip-themes --quiet ; wp --allow-root --skip-plugins --skip-themes --quiet plugin delete comet-cache sg-cachepress wp-hummingbird wp-super-cache w3-total-cache nginx-helper wp-redis wp-fastest-cache ; chown -R nginx: .
 
 sed -i '/location \/ {/i \ \ #if ($http_accept ~* "webp"){\n  #rewrite ^/(.*).(jpe\?g|png)\$ \/wp-content\/plugins\/webp-express\/wod\/webp-on-demand.php?wp-content=wp-content break;\n  #}\n \n  #include /usr/local/nginx/conf/webplocations.conf; \n' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
 
@@ -269,24 +258,12 @@ touch apple-touch-icon.png
 
 if [[ "$wprocket" == "y" ]]; then
 
-  echo "Removing old wp-content/advanced-cache.php"
-  echo
-
   rm -f wp-content/advanced-cache.php
 
-  echo "Deactivating wp-rocket"
-  echo
   wp plugin --allow-root --skip-plugins --skip-themes deactivate wp-rocket
-
-  echo "Activating wp-rocket"
-  echo
   wp plugin --allow-root --skip-plugins --skip-themes activate wp-rocket
 
-  echo "Correct path should now be set in wp-content/advanced-cache.php"
-
-  echo
-  echo "wprocket is detected check /usr/local/nginx/conf/conf.d/$i.ssl.conf for proper config"
-  echo
+  echo "wprocket is detected check /usr/local/nginx/conf/conf.d/$i.ssl.conf for proper config" | mail -s "WPO  $i  $HOSTNAME - wprocket is detected check config"
 
 fi
 
@@ -298,7 +275,6 @@ if [[ $(wp option get siteurl --allow-root) =~ https:// ]]; then
                 npreload > /dev/null 2>&1
         else
                 "$NGINX" -t 2>&1 | mail -s "WPO URGENT - Nginx conf fail forcing https /usr/local/nginx/conf/conf.d/$(pwd | sed 's/\// /g' | awk '{print $4}').conf for www -  $HOSTNAME" monitor@bigscoots.com
-                echo "nginx conf fail forcing https in /usr/local/nginx/conf/conf.d/$(pwd | sed 's/\// /g' | awk '{print $4}').conf"
     fi
 fi   
 
@@ -310,7 +286,6 @@ if [[ $(wp option get siteurl --allow-root) =~ //www. ]]; then
                 npreload > /dev/null 2>&1
         else
                 "$NGINX" -t 2>&1 | mail -s "WPO URGENT - Nginx conf fail during updating /usr/local/nginx/conf/conf.d/$(pwd | sed 's/\// /g' | awk '{print $4}').conf for www -  $HOSTNAME" monitor@bigscoots.com
-                echo "nginx conf failed on setting www in /usr/local/nginx/conf/conf.d/$(pwd | sed 's/\// /g' | awk '{print $4}').conf"
     fi
 fi
 
