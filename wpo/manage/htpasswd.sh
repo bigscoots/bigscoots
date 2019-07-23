@@ -26,3 +26,11 @@ else
         sleep 1
 
 fi
+
+    nginx -t > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+                npreload > /dev/null 2>&1
+        else
+                nginx -t 2>&1 | mail -s "WPO URGENT - Nginx conf fail while adding htpasswd protection -  $HOSTNAME" monitor@bigscoots.com
+                exit 1
+    fi
