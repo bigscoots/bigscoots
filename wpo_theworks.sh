@@ -66,16 +66,12 @@ if [[ $1 == fresh ]]; then
   wpuserpass=$(grep "Wordpress Admin Pass:" $wplog | awk '{print $4}')
 
   wp --allow-root --skip-plugins --skip-themes search-replace http: https:
-  /bigscoots/wpo_forcehttps.sh "$DOMAIN"
-  nginx -t
 
-  echo
-  echo
+  {
   echo "Wordpress Admin URL: https://$DOMAIN/wp-login.php"
   echo "Wordpress Admin User: $wpuser"
   echo "Wordpress Admin Pass: $wpuserpass"
-  echo
-  echo
+  } >> /home/nginx/domains/"$DOMAIN"/.fresh
 
 else
 
