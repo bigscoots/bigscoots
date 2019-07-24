@@ -6,8 +6,8 @@ if [ ! -f "/root/.wpocf" ] || [ ! -s "/root/.wpocf" ]
         echo "\"cloudflare\": {"
         echo "\"username\": \"NA\","
         echo "\"password\": \"NA\","
-        echo "\"userkey\": \"NA\","
-        echo "\"apikey\": \"NA\","
+        echo "\"userKey\": \"NA\","
+        echo "\"apiKey\": \"NA\","
         echo "\"nameserver1\": \"NA.ns.cloudflare.com\","
         echo "\"nameserver2\": \"NA.ns.cloudflare.com\""
     } >> /root/.wpocf
@@ -63,7 +63,7 @@ rm -f /tmp/tmpftp.txt
 
 sleep 1
 
-echo ; echo { ; echo "\"domain\": \"$domain\"," ; echo "\"backupUser\": \"$bkuser\"," ; echo "\"serverIp\": \"$ftphost\"," ; echo "\"flushOpcacheURL\": \"https://$HOSTNAME/$(grep -l "The servers opcache has been flushed" /usr/local/nginx/html/*.php | sed 's/\// /'g | grep -oE '[^ ]+$')\"," ; echo "\"phpMyAdmin\": {" ; echo "\"url\": \"$pmaurl\"," ; echo "\"popupUsername\": \"$pmauser\"," ; echo "\"popupPassword\": \"$pmapass\"," ; echo "\"username\": \"$pmadbuser\"," ; echo "\"password\": \"$pmadbpass\"" ; echo }, ; echo "\"ftp\": {" ; echo "\"host\": \"$ftphost\"," ; echo "\"port\": \"21\"," ; echo "\"mode\": \"FTP (explicit SSL)\"," ; echo "\"pasv\": \"Ensure is Checked/Enabled\"," ; echo "\"username\": \"$ftpusername\"," ; echo "\"password\": \"$ftppassword\"" ; echo }, ; if [ "$2" != nocf ] ; then cat /root/.wpocf ; fi ; echo } ; echo } ; echo
+echo ; echo { ; echo "\"domain\": \"$domain\"," ; echo "\"backupUser\": \"$bkuser\"," ; echo "\"serverIP\": \"$ftphost\"," ; echo "\"flushOpcacheURL\": \"https://$HOSTNAME/$(grep -l "The servers opcache has been flushed" /usr/local/nginx/html/*.php | sed 's/\// /'g | grep -oE '[^ ]+$')\"," ; echo "\"phpMyAdmin\": {" ; echo "\"url\": \"$pmaurl\"," ; echo "\"popupUsername\": \"$pmauser\"," ; echo "\"popupPassword\": \"$pmapass\"," ; echo "\"username\": \"$pmadbuser\"," ; echo "\"password\": \"$pmadbpass\"" ; echo }, ; echo "\"ftp\": {" ; echo "\"host\": \"$ftphost\"," ; echo "\"port\": \"21\"," ; echo "\"mode\": \"FTP (explicit SSL)\"," ; echo "\"pasv\": \"Ensure is Checked/Enabled\"," ; echo "\"username\": \"$ftpusername\"," ; echo "\"password\": \"$ftppassword\"" ; echo }, ; if [ "$2" != nocf ] ; then cat /root/.wpocf ; fi ; echo } ; echo } ; echo
 
 done
 
@@ -100,6 +100,6 @@ rm -f /tmp/tmpftp.txt
 
 sleep 1
 
-echo ; echo { ; echo "\"domain\": \"$domain\"," ; echo "\"backupUser\": \"$bkuser\"," ; echo "\"serverIp\": \"$ftphost\"," ; echo "\"flushOpcacheURL\": \"https://$HOSTNAME/$(grep -l "The servers opcache has been flushed" /usr/local/nginx/html/*.php | sed 's/\// /'g | grep -oE '[^ ]+$')\"," ; echo "\"phpMyAdmin\": {" ; echo "\"url\": \"$pmaurl\"," ; echo "\"popupUsername\": \"$pmauser\"," ; echo "\"popupPassword\": \"$pmapass\"," ; echo "\"username\": \"$pmadbuser\"," ; echo "\"password\": \"$pmadbpass\"" ; echo }, ; echo "\"ftp\": {" ; echo "\"host\": \"$ftphost\"," ; echo "\"port\": \"21\"," ; echo "\"mode\": \"FTP (explicit SSL)\"," ; echo "\"pasv\": \"Ensure is Checked/Enabled\"," ; echo "\"username\": \"$ftpusername\"," ; echo "\"password\": \"$ftppassword\"" ; echo }, ; if [ "$2" != nocf ] ; then cat /root/.wpocf ; fi ; echo } ; echo } ; echo
+echo ; echo { ; echo "\"domain\": \"$domain\"," ; echo "\"backupUser\": \"$bkuser\"," ; echo "\"serverIP\": \"$ftphost\"," ; echo "\"flushOpcacheURL\": \"https://$HOSTNAME/$(grep -l "The servers opcache has been flushed" /usr/local/nginx/html/*.php | sed 's/\// /'g | grep -oE '[^ ]+$')\"," ; echo "\"phpMyAdmin\": {" ; echo "\"url\": \"$pmaurl\"," ; echo "\"popupUsername\": \"$pmauser\"," ; echo "\"popupPassword\": \"$pmapass\"," ; echo "\"username\": \"$pmadbuser\"," ; echo "\"password\": \"$pmadbpass\"" ; echo }, ; echo "\"ftp\": {" ; echo "\"host\": \"$ftphost\"," ; echo "\"port\": \"21\"," ; echo "\"mode\": \"FTP (explicit SSL)\"," ; echo "\"pasv\": \"Ensure is Checked/Enabled\"," ; echo "\"username\": \"$ftpusername\"," ; echo "\"password\": \"$ftppassword\"" ; echo }, ; if [ "$2" != nocf ] ; then cat /root/.wpocf ; fi ; echo } ; echo } ; echo
 
 fi
