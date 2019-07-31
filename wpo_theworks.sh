@@ -24,7 +24,6 @@ if [[ $1 == cpanel ]]; then
   mv "$backup"/mysql/"$DB_NAME".sql bigscoots.sql
   mv "$backup"/homedir/public_html/* .
   mv "$backup"/homedir/public_html/.htaccess .
-  wp --allow-root --skip-plugins --skip-themes config set DB_HOST localhost
 fi
 
 if [[ $1 == wpe ]]; then
@@ -41,7 +40,6 @@ if [[ $1 == wpe ]]; then
   wp --allow-root --skip-plugins --skip-themes config set DB_CHARSET "$DB_CHARSET"
   wp --allow-root --skip-plugins --skip-themes config set DB_COLLATE "$DB_COLLATE"
   wp --allow-root --skip-plugins --skip-themes config set table_prefix "$TABLE_PREFIX"
-  wp --allow-root --skip-plugins --skip-themes config set DB_HOST localhost
   wp --allow-root --skip-plugins --skip-themes db reset --yes
 fi
 
