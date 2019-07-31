@@ -9,6 +9,10 @@ exit_on_error() {
     fi
 }
 
+# remove add_filter should be used in a mu-plugin, otherwise breaks wp-cli
+
+sed -i 's/add_filter/\/\/add_filter/g' wp-config.php
+
 NGINX=$(which nginx)
 
 if [[ $1 == cpanel ]]; then
