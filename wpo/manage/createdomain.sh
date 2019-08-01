@@ -11,6 +11,7 @@ fi
 # fi
 
 domain="$1"
+domainip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 
 if [ -d /home/nginx/domains/"$domain" ]; then
   echo "$domain already exists on the server."
@@ -27,3 +28,7 @@ else
   /bigscoots/wpo/manage/expect/createdomain "$domain"
 
 fi
+
+sed "s/REPLACEDOMAIN/$domain/g ; s/REPLACEIP/$domainip/g" /bigscoots/wpo/extras/dnszone.txt > /home/nginx/domains/"$domain"/"$domain"-dnszone.txt
+
+echo "" | mail -s "$domain has been successfully created on  $HOSTNAME - DNS attached" monitor@bigscoots.com -A /home/nginx/domains/"$domain"/"$domain"-dnszone.txt
