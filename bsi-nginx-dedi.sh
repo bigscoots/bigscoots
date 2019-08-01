@@ -70,7 +70,7 @@ echo ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAgEAjOtX/QuK+gv+yxQRvCRe3gFDvCR3qmjByRAbDq8
 echo "# Office 4 - BigScoots.com" >> ~/.ssh/authorized_keys
 echo ssh-dss AAAAB3NzaC1kc3MAAACBAIYT7sboqZESdMYMCTti3TU7YxFTKlBTsYW0cpB+KnGSRN3pWBg7UuGqagtsA8Kjy7x0UC4n+xBT4qplIsfnO0xGAtYoQfC24R4CRgxzVK78SUx9SaBWEzC4SAhq8GF4rizCVQyAtUjTe7YYGliAVtQ+VhnsOopobJ7QTq9OPwbjAAAAFQDuwQe/Czor8p1a67LKvb4xdpBdmwAAAIAbE8p5D/7G7epAFi/c6SIAgQSi4HccXfVu2jGqJwhW3fr1kGsfigDmsu83vSDbnb++GU1ZfuhtrjDyHGReSR3A8nTrLhNWQWrCh9qiEqk+y1SsRksEAo+OAMkj1HyagU5oV5wBAYHS3uqp6irY8gBV7tOdRTeGT1LChT+Sx++BWQAAAIBHa1gvHIrWC03bmLAc52yMFlWSy9mRrdcUQ0qB9dnThSN7ReRHM7Bo1kbK8BrFXpNl5yLXCjLLwrCPe1e71z5gMRwCept8PPjFyX4BNlRYtj1Ox2LiePTHgMCnSYeyL1KRwEWhKRsYA2K8pdpoMs1KKwIB1c08jkegt1mqtpezZw== tim@localhost.localdomain >> ~/.ssh/authorized_keys
 
-echo "# Office 5 - BigScoots.com" >> /vz/root/"$i"/root/.ssh/authorized_keys
+echo "# Office 5 - BigScoots.com" >> ~/.ssh/authorized_keys
 echo ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDhD+XoZMHAXrpcR8MBtR7SGCe4Ii5G/PIKhKt/0RviOmF8yLJ3k8/ePmhA00QFM0DIRycgu0EatAYbzbrv9opJq8BMIaP2mpIbIrHZHwsIUKmoXCTcTu9ogOAp1Ke6pBIDYWA68dT62qRs05GJ9eRFRWBz6ymRKLlsEYFUS90nb3cH97cd+ILZv3qEGGC0nyPeoXVcX5MlmIU/S74ldNvvi0yo1UEH9/sKcc25wzKWQ0dzzGp5lpex4075NlrhlrMWysfe05XKKNYuDf3A7FSwMsgsFl5fVRbHCwqq3U1pb0RoNcWuzV5L33bLgpE57+RY403vVL3BMgbMNQfJ4io5 bassu@Thunderstorm >> ~/.ssh/authorized_keys
 
 chmod 700 ~/.ssh ; chmod 600 ~/.ssh/authorized_keys
