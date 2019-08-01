@@ -239,7 +239,7 @@ else
 fi
 }
 
-while getopts ":d:s:u:" opt; do
+while getopts ":d:s:u:r:" opt; do
     case "$opt" in
 	d)
 	 vhostname=${OPTARG}
@@ -267,6 +267,10 @@ while getopts ":d:s:u:" opt; do
     fi
 	 fi
 	;;
+    r)
+   redirectdomain=${OPTARG}
+   RUN=y
+  ;;
 	*)
 	 usage
 	;;
@@ -806,6 +810,7 @@ server {
   # limit_conn limit_per_ip 16;
   # ssi  on;
 
+  return 301 https://$redirectdomain\$request_uri;
 
 }
 ENSS
@@ -871,6 +876,7 @@ server {
   #ssl_stapling on;
   #ssl_stapling_verify on;
 
+  return 301 https://$redirectdomain\$request_uri;
 
 }
 ESX
@@ -928,6 +934,7 @@ server {
   #ssl_stapling_verify on;
   #ssl_trusted_certificate /usr/local/nginx/conf/ssl/${vhostname}/${vhostname}-trusted.crt;  
 
+  return 301 https://$redirectdomain\$request_uri;
 
 }
 ESS
@@ -982,6 +989,7 @@ server {
   #ssl_stapling_verify on;
   #ssl_trusted_certificate /usr/local/nginx/conf/ssl/${vhostname}/${vhostname}-trusted.crt;  
 
+  return 301 https://$redirectdomain\$request_uri;
 
 }
 ESS
@@ -1019,6 +1027,7 @@ server {
   # limit_conn limit_per_ip 16;
   # ssi  on;
 
+  return 301 https://$redirectdomain\$request_uri;
 
 }
 END
