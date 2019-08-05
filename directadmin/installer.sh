@@ -1,4 +1,4 @@
-DA
+#!/bin/bash
 
 /bigscoots/includes/keymebatman.sh
 
