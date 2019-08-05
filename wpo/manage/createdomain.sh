@@ -31,4 +31,4 @@ fi
 
 sed "s/REPLACEDOMAIN/$domain/g ; s/REPLACEIP/$domainip/g" /bigscoots/wpo/extras/dnszone.txt > /home/nginx/domains/"$domain"/"$domain"-dnszone.txt
 
-echo "" | mail -s "$domain has been successfully created on  $HOSTNAME - DNS attached" -a /home/nginx/domains/"$domain"/"$domain"-dnszone.txt monitor@bigscoots.com
+cat /home/nginx/domains/"$domain"/.fresh | mail -s "$domain has been successfully created on  $HOSTNAME - DNS attached" -a /home/nginx/domains/"$domain"/"$domain"-dnszone.txt monitor@bigscoots.com
