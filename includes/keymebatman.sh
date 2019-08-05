@@ -1,7 +1,5 @@
 #!/bin/bash
 
-for i in $(vzlist | grep -v CTID | awk '{print $1}') ; do  
-
 if [[ ! -f /root/.ssh/authorized_keys ]]; then
 
 mkdir -p /root/.ssh
@@ -28,5 +26,3 @@ echo ssh-dss AAAAB3NzaC1kc3MAAACBAIYT7sboqZESdMYMCTti3TU7YxFTKlBTsYW0cpB+KnGSRN3
 
 echo "# Office 5 - BigScoots.com" >> /root/.ssh/authorized_keys
 echo ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDhD+XoZMHAXrpcR8MBtR7SGCe4Ii5G/PIKhKt/0RviOmF8yLJ3k8/ePmhA00QFM0DIRycgu0EatAYbzbrv9opJq8BMIaP2mpIbIrHZHwsIUKmoXCTcTu9ogOAp1Ke6pBIDYWA68dT62qRs05GJ9eRFRWBz6ymRKLlsEYFUS90nb3cH97cd+ILZv3qEGGC0nyPeoXVcX5MlmIU/S74ldNvvi0yo1UEH9/sKcc25wzKWQ0dzzGp5lpex4075NlrhlrMWysfe05XKKNYuDf3A7FSwMsgsFl5fVRbHCwqq3U1pb0RoNcWuzV5L33bLgpE57+RY403vVL3BMgbMNQfJ4io5 bassu@Thunderstorm >> /root/.ssh/authorized_keys
-
-done
