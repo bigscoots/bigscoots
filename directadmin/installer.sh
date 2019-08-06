@@ -13,7 +13,11 @@ cd /root
 echo 2.0 > /root/.custombuild
 wget -O setup.sh http://www.directadmin.com/setup.sh
 chmod 755 setup.sh
-./setup.sh 31392 198570 server.humblemeteor.com venet0:0 50.31.114.143
+IP=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | grep -v '192.168.')
+ETH=$(ip addr |grep ${IP} | grep -o '[^ ]\+$')
+read -p "Enter DA LID: " LID
+
+./setup.sh 31392 ${LID} ${HOSTNAME} venet0:0 ${IP}
 
 # Upgrade mysql to mariadb10.3
 
