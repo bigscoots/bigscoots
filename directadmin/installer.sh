@@ -17,7 +17,7 @@ IP=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\
 ETH=$(ip addr |grep ${IP} | grep -o '[^ ]\+$')
 read -p "Enter DA LID: " LID
 
-./setup.sh 31392 ${LID} ${HOSTNAME} venet0:0 ${IP}
+./setup.sh 31392 ${LID} ${HOSTNAME} ${ETH} ${IP}
 
 # Upgrade mysql to mariadb10.3
 
