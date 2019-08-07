@@ -11,18 +11,6 @@
  * License: GPLv2
  */
 
-function clear_iis_wincache() {
-	if( ! function_exists( 'wincache_ucache_get' ) ) {
-		return;
-	}
-	if( ! wincache_ucache_clear() ) {
-		return false;
-	}
-	else {
-		return true;
-	}
-}
-
 function clear_php_opcache() {
 	if( ! extension_loaded( 'Zend OPcache' ) ) {
 		return;
@@ -52,23 +40,7 @@ function clear_php_opcache() {
 	}
 }
 
-function is_iis() {
-	$software = strtolower( $_SERVER["SERVER_SOFTWARE"] );
-	if( false !== strpos( $software, "microsoft-iis" ) )
-		return true;
-	else
-		return false;
-}
-
 function clear_caches() {
-	if( is_iis() ) {
-		if ( clear_iis_wincache() ) {
-			error_log( 'WinCache user cache cleared.' );
-		}
-		else {
-			error_log( 'Clearing WinCache user cache opcode cache failed.' );
-		}
-	}
 	if( clear_php_opcache() ) {
 		error_log( 'PHP OPcache opcode cache cleared.' );
 	}
