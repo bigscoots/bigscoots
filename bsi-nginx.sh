@@ -168,6 +168,9 @@ opcachephp=$(cat /dev/urandom | tr -cd 'a-f0-9' | head -c 32).php ;
 } >> "/usr/local/nginx/html/$opcachephp"
 chown nginx: "/usr/local/nginx/html/$opcachephp"
 
+mkdir -p /root/.bigscoots/php/
+echo '/home/nginx/domains/*.bigscoots-staging.com/public' >> /root/.bigscoots/php/opcache-blacklist.txt
+
 sed -i 's/return 302/#return 302/g' /usr/local/nginx/conf/conf.d/phpmyadmin_ssl.conf
 sed -i 's/#include \/usr\/local\/nginx\/conf\/php.conf/include \/usr\/local\/nginx\/conf\/php.conf/g' /usr/local/nginx/conf/conf.d/phpmyadmin_ssl.conf
 
