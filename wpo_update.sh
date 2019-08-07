@@ -52,13 +52,18 @@ if [[ ! -f /etc/centminmod/email-secondary.ini ]]; then
 	echo "root" > /etc/centminmod/email-secondary.ini
 fi
 
- if ! grep -q @ /etc/centminmod/email-primary.ini ; then
+ if ! grep -q @ /etc/centminmod/email-primary.ini > /dev/null 2>&1 ; then
  	echo "root" > /etc/centminmod/email-primary.ini
  fi
 
- if ! grep -q @ /etc/centminmod/email-secondary.ini ; then
+ if ! grep -q @ /etc/centminmod/email-secondary.ini > /dev/null 2>&1 ; then
  	echo "root" > /etc/centminmod/email-secondary.ini
  fi
 
+if ! grep -q bigscoots-staging.com /root/.bigscoots/php/opcache-blacklist.txt > /dev/null 2>&1 ; then
+ 	mkdir -p /root/.bigscoots/php/
+	echo '/home/nginx/domains/*.bigscoots-staging.com/public/*' >> /root/.bigscoots/php/opcache-blacklist.txt
+ fi
+ 
 exit
 
