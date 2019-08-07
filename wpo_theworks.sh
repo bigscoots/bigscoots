@@ -265,6 +265,11 @@ touch apple-touch-icon-76x76.png
 touch apple-touch-icon-precomposed.png
 touch apple-touch-icon.png
 
+# flush opcache muplugin on updates
+
+mkdir -p wp-content/mu-plugins
+rsync -ahv /bigscoots/wpo/extras/clear-opcode-caches.php wp-content/mu-plugins/
+
 if [[ "$wprocket" == "y" ]]; then
 
   rm -f wp-content/advanced-cache.php
