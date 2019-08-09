@@ -38,7 +38,7 @@ cd /usr/local/directadmin/custombuild
 # ./build rewrite_confs
 
 # increase max userlength
-sed -i '/max_username_length/c\max_username_length = 30' /usr/local/directadmin/conf/directadmin.conf
+sed -i '/max_username_length/c\max_username_length=30' /usr/local/directadmin/conf/directadmin.conf
 # enable sni
 grep -q 'enable_ssl_sni=1' /usr/local/directadmin/conf/directadmin.conf || echo 'enable_ssl_sni=1' >> /usr/local/directadmin/conf/directadmin.conf
 
