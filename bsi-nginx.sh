@@ -123,7 +123,6 @@ chmod +x phpmyadmin.sh
 
 sed -i 's/listen 443 ssl spdy/listen 443 ssl http2/g' /usr/local/nginx/conf/conf.d/phpmyadmin_ssl.conf
 sed -i 's/spdy_headers_comp/#spdy_headers_comp/g' /usr/local/nginx/conf/conf.d/phpmyadmin_ssl.conf
-sed -i 's/location \/robots.txt/#location \/robots.txt/g' /usr/local/nginx/conf/drop.conf
 
 echo -e "\n" | ssh-keygen -t rsa -N "" -b 4096
 
