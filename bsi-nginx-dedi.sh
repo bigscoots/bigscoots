@@ -56,7 +56,7 @@ fi
 sed -ie 's/#Port.*[0-9]$/Port 2222/gI' /etc/ssh/sshd_config
 sed -i 's/#UseDNS yes/UseDNS no/g' /etc/ssh/sshd_config
 sed -i 's/#PermitRootLogin yes/PermitRootLogin without-password/g' /etc/ssh/sshd_config
-sed -i 's/location \/robots.txt/#location \/robots.txt/g' /usr/local/nginx/conf/drop.conf
+sed -i 's/location = \/robots.txt/#location = \/robots.txt/g' /usr/local/nginx/conf/drop.conf
 
 sleep 1
 
