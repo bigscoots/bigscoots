@@ -290,6 +290,12 @@ if [[ "$wprocket" == "y" ]]; then
 
 fi
 
+if [[ $(wp option get siteurl --allow-root) =~ http:// ]]; then
+	HTTPDOMAIN=$(wp option get siteurl --allow-root)
+	HTTPSDOMAIN=$(wp option get siteurl --allow-root | sed 's/http:/https:/g')
+	wp search-replace "${HTTPDOMAIN}" "${HTTPSDOMAIN}" --skip-columns=guid
+fi
+
 if [[ $(wp option get siteurl --allow-root) =~ https:// ]]; then
     /bigscoots/wpo_forcehttps.sh $(pwd | sed 's/\// /g' | awk '{print $4}')
 
