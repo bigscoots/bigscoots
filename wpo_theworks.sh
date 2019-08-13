@@ -35,6 +35,14 @@ fi
 
 if [[ $1 == wpe ]]; then
 
+  if [[ ! $(pwd | sed 's/\// /g' | grep -oE '[^ ]+$')  == public ]]; then
+  echo "You are not curently in the public directory please cd into the  proper directory then try again."
+  exit
+  fi
+
+  mv site-archive-*.zip wp-config.php ..
+  rm -rf *
+  mv ../site-archive-*.zip .
   unzip site-archive-*.zip
 
   DB_CHARSET=$(wp --allow-root --skip-plugins --skip-themes config get DB_CHARSET)
@@ -44,6 +52,7 @@ if [[ $1 == wpe ]]; then
   mv wp-config.php wp-config.php.wpe
   mv ../wp-config.php .
   mv wp-content/mysql.sql bigscoots.sql
+
   wp --allow-root --skip-plugins --skip-themes config set DB_CHARSET "$DB_CHARSET"
   wp --allow-root --skip-plugins --skip-themes config set DB_COLLATE "$DB_COLLATE"
   wp --allow-root --skip-plugins --skip-themes config set table_prefix "$TABLE_PREFIX"
@@ -283,16 +292,16 @@ fi
 
 if [[ $(wp option get siteurl --allow-root) =~ https:// ]]; then
     /bigscoots/wpo_forcehttps.sh $(pwd | sed 's/\// /g' | awk '{print $4}')
-   
+
     "$NGINX" -t > /dev/null 2>&1
     if [ $? -eq 0 ]; then
                 npreload > /dev/null 2>&1
         else
                 "$NGINX" -t 2>&1 | mail -s "WPO URGENT - Nginx conf fail forcing https /usr/local/nginx/conf/conf.d/$(pwd | sed 's/\// /g' | awk '{print $4}').conf for www -  $HOSTNAME" monitor@bigscoots.com
     fi
-fi   
+fi
 
-if [[ $(wp option get siteurl --allow-root) =~ //www. ]]; then 
+if [[ $(wp option get siteurl --allow-root) =~ //www. ]]; then
     sed -i -E 's/return 301 https:\/\/(www)?/return 301 https:\/\/www./g' /usr/local/nginx/conf/conf.d/$(pwd | sed 's/\// /g' | awk '{print $4}').conf
 
     "$NGINX" -t > /dev/null 2>&1
