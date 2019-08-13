@@ -41,7 +41,7 @@ if [[ $1 == wpe ]]; then
   fi
 
   mv site-archive-*.zip wp-config.php ..
-  rm -rf *
+  rm -rf * .htaccess
   mv ../site-archive-*.zip .
   unzip site-archive-*.zip
 
