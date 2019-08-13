@@ -293,7 +293,7 @@ fi
 if [[ $(wp option get siteurl --allow-root) =~ http:// ]]; then
 	HTTPDOMAIN=$(wp option get siteurl --allow-root)
 	HTTPSDOMAIN=$(wp option get siteurl --allow-root | sed 's/http:/https:/g')
-	wp search-replace "${HTTPDOMAIN}" "${HTTPSDOMAIN}" --skip-columns=guid
+	wp search-replace "${HTTPDOMAIN}" "${HTTPSDOMAIN}" --skip-columns=guid --allow-root
 fi
 
 if [[ $(wp option get siteurl --allow-root) =~ https:// ]]; then
