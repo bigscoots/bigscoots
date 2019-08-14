@@ -23,7 +23,16 @@ dos2unix wp-config.php
 NGINX=$(which nginx)
 
 if [[ $1 == cpanel ]]; then
+  
+  if [[ ! $(pwd | sed 's/\// /g' | grep -oE '[^ ]+$')  == public ]]; then
+  echo "You are not curently in the public directory please cd into the  proper directory then try again."
+  exit
+  fi
+  
   backup=$(echo *.tar.gz | sed 's/.tar.gz//g')
+  mv "${backup}".tar.gz ..
+  rm -rf *
+  mv ../"${backup}".tar.gz" /
   tar -zxvf "$backup".tar.gz
   sed -i '/gd-config.php/d' "$backup"/homedir/public_html/wp-config.php
   sed -i '/SiteGround/d' "$backup"/homedir/public_html/wp-config.php
