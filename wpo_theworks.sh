@@ -32,7 +32,7 @@ if [[ $1 == cpanel ]]; then
   backup=$(echo *.tar.gz | sed 's/.tar.gz//g')
   mv "${backup}".tar.gz ..
   rm -rf *
-  mv ../"${backup}".tar.gz" /
+  mv ../"${backup}".tar.gz" .
   tar -zxvf "$backup".tar.gz
   sed -i '/gd-config.php/d' "$backup"/homedir/public_html/wp-config.php
   sed -i '/SiteGround/d' "$backup"/homedir/public_html/wp-config.php
