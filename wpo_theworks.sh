@@ -164,55 +164,49 @@ rm -rfv wp-content/mu-plugins/SupportCenterMUAutoloader.php  wp-content/mu-plugi
 
 # CACHING
 
+#!/bin/bash
+
+sslconf=$(echo /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf)
+
 if [ -d "wp-content/plugins/wp-rocket" ]; then
 
   wprocket=y
 
   if [ ! -d "/usr/local/nginx/conf/rocket-nginx" ]; then
 
-  bringmeback=$(pwd)
-  cd /usr/local/nginx/conf/ || exit
-  git clone https://github.com/maximejobin/rocket-nginx.git
-  cd rocket-nginx || exit
-  cp rocket-nginx.ini.disabled rocket-nginx.ini
-  php rocket-parser.php
-  cd "$bringmeback" || exit
+    bringmeback=$(pwd)
+    cd /usr/local/nginx/conf/ || exit
+    git clone https://github.com/maximejobin/rocket-nginx.git
+    cd rocket-nginx || exit
+    cp rocket-nginx.ini.disabled rocket-nginx.ini
+    php rocket-parser.php
+    cd "$bringmeback" || exit
 
-    for i in wpsupercache_ wpcacheenabler_ rediscache_
-      do
-        sed -i "/$i/s/#\?include /#include /g" /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
-    done
-        sed -i '/rocket-nginx\/default.conf/s/#\?include/include/g' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
+  fi
 
-    if grep -q "rocket-nginx/default.conf" /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf ; then
-    for i in wpsupercache_ wpcacheenabler_ rediscache_
-      do
-        sed -i "/$i/s/#\?include /#include /g" /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
-    done
-      sed -i '/rocket-nginx\/default.conf/s/#\?include /include /g' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
-    else
-      sed -i '/rediscache_/a\ \ include /usr/local/nginx/conf/rocket-nginx/default.conf\;' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
+  if ! grep -q "rocket-nginx/default.conf" "${sslconf}" ; then
+
+    sed -i '/rediscache_/a\ \ include /usr/local/nginx/conf/rocket-nginx/default.conf\;' "${sslconf}"
+
+  fi
+
+  sed -i 's/#include \/usr\/local\/nginx\/conf\/rocket-nginx\/default.conf;/include \/usr\/local\/nginx\/conf\/rocket-nginx\/default.conf;/g' "${sslconf}"
+
+  for i in wpsupercache_ wpcacheenabler_ rediscache_ ; do
+
+    if [[ ! $(grep $i "${sslconf}") =~ ^# ]]; then
+  
+      sed -i "/$i/s/#\?include /#include /g" "${sslconf}"
+
     fi
 
-  elif grep -q "rocket-nginx/default.conf" /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf ; then
-    for i in wpsupercache_ wpcacheenabler_ rediscache_
-      do
-        sed -i "/$i/s/#\?include /#include /g" /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
-    done
-      sed -i '/rocket-nginx\/default.conf/s/#\?include /include /g' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
-    else
-      sed -i '/rediscache_/a\ \ include /usr/local/nginx/conf/rocket-nginx/default.conf\;' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
-    fi
+  done
 
-    sed -i 's/#\?try_files /#try_files /g ; s/#try_files \$uri \$uri\/ \/index.php?q/try_files \$uri \$uri\/ \/index.php?q/g' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
+  sed -i 's/#\?try_files /#try_files /g ; s/#try_files \$uri \$uri\/ \/index.php?\$/try_files \$uri \$uri\/ \/index.php?\$/g' "${sslconf}"
 
 else
 
-wp plugin install cache-enabler --activate --allow-root --skip-plugins --skip-themes --quiet ; wp --allow-root --skip-plugins --skip-themes --quiet plugin delete comet-cache sg-cachepress wp-hummingbird wp-super-cache w3-total-cache nginx-helper wp-redis wp-fastest-cache ; chown -R nginx: .
-
-sed -i '/location \/ {/i \ \ #if ($http_accept ~* "webp"){\n  #rewrite ^/(.*).(jpe\?g|png)\$ \/wp-content\/plugins\/webp-express\/wod\/webp-on-demand.php?wp-content=wp-content break;\n  #}\n \n  #include /usr/local/nginx/conf/webplocations.conf; \n' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
-
-sed -i '/uploads|files/a \ \n location ~ ^\/wp-content\/plugins\/webp-express\/ {\n   include /usr/local/nginx/conf/php.conf;\n }\n' /usr/local/nginx/conf/wpincludes/"$(pwd | sed 's/\// /g' | awk '{print $4}')"/wpsecure_"$(pwd | sed 's/\// /g' | awk '{print $4}')".conf
+wp plugin install cache-enabler --activate --allow-root --skip-plugins --skip-themes --quiet ; wp plugin delete comet-cache sg-cachepress wp-hummingbird wp-super-cache w3-total-cache nginx-helper wp-redis wp-fastest-cache --allow-root --skip-plugins --skip-themes --quiet
 
 fi
 
