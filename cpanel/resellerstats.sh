@@ -1,5 +1,7 @@
 #!/bin/bash
 
+rm -f Unleaded.txt Petroleum.txt Diesel.txt Nitro.txt
+
 for i in $(sed 's/:/ /g' /var/cpanel/resellers | awk '{print $1}'| grep -v bigscoot | grep -v bsreseller |grep -v scootsreseller) ; do 
 	
 	if whmapi1 accountsummary user=$i |grep -i Unleaded &>/dev/null ; then 
