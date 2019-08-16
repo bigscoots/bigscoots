@@ -15,7 +15,7 @@ for i in $(sed 's/:/ /g' /var/cpanel/resellers | awk '{print $1}'| grep -v bigsc
 	fi
 
 	if whmapi1 accountsummary user=$i |grep -i Nitro &>/dev/null ; then 
-		whmapi1 resellerstats user=$i |grep user | wc -l > Nitro.txt
+		whmapi1 resellerstats user=$i |grep user | wc -l >> Nitro.txt
 	fi
 
 done
