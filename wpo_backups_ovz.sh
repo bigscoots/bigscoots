@@ -6,8 +6,7 @@ BKSVR=backup3.bigscoots.com
 BSPATH=/root/.bigscoots
 PATH=/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/root/bin
 
-if [ -f /proc/vz/veinfo ];
-then
+if [ -f /proc/vz/veinfo ] && [ -z "$2" ]; then
 
 BKUSER=wpo$(awk '{print $1}' /proc/vz/veinfo)
 
@@ -34,8 +33,35 @@ if [ ! -f "$BSPATH"/rsync/exclude ]; then
         echo "*/wp-content/uploads/ShortpixelBackups"
 
         } > "$BSPATH"/rsync/exclude
-else
-        :
+fi
+
+elif [ -n "$2" ]; then
+  BKUSER="$2"
+
+  if ssh -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" 'uptime' >/dev/null; [ $? -eq 255 ]
+then
+  echo "Mark for Justin" | mail -s "$HOSTNAME- WPO failed to SSH to backup server." monitor@bigscoots.com
+  exit 1
+fi
+
+if [ ! -f "$BSPATH"/rsync/exclude ]; then
+        mkdir -p "$BSPATH"/rsync
+
+        {
+        echo ".infected_*"
+        echo "log/access.log*"
+        echo "log/error.log*"
+        echo "*/core.[0-9]*"
+        echo "*/error_log"
+        echo "*/wp-content/updraft"
+        echo "*/wp-content/cache"
+        echo "*/wp-content/wpbackitup_backups"
+        echo "*/wp-content/uploads/ithemes-security"
+        echo "*/wp-content/uploads/wpallimport"
+        echo "*/wp-content/uploads/ShortpixelBackups"
+
+        } > "$BSPATH"/rsync/exclude
+        
 fi
 
 
