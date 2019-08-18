@@ -6,7 +6,7 @@ BKSVR=backup3.bigscoots.com
 BSPATH=/root/.bigscoots
 PATH=/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/root/bin
 
-if [ -f /proc/vz/veinfo ] && [ -z "$2" ]; then
+if [ -f /proc/vz/veinfo ] && [ -z "$1" ]; then
 
 BKUSER=wpo$(awk '{print $1}' /proc/vz/veinfo)
 
@@ -35,8 +35,8 @@ if [ ! -f "$BSPATH"/rsync/exclude ]; then
         } > "$BSPATH"/rsync/exclude
 fi
 
-elif [ -n "$2" ]; then
-  BKUSER="$2"
+elif [ -n "$1" ]; then
+  BKUSER="$1"
 
   if ssh -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" 'uptime' >/dev/null; [ $? -eq 255 ]
 then
