@@ -129,21 +129,36 @@ manual)
 ;;
 delete)
 
+  if [[ -z $2 ]]; then
+
+      echo "Make sure to specify a manual backup folder name."
+      exit
+  fi
+
   if [[ $2 == manual-* ]]; then
 
- mkdir -p "$HOMEDIR"/.empty
- rsync -a \
- -e "$SSHOPTIONS" \
- --ignore-errors \
- --delete \
- "$HOMEDIR"/.empty/ "$BKUSER"@"$BKSVR":"$2"/"$(dirname "$PWD" | sed 's/\// /g' | awk '{print $4}')"
+    if  [[ $remote == y ]]; then
 
- ssh -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" "rmdir -p $2/$(dirname "$PWD" | sed 's/\// /g' | awk '{print $4}')"
+      mkdir -p "$HOMEDIR"/.empty
+      rsync -a \
+      -e "$SSHOPTIONS" \
+      --ignore-errors \
+      --delete \
+      "$HOMEDIR"/.empty/ "$BKUSER"@"$BKSVR":"$2"/"$(dirname "$PWD" | sed 's/\// /g' | awk '{print $4}')"
 
+      ssh -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" "rmdir -p $2/$(dirname "$PWD" | sed 's/\// /g' | awk '{print $4}')"
 
-else
+    else
 
-  echo "Make sure to specify a manual backup folder name."
+      mkdir -p "$HOMEDIR"/.empty
+      rsync -a \
+      --ignore-errors \
+      --delete \
+      "$HOMEDIR"/.empty/ /backup/"$2"/"$(dirname $PWD | sed 's/\// /g' | awk '{print $4}')"
+
+      rm -rf "/backup/$2"
+
+    fi
 
 fi
 
