@@ -37,7 +37,7 @@ if [[ $sourcesitedb == "$destinationsitedb" ]]; then
     if ! wp ${WPCLIFLAGS} config set DB_PASSWORD "$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16)" --path="${destinationsitedocroot}" 2>&1; then
         exit
     fi
-    if ! wp ${WPCLIFLAGS} db create 2>&1; then
+    if ! wp ${WPCLIFLAGS} db create --path="${destinationsitedocroot}" 2>&1; then
         exit
     fi
 fi
