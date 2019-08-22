@@ -1,5 +1,7 @@
 #!/bin/bash
 
+{
+
 if [ ! -f "/root/.wpocf" ] || [ ! -s "/root/.wpocf" ]
  then
     {
@@ -103,3 +105,5 @@ sleep 1
 echo ; echo { ; echo "\"domain\": \"$domain\"," ; echo "\"backupUser\": \"$bkuser\"," ; echo "\"serverIP\": \"$ftphost\"," ; echo "\"flushOpcacheURL\": \"https://$HOSTNAME/$(grep -l "The servers opcache has been flushed" /usr/local/nginx/html/*.php | sed 's/\// /'g | grep -oE '[^ ]+$')\"," ; echo "\"phpMyAdmin\": {" ; echo "\"url\": \"$pmaurl\"," ; echo "\"popupUsername\": \"$pmauser\"," ; echo "\"popupPassword\": \"$pmapass\"," ; echo "\"username\": \"$pmadbuser\"," ; echo "\"password\": \"$pmadbpass\"" ; echo }, ; echo "\"ftp\": {" ; echo "\"host\": \"$ftphost\"," ; echo "\"port\": \"21\"," ; echo "\"mode\": \"FTP (explicit SSL)\"," ; echo "\"pasv\": \"Ensure is Checked/Enabled\"," ; echo "\"username\": \"$ftpusername\"," ; echo "\"password\": \"$ftppassword\"" ; echo } ; if [ "$2" = cf ] ; then cat /root/.wpocf ; echo } ; fi ; echo } ; echo
 
 fi
+
+} 2> /dev/null
