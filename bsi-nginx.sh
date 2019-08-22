@@ -153,9 +153,12 @@ echo '/home/nginx/domains/*.bigscoots-staging.com/public/*' >> /root/.bigscoots/
 sed -i 's/return 302/#return 302/g' /usr/local/nginx/conf/conf.d/phpmyadmin_ssl.conf
 sed -i 's/#include \/usr\/local\/nginx\/conf\/php.conf/include \/usr\/local\/nginx\/conf\/php.conf/g' /usr/local/nginx/conf/conf.d/phpmyadmin_ssl.conf
 sed -i 's/location = \/robots.txt/#location = \/robots.txt/g' /usr/local/nginx/conf/drop.conf
-
+sed -i 's/default-character-set/#default-character-set/g' /etc/my.cnf
+sed -i 's/character-set-server/#character-set-server/g' /etc/my.cnf
 
 npreload
+systemctl daemon-reload
+/etc/init.d/mysql restart
 
 sleep 2
 echo "nginx install for $HOSTNAME completed" | mail -s "nginx install for $HOSTNAME completed" monitor@bigscoots.com
