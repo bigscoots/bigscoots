@@ -66,10 +66,8 @@ wp ${WPCLIFLAGS} config set table_prefix $(wp ${WPCLIFLAGS} config get table_pre
 
 # Ended Here
 
-cd "$sourcesitedocroot/" || exit
-siteurl=$(wp option get siteurl --allow-root | sed -r 's/https?:\/\///g')
-cd "$destinationsitedocroot/" || exit
-wp search-replace "//$siteurl" "//$destinationsite" --recurse-objects --skip-columns=guid --skip-tables=wp_users ${WPCLIFLAGS}
+siteurl=$(wp option get siteurl --path=${sourcesitedocroot} ${WPCLIFLAGS} | sed -r 's/https?:\/\///g')
+wp search-replace "//$siteurl" "//$destinationsite" --recurse-objects --skip-columns=guid --skip-tables=wp_users --path=${destinationsitedocroot} ${WPCLIFLAGS}
 
 
 if [ -n "$3" ] && [ -n "$4" ]; then
