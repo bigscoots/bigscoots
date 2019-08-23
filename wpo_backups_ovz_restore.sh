@@ -80,6 +80,8 @@ echo
 ;;
 restore)
 
+{
+
 dbname=$(wp --allow-root --skip-plugins --skip-themes config get DB_NAME)
 
 # "Restoring files..."
@@ -108,11 +110,6 @@ rm -f "$dbname".sql
 
 # "Checking if Cloudflare plugin exists, reinstalling if so."
 
-if [ -d wp-content/plugins/cloudflare ]; then
-  wp plugin delete cloudflare --allow-root --skip-plugins --skip-themes
-  wp plugin install cloudflare --allow-root --skip-plugins --skip-themes
-fi
-
 
 # "Setting proper permissions..."
 
@@ -122,6 +119,8 @@ find $(pwd) -type d -exec chmod 755 {} \; &
 
 
 # "Restore has been completed!"
+
+} 2>&1>/dev/null
 
 ;;
 *)
@@ -163,6 +162,7 @@ fi
 ;;
 hh)
 ls -1d /backup/*/$DOMAIN | sed 's/\/$DOMAIN//g' |grep -v current
+
 echo
 echo "Example rsync command - You should run a backup before proceeding"
 echo "# rsync -ahv --delete /backup/current/$DOMAIN/public/ $(pwd)/"
@@ -170,49 +170,43 @@ echo
 
 ;;
 restore)
+
+{
 dbname=$(grep DB_NAME wp-config.php | grep -v WP_CACHE_KEY_SALT | cut -d \' -f 4)
 
-echo "Restoring files..."
+# "Restoring files..."
 
 "$RSYNC" -ah --delete /backup/"$2"/"$DOMAIN"/public/ "$(pwd)"/
 
 sed -i '/@include "/d' *.php
 
-echo
-echo "Backing up the current database..."
+
+# "Backing up the current database..."
 
 "$MYSQLDUMP" "$dbname" | "$GZIP" > ../"$dbname".sql.gz
 
-echo
-echo "Dropping current database..."
+
+# echo "Dropping current database..."
 
 "$MYSQLADMIN" -s drop -f "$dbname"
 
-echo
-echo "Restoring backup database..."
+
+# echo "Restoring backup database..."
 
 "$MYSQLADMIN" create "$dbname"
 "$GUNZIP" -f "$dbname".sql.gz
 "$MYSQL" "$dbname" < "$dbname".sql
 rm -f "$dbname".sql
 
-echo
-echo "Checking if Cloudflare plugin exists, reinstalling if so."
-
-if [ -d wp-content/plugins/cloudflare ]; then
-  wp plugin delete cloudflare --allow-root --skip-plugins --skip-themes
-  wp plugin install cloudflare --allow-root --skip-plugins --skip-themes
-fi
-
-echo
-echo "Setting proper permissions..."
+# "Setting proper permissions..."
 
 "$CHOWN" -R nginx: $(pwd)
 find $(pwd) -type f -exec chmod 644 {} \; &
 find $(pwd) -type d -exec chmod 755 {} \; &
 
-echo
-echo "Restore has been completed!"
+# "Restore has been completed!"
+
+} &2>
 
 ;;
 *)
