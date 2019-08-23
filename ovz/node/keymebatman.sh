@@ -1,11 +1,11 @@
 #!/bin/bash
 
-if [[ ! -f /vz/root/"$i"/root/.ssh/authorized_keys ]]; then
+if [[ ! -f /vz/root/"$1"/root/.ssh/authorized_keys ]]; then
 
-mkdir -p /vz/root/"$i"/root/.ssh
-touch /vz/root/"$i"/root/.ssh/authorized_keys
-chmod 700 /vz/root/"$i"/root/.ssh
-chmod 600 /vz/root/"$i"/root/.ssh/authorized_keys
+mkdir -p /vz/root/"$1"/root/.ssh
+touch /vz/root/"$1"/root/.ssh/authorized_keys
+chmod 700 /vz/root/"$1"/root/.ssh
+chmod 600 /vz/root/"$1"/root/.ssh/authorized_keys
 
 fi
 
@@ -15,34 +15,33 @@ office02='ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAgEAx/wguQjxQ/h3JD6Tit6hHvXZFszRnQQMMV
 office03='ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAgEAjOtX/QuK+gv+yxQRvCRe3gFDvCR3qmjByRAbDq8I3FKBNLMUpDARMea8ISR/D/xgD1s30WWCXTtUQK9Qem0XSYSn9qdaKp30f7j5APfoL8bAect0i4XR/RpJBTbuH1Mt1WMaqKB5w8cuo7Rwo3dRE7iUZKlSjJFpofQ+hKAWFdnu82MgmetzbQtvR2Ta1ymLul2LK3bluy0tovyB4cWEFGFUwayK999tEvXJ3+T3PxEonVSUS2Ay3xfXJwK+yIigU/MQqf72bKlMRhGEuLnozlYwm5y97qJFKPIDSp4YN8ztmBeKLTBvQkSD32HctxKY4z2BzTev7Ip1Xhil6DDPY7Y/PoQwQ+xBP6jk6OpJud5P49lHIT16obkSW9L8fD5SHT+Ov7AJv0/cclY2VBbJBPKjCy5q+qeiVMSbGkAcRLp40UTTtWkFP6nmWjfPK1sytco5dy1GhoC6mwPrwLmq+mvMpa721NVpcw25/G7o7zXBXZ56i/7ImqlqwCa4/VNEioabhvM3zODLOfbqDXMeZVwIOAoshmAhGYLCm/+OdTi+J+D0+ub6k7EVze3h5/0c4rDYOib62Urp/G3ZUDSakLUj8KhyNLc5UaFbfQPD5ePiw2KQ9qO83Ikkt90oHjFQwW+vu8ribYgEsR/0qk8qTjFL8GYXRsRmqJaMyRFz18U= rsa-key-20170802'
 office04='ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAgEA8Drkz4YtC2FOTYX3iBfkHcPTUoZm39ps3chvK/4jv5wdDtWPeVsPQ0/fmJDSCMqZ85ayuL0d6f7OhxJrhJvqE+AmVpx81O4BGSyjuWISTGg0AwMosNm4gEI8Tms4mP10iHA0nQL90OUYN3uFkp2a3/79bvYnJ2uHl2Sb50ygNOHnRGfds7FcembUCpGkitUqp+BRbRmGB1YFyT4NM+gvYhvdDyuZXgh37ReZpNKPLsqhBdpZOH57b708QUKltw0tLmbOD4e54i1mcyAmg60LZmVMJPfHUegUrb1SdCMCKuA+SKrzymdtCL38q4JmKbaNDc+F/evdfQhuh3fIrRcnMsY0PIf6CYFyVRidWafUCH3f0wTJYKwIOe8qIudEMULn8R1/6MmT4oQBy7NIe/UY7g+BzbXiuBXGgzEZIiyD8vCJym4XcCSL7heFR4Fe4mac1YjDQKoaV2reMbW6CcLGtIZyXnP2/xGWZxouQXr3OM/CAOX9fFxHIIj6OwabxugJu+uPmz+xty77U5YuRWiy73zWAftTZbMHfY187d6Q7KFVgxa3AWDZNYvKlv4vR3l2LOayNYG0Y6mxBkPGRfUnTXfxzYFSniieMPwCpxPyHRdAG68I1VLPd4dF7cZxu+UMJKSc1GfHew+ViResmExunCYCQGRVw3TO/Z+0a6MYWyE= dean'
 office05='ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDhD+XoZMHAXrpcR8MBtR7SGCe4Ii5G/PIKhKt/0RviOmF8yLJ3k8/ePmhA00QFM0DIRycgu0EatAYbzbrv9opJq8BMIaP2mpIbIrHZHwsIUKmoXCTcTu9ogOAp1Ke6pBIDYWA68dT62qRs05GJ9eRFRWBz6ymRKLlsEYFUS90nb3cH97cd+ILZv3qEGGC0nyPeoXVcX5MlmIU/S74ldNvvi0yo1UEH9/sKcc25wzKWQ0dzzGp5lpex4075NlrhlrMWysfe05XKKNYuDf3A7FSwMsgsFl5fVRbHCwqq3U1pb0RoNcWuzV5L33bLgpE57+RY403vVL3BMgbMNQfJ4io5 bassu@Thunderstorm'
-  
-if ! grep -q "${wponexus}" /vz/root/"$i"/root/.ssh/authorized_keys; then
 
-	echo "# WPO NEXUS - BigScoots.com" >> /vz/root/"$i"/root/.ssh/authorized_keys
-	echo from=\"67.202.70.147\" "${wponexus}" >> /vz/root/"$i"/root/.ssh/authorized_keys
+if ! grep -q "${wponexus}" /vz/root/"$1"/root/.ssh/authorized_keys; then
+        echo "# WPO NEXUS - BigScoots.com" >> /vz/root/"$1"/root/.ssh/authorized_keys
+        echo from=\"67.202.70.147\" "${wponexus}" >> /vz/root/"$1"/root/.ssh/authorized_keys
 fi
 
-if ! grep -q "${office01}" /vz/root/"$i"/root/.ssh/authorized_keys; then
-	echo "# Office 1 - BigScoots.com" >> /vz/root/"$i"/root/.ssh/authorized_keys
-	echo "${office01}" >> /vz/root/"$i"/root/.ssh/authorized_keys
+if ! grep -q "${office01}" /vz/root/"$1"/root/.ssh/authorized_keys; then
+        echo "# Office 1 - BigScoots.com" >> /vz/root/"$1"/root/.ssh/authorized_keys
+        echo "${office01}" >> /vz/root/"$1"/root/.ssh/authorized_keys
 fi
 
-if ! grep -q "${office02}" /vz/root/"$i"/root/.ssh/authorized_keys; then
-	echo "# Office 2 - BigScoots.com" >> /vz/root/"$i"/root/.ssh/authorized_keys
-	echo "${office02}" >> /vz/root/"$i"/root/.ssh/authorized_keys
+if ! grep -q "${office02}" /vz/root/"$1"/root/.ssh/authorized_keys; then
+        echo "# Office 2 - BigScoots.com" >> /vz/root/"$1"/root/.ssh/authorized_keys
+        echo "${office02}" >> /vz/root/"$1"/root/.ssh/authorized_keys
 fi
 
-if ! grep -q "${office03}" /vz/root/"$i"/root/.ssh/authorized_keys; then
-	echo "# Office 3 - BigScoots.com" >> /vz/root/"$i"/root/.ssh/authorized_keys
-	echo "${office03}" >> /vz/root/"$i"/root/.ssh/authorized_keys
+if ! grep -q "${office03}" /vz/root/"$1"/root/.ssh/authorized_keys; then
+        echo "# Office 3 - BigScoots.com" >> /vz/root/"$1"/root/.ssh/authorized_keys
+        echo "${office03}" >> /vz/root/"$1"/root/.ssh/authorized_keys
 fi
 
-if ! grep -q "${office04}" /vz/root/"$i"/root/.ssh/authorized_keys; then
-	echo "# Office 4 - BigScoots.com" >> /vz/root/"$i"/root/.ssh/authorized_keys
-	echo "${office04}" >> /vz/root/"$i"/root/.ssh/authorized_keys
+if ! grep -q "${office04}" /vz/root/"$1"/root/.ssh/authorized_keys; then
+        echo "# Office 4 - BigScoots.com" >> /vz/root/"$1"/root/.ssh/authorized_keys
+        echo "${office04}" >> /vz/root/"$1"/root/.ssh/authorized_keys
 fi
 
-if ! grep -q "${office05}" /vz/root/"$i"/root/.ssh/authorized_keys; then
-	echo "# Office 5 - BigScoots.com" >> /vz/root/"$i"/root/.ssh/authorized_keys
-	echo "${office05}" >> /vz/root/"$i"/root/.ssh/authorized_keys
+if ! grep -q "${office05}" /vz/root/"$1"/root/.ssh/authorized_keys; then
+        echo "# Office 5 - BigScoots.com" >> /vz/root/"$1"/root/.ssh/authorized_keys
+        echo "${office05}" >> /vz/root/"$1"/root/.ssh/authorized_keys
 fi
