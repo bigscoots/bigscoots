@@ -67,7 +67,9 @@ fi
 
 ;;
 hh)
+
 ssh -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" "ls -1d */$DOMAIN | sed 's/\/$DOMAIN//g' |grep -v current"
+
 echo
 echo "Example rsync command - You should run a backup before proceeding"
 echo "# rsync -ahv -e \"ssh -i $HOME/.ssh/wpo_backups\" --delete $BKUSER@$BKSVR:$(ssh -i $HOME/.ssh/wpo_backups $BKUSER@$BKSVR 'echo $HOME')/$(ssh -i $HOME/.ssh/wpo_backups $BKUSER@$BKSVR "ls -1d */$DOMAIN | sed 's/\/$DOMAIN//g' |grep -v current" | tail -1)/$DOMAIN/public/ $(pwd)/"
@@ -161,6 +163,7 @@ fi
 
 ;;
 hh)
+
 ls -1d /backup/*/$DOMAIN | sed 's/\/$DOMAIN//g' |grep -v current
 
 echo
@@ -171,7 +174,6 @@ echo
 ;;
 restore)
 
-{
 dbname=$(grep DB_NAME wp-config.php | grep -v WP_CACHE_KEY_SALT | cut -d \' -f 4)
 
 # "Restoring files..."
@@ -205,8 +207,6 @@ find $(pwd) -type f -exec chmod 644 {} \; &
 find $(pwd) -type d -exec chmod 755 {} \; &
 
 # "Restore has been completed!"
-
-} &2>
 
 ;;
 *)
