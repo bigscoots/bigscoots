@@ -45,3 +45,4 @@ fi
 if ! grep -q "${office05}" /vz/root/"$i"/root/.ssh/authorized_keys; then
 	echo "# Office 5 - BigScoots.com" >> /vz/root/"$i"/root/.ssh/authorized_keys
 	echo "${office05}" >> /vz/root/"$i"/root/.ssh/authorized_keys
+fi
