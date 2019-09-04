@@ -9,6 +9,8 @@ exit_on_error() {
     fi
 }
 
+WPCLIFLAGS="--allow-root --skip-plugins --skip-themes"
+
 # Pre-checks
 # remove add_filter should be used in a mu-plugin, otherwise breaks wp-cli
 
@@ -22,13 +24,17 @@ dos2unix wp-config.php
 
 NGINX=$(which nginx)
 
+NEW_DB_NAME=$(wp ${WPCLIFLAGS} config get DB_NAME)
+NEW_DB_USER=$(wp ${WPCLIFLAGS} config get DB_USER)
+NEW_DB_PASSWORD=$(wp ${WPCLIFLAGS} config get DB_PASSWORD)
+
 if [[ $1 == cpanel ]]; then
-  
+
   if [[ ! $(pwd | sed 's/\// /g' | grep -oE '[^ ]+$')  == public ]]; then
   echo "You are not curently in the public directory please cd into the  proper directory then try again."
   exit
   fi
-  
+
   backup=$(echo *.tar.gz | sed 's/.tar.gz//g')
   mv "${backup}".tar.gz ..
   rm -rf *
@@ -36,7 +42,7 @@ if [[ $1 == cpanel ]]; then
   tar -zxvf "$backup".tar.gz
   sed -i '/gd-config.php/d' "$backup"/homedir/public_html/wp-config.php
   sed -i '/SiteGround/d' "$backup"/homedir/public_html/wp-config.php
-  DB_NAME=$(wp --allow-root config get DB_NAME --path="$backup"/homedir/public_html/)
+  DB_NAME=$(wp ${WPCLIFLAGS} config get DB_NAME --path="$backup"/homedir/public_html/)
   mv "$backup"/mysql/"$DB_NAME".sql bigscoots.sql
   mv "$backup"/homedir/public_html/* .
   mv "$backup"/homedir/public_html/.htaccess .
@@ -54,18 +60,18 @@ if [[ $1 == wpe ]]; then
   mv ../site-archive-*.zip .
   unzip site-archive-*.zip
 
-  DB_CHARSET=$(wp --allow-root --skip-plugins --skip-themes config get DB_CHARSET)
-  DB_COLLATE=$(wp --allow-root --skip-plugins --skip-themes config get DB_COLLATE)
-  TABLE_PREFIX=$(wp --allow-root --skip-plugins --skip-themes config get table_prefix)
+  DB_CHARSET=$(wp ${WPCLIFLAGS} config get DB_CHARSET)
+  DB_COLLATE=$(wp ${WPCLIFLAGS} config get DB_COLLATE)
+  TABLE_PREFIX=$(wp ${WPCLIFLAGS} config get table_prefix)
 
   mv wp-config.php wp-config.php.wpe
   mv ../wp-config.php .
   mv wp-content/mysql.sql bigscoots.sql
 
-  wp --allow-root --skip-plugins --skip-themes config set DB_CHARSET "$DB_CHARSET"
-  wp --allow-root --skip-plugins --skip-themes config set DB_COLLATE "$DB_COLLATE"
-  wp --allow-root --skip-plugins --skip-themes config set table_prefix "$TABLE_PREFIX"
-  wp --allow-root --skip-plugins --skip-themes db reset --yes
+  wp ${WPCLIFLAGS} config set DB_CHARSET "$DB_CHARSET"
+  wp ${WPCLIFLAGS} config set DB_COLLATE "$DB_COLLATE"
+  wp ${WPCLIFLAGS} config set table_prefix "$TABLE_PREFIX"
+  wp ${WPCLIFLAGS} db reset --yes
 fi
 
 if [[ $1 == flywheel ]]; then
@@ -76,8 +82,8 @@ TABLE_PREFIX=${TABLE_PREFIX:-wp_}
 rm -rfv wp-content
 unzip $(ls *.zip)
 
-wp --allow-root --skip-plugins --skip-themes db reset --yes
-wp --allow-root --skip-plugins --skip-themes config set table_prefix "$TABLE_PREFIX"
+wp ${WPCLIFLAGS} db reset --yes
+wp ${WPCLIFLAGS} config set table_prefix "$TABLE_PREFIX"
 mv backup.sql bigscoots.sql
 rsync -ahv --exclude wp-content files/ .
 mv files/wp-content .
@@ -88,11 +94,11 @@ fi
 if [[ $1 == fresh ]]; then
 
   DOMAIN=$(echo "$(pwd)"| sed "s=/home/nginx/domains/==g ; s=/public==g")
-  wpuser=$(wp --allow-root --skip-plugins --skip-themes user list --role=administrator --field=user_login)
+  wpuser=$(wp ${WPCLIFLAGS} user list --role=administrator --field=user_login)
   wplog=$(grep -rl $wpuser /root/centminlogs/*wordpress_addvhost.log)
   wpuserpass=$(grep "Wordpress Admin Pass:" $wplog | awk '{print $4}')
 
-  wp --allow-root --skip-plugins --skip-themes search-replace http: https:
+  wp ${WPCLIFLAGS} search-replace http: https:
 
   {
   echo "Wordpress Admin URL: https://$DOMAIN/wp-login.php"
@@ -110,38 +116,11 @@ else
   sed -i '/gd-config.php/d' wp-config.php
   sed -i '/SiteGround/d' wp-config.php
 
-  if hash wp 2>/dev/null; then
+wp ${WPCLIFLAGS} config set DB_NAME "${NEW_DB_NAME}"
+wp ${WPCLIFLAGS} config set DB_USER "${NEW_DB_USER}"
+wp ${WPCLIFLAGS} config set DB_PASSWORD "${NEW_DB_PASSWORD}"
+wp ${WPCLIFLAGS} db import bigscoots.sql
 
-  dbname=$(wp --allow-root --skip-plugins --skip-themes config get DB_NAME)
-  dbuser=$(wp --allow-root --skip-plugins --skip-themes config get DB_USER)
-  dbpass=$(wp --allow-root --skip-plugins --skip-themes config get DB_PASSWORD)
-  wp --allow-root --skip-plugins --skip-themes config set DB_HOST localhost
-
-  if grep -q FS_METHOD wp-config.php; then
-  wp --allow-root --skip-plugins --skip-themes config delete FS_METHOD
-  fi
-  if grep -q FS_CHMOD_DIR wp-config.php; then
-  wp --allow-root --skip-plugins --skip-themes config delete FS_CHMOD_DIR
-  fi
-  if grep -q FS_CHMOD_FILE wp-config.php; then
-  wp --allow-root --skip-plugins --skip-themes config delete FS_CHMOD_FILE
-  fi
-
-  else
-
-  dbname=$(grep DB_NAME wp-config.php | grep -v WP_CACHE_KEY_SALT | grep -v '^//' | cut -d \' -f 4 )
-  dbuser=$(grep DB_USER wp-config.php | grep -v WP_CACHE_KEY_SALT | grep -v '^//' | cut -d \' -f 4 )
-  dbpass=$(grep DB_PASSWORD wp-config.php | grep -v WP_CACHE_KEY_SALT | grep -v '^//' | cut -d \' -f 4 )
-
-  fi
-
-  if [ ! -d /var/lib/mysql/"$dbname" ] ; then
-    mysql -e "CREATE DATABASE $dbname;"
-  fi
-
-  /usr/bin/mysql -e "grant all privileges on $dbname.* to '$dbuser'@'localhost' identified by '$dbpass';"
-
-wp --allow-root --skip-plugins --skip-themes db import bigscoots.sql
 exit_on_error $? MySQL Import
 
 mv bigscoots.sql ../
@@ -195,7 +174,7 @@ if [ -d "wp-content/plugins/wp-rocket" ]; then
   for i in wpsupercache_ wpcacheenabler_ rediscache_ ; do
 
     if [[ ! $(grep $i "${sslconf}") =~ ^# ]]; then
-  
+
       sed -i "/$i/s/#\?include /#include /g" "${sslconf}"
 
     fi
@@ -206,7 +185,7 @@ if [ -d "wp-content/plugins/wp-rocket" ]; then
 
 else
 
-wp plugin install cache-enabler --activate --allow-root --skip-plugins --skip-themes --quiet ; wp plugin delete comet-cache sg-cachepress wp-hummingbird wp-super-cache w3-total-cache nginx-helper wp-redis wp-fastest-cache --allow-root --skip-plugins --skip-themes --quiet
+wp plugin install cache-enabler --activate ${WPCLIFLAGS} --quiet ; wp plugin delete comet-cache sg-cachepress wp-hummingbird wp-super-cache w3-total-cache nginx-helper wp-redis wp-fastest-cache ${WPCLIFLAGS} --quiet
 
 fi
 
@@ -286,20 +265,20 @@ if [[ "$wprocket" == "y" ]]; then
 
   rm -f wp-content/advanced-cache.php
 
-  wp plugin --allow-root --skip-plugins --skip-themes deactivate wp-rocket
-  wp plugin --allow-root --skip-plugins --skip-themes activate wp-rocket
+  wp plugin ${WPCLIFLAGS} deactivate wp-rocket
+  wp plugin ${WPCLIFLAGS} activate wp-rocket
 
   echo "wprocket is detected check /usr/local/nginx/conf/conf.d/$i.ssl.conf for proper config" | mail -s "WPO  $i  $HOSTNAME - wprocket is detected check config" monitor@bigscoots.com
 
 fi
 
-if [[ $(wp option get siteurl --allow-root) =~ http:// ]]; then
-	HTTPDOMAIN=$(wp option get siteurl --allow-root)
-	HTTPSDOMAIN=$(wp option get siteurl --allow-root | sed 's/http:/https:/g')
-	wp search-replace "${HTTPDOMAIN}" "${HTTPSDOMAIN}" --skip-columns=guid --allow-root
+if [[ $(wp option get siteurl ${WPCLIFLAGS}) =~ http:// ]]; then
+        HTTPDOMAIN=$(wp option get siteurl ${WPCLIFLAGS})
+        HTTPSDOMAIN=$(wp option get siteurl ${WPCLIFLAGS} | sed 's/http:/https:/g')
+        wp search-replace "${HTTPDOMAIN}" "${HTTPSDOMAIN}" --skip-columns=guid ${WPCLIFLAGS}
 fi
 
-if [[ $(wp option get siteurl --allow-root) =~ https:// ]]; then
+if [[ $(wp option get siteurl ${WPCLIFLAGS}) =~ https:// ]]; then
     /bigscoots/wpo_forcehttps.sh $(pwd | sed 's/\// /g' | awk '{print $4}')
 
     "$NGINX" -t > /dev/null 2>&1
@@ -310,7 +289,7 @@ if [[ $(wp option get siteurl --allow-root) =~ https:// ]]; then
     fi
 fi
 
-if [[ $(wp option get siteurl --allow-root) =~ //www. ]]; then
+if [[ $(wp option get siteurl ${WPCLIFLAGS}) =~ //www. ]]; then
     sed -i -E 's/return 301 https:\/\/(www)?/return 301 https:\/\/www./g' /usr/local/nginx/conf/conf.d/$(pwd | sed 's/\// /g' | awk '{print $4}').conf
 
     "$NGINX" -t > /dev/null 2>&1
