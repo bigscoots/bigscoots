@@ -306,6 +306,6 @@ if [[ $(wp option get siteurl ${WPCLIFLAGS}) =~ //www. ]]; then
     fi
 fi
 
-chown -R nginx: /home/nginx/domains &
+chown -R nginx: .
 find . -type f -exec chmod 644 {} \; &
 find . -type d -exec chmod 755 {} \; &
