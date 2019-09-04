@@ -122,9 +122,7 @@ else
   wp ${WPCLIFLAGS} config set DB_NAME "${NEW_DB_NAME}"
   wp ${WPCLIFLAGS} config set DB_USER "${NEW_DB_USER}"
   wp ${WPCLIFLAGS} config set DB_PASSWORD "${NEW_DB_PASSWORD}"
-  unset NEW_DB_NAME
-  unset NEW_DB_USER
-  unset NEW_DB_PASSWORD 
+  unset NEW_DB_NAME NEW_DB_USER NEW_DB_PASSWORD
   fi
 
 wp ${WPCLIFLAGS} db import bigscoots.sql
