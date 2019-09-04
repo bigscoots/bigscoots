@@ -117,7 +117,7 @@ else
   sed -i '/gd-config.php/d' wp-config.php
   sed -i '/SiteGround/d' wp-config.php
 
-  if [ -n "NEW_DB_NAME" ] && [ -n "NEW_DB_USER" ] && [ -n "NEW_DB_PASSWORD" ]; then
+  if [ -n "$NEW_DB_NAME" ] && [ -n "$NEW_DB_USER" ] && [ -n "$NEW_DB_PASSWORD" ]; then
 
   wp ${WPCLIFLAGS} config set DB_NAME "${NEW_DB_NAME}"
   wp ${WPCLIFLAGS} config set DB_USER "${NEW_DB_USER}"
