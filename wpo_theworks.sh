@@ -24,9 +24,6 @@ dos2unix wp-config.php
 
 NGINX=$(which nginx)
 
-NEW_DB_NAME=$(wp ${WPCLIFLAGS} config get DB_NAME)
-NEW_DB_USER=$(wp ${WPCLIFLAGS} config get DB_USER)
-NEW_DB_PASSWORD=$(wp ${WPCLIFLAGS} config get DB_PASSWORD)
 
 if [[ $1 == cpanel ]]; then
 
@@ -34,6 +31,10 @@ if [[ $1 == cpanel ]]; then
   echo "You are not curently in the public directory please cd into the  proper directory then try again."
   exit
   fi
+
+  NEW_DB_NAME=$(wp ${WPCLIFLAGS} config get DB_NAME)
+  NEW_DB_USER=$(wp ${WPCLIFLAGS} config get DB_USER)
+  NEW_DB_PASSWORD=$(wp ${WPCLIFLAGS} config get DB_PASSWORD)
 
   backup=$(echo *.tar.gz | sed 's/.tar.gz//g')
   mv "${backup}".tar.gz ..
@@ -116,9 +117,16 @@ else
   sed -i '/gd-config.php/d' wp-config.php
   sed -i '/SiteGround/d' wp-config.php
 
-wp ${WPCLIFLAGS} config set DB_NAME "${NEW_DB_NAME}"
-wp ${WPCLIFLAGS} config set DB_USER "${NEW_DB_USER}"
-wp ${WPCLIFLAGS} config set DB_PASSWORD "${NEW_DB_PASSWORD}"
+  if [ -n "NEW_DB_NAME" ] && [ -n "NEW_DB_USER" ] && [ -n "NEW_DB_PASSWORD" ]; then
+
+  wp ${WPCLIFLAGS} config set DB_NAME "${NEW_DB_NAME}"
+  wp ${WPCLIFLAGS} config set DB_USER "${NEW_DB_USER}"
+  wp ${WPCLIFLAGS} config set DB_PASSWORD "${NEW_DB_PASSWORD}"
+  unset NEW_DB_NAME
+  unset NEW_DB_USER
+  unset NEW_DB_PASSWORD 
+  fi
+
 wp ${WPCLIFLAGS} db import bigscoots.sql
 
 exit_on_error $? MySQL Import
