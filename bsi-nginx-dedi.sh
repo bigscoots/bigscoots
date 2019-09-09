@@ -51,8 +51,6 @@ if [ "$?" -eq "0" ]; then
         fi
 fi
 
-/bigscoots/includes/keymebatman.sh
-
 sed -ie 's/#Port.*[0-9]$/Port 2222/gI' /etc/ssh/sshd_config
 sed -i 's/#UseDNS yes/UseDNS no/g' /etc/ssh/sshd_config
 sed -i 's/#PermitRootLogin yes/PermitRootLogin without-password/g' /etc/ssh/sshd_config
@@ -190,6 +188,20 @@ sed -i 's/#include \/usr\/local\/nginx\/conf\/php.conf/include \/usr\/local\/ngi
 
 sed -i 's/default-character-set/#default-character-set/g' /etc/my.cnf
 sed -i 's/character-set-server/#character-set-server/g' /etc/my.cnf
+
+if ! crontab -l |grep /bigscoots/dedicated/updater.sh > /dev/null 2>&1; then 
+	crontab -l | { cat; echo "30 */6 * * * /bigscoots/dedicated/updater.sh > /dev/null 2>&1"; } | crontab -
+fi
+
+if [[ ! -f /usr/bin/git || ! -f /usr/bin/curl || ! -f /usr/bin/nano ]]; then
+  echo
+  echo "installing yum packages..."
+  echo
+  yum -y install git nano wget curl
+fi
+
+curl -sL https://raw.githubusercontent.com/jcatello/bigscoots/master/dedicated/updater.sh| bash
+
 
 npreload
 systemctl daemon-reload
