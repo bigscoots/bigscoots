@@ -74,6 +74,18 @@ wget -O /usr/local/sbin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pa
 ln -s /usr/local/sbin/wp /usr/sbin/wp
 echo "alias wp='/usr/local/bin/php /usr/local/sbin/wp --allow-root'" >> /root/.bashrc
 
+if ! crontab -l |grep /bigscoots/dedicated/updater.sh > /dev/null 2>&1; then 
+	crontab -l | { cat; echo "30 */6 * * * /bigscoots/dedicated/updater.sh > /dev/null 2>&1"; } | crontab -
+fi
+
+if [[ ! -f /usr/bin/git || ! -f /usr/bin/curl || ! -f /usr/bin/nano ]]; then
+  echo
+  echo "installing yum packages..."
+  echo
+  yum -y install git nano wget curl
+fi
+
+curl -sL https://raw.githubusercontent.com/jcatello/bigscoots/master/dedicated/updater.sh| bash
 
 # Migration:
 
