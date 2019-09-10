@@ -125,6 +125,7 @@ else
   unset NEW_DB_NAME NEW_DB_USER NEW_DB_PASSWORD
   fi
 
+wp ${WPCLIFLAGS} config set DB_HOST localhost
 wp ${WPCLIFLAGS} db import bigscoots.sql
 
 exit_on_error $? MySQL Import
