@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# BigScoots - cpanel fail over sync
+
 liveserver=192.168.1.196
 sshport=2222
 
