@@ -81,8 +81,8 @@ chown -R nginx: /var/log/php-fpm
 nprestart
 
 postconf -e inet_protocols=ipv4
-postfix reload
 /bin/systemctl restart postfix.service
+postfix reload
 
 sed -i '/SystemMaxUse/c\SystemMaxUse=500M'  /etc/systemd/journald.conf 
 systemctl restart systemd-journald
