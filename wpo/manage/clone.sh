@@ -18,11 +18,11 @@ fi
 sourcesitedocroot=/home/nginx/domains/"${sourcesite}"/public
 destinationsitedocroot=/home/nginx/domains/"${destinationsite}"/public
 
-if ! sourcesitedb=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${sourcesitedocroot} 2>&1); then 
+if ! sourcesitedb=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${sourcesitedocroot} 2>&1); then
     exit 3
 fi
 
-if ! destinationsitedb=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${destinationsitedocroot} 2>&1); then 
+if ! destinationsitedb=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${destinationsitedocroot} 2>&1); then
     exit 3
 fi
 
@@ -41,7 +41,7 @@ if [[ $sourcesitedb == $destinationsitedb ]]; then
     fi
 fi
 
-rsync -ahv --delete \
+rsync -aqhv --delete \
 --exclude 'wp-content/uploads/backupbuddy*' \
 --exclude 'wp-content/backup*' \
 --exclude wp-content/uploads/backup \
@@ -56,15 +56,11 @@ rsync -ahv --delete \
 --exclude wp-content/wpbackitup_backups \
 "$sourcesitedocroot/" "$destinationsitedocroot/"
 
-wp ${WPCLIFLAGS} --quiet db reset "${destinationsitedocroot}" 2>&1 
-wp ${WPCLIFLAGS} --quiet db export - --path="${sourcesitedocroot}" | wp --quiet db import - --path="${destinationsitedocroot}" 2>&1
-
-wp ${WPCLIFLAGS} config set table_prefix $(wp ${WPCLIFLAGS} config get table_prefix --path="${sourcesitedocroot}") 2>&1
-
-cd "$sourcesitedocroot/" || exit
-siteurl=$(wp option get siteurl --allow-root | sed -r 's/https?:\/\///g')
-cd "$destinationsitedocroot/" || exit
-wp search-replace "//$siteurl" "//$destinationsite" --recurse-objects --skip-columns=guid --skip-tables=wp_users ${WPCLIFLAGS}
+wp ${WPCLIFLAGS} db reset --yes --path="${destinationsitedocroot}" --quiet 2>&1
+wp ${WPCLIFLAGS} db export - --path="${sourcesitedocroot}" --quiet | wp ${WPCLIFLAGS} --quiet db import - --path="${destinationsitedocroot}" --quiet 2>&1
+wp ${WPCLIFLAGS} config set table_prefix $(wp ${WPCLIFLAGS} config get table_prefix --path="${sourcesitedocroot}") --quiet 2>&1
+siteurl=$(wp ${WPCLIFLAGS} option get siteurl --path="${sourcesitedocroot}" --quiet | sed -r 's/https?:\/\///g')
+wp ${WPCLIFLAGS} search-replace "//$siteurl" "//$destinationsite" --recurse-objects --skip-columns=guid --skip-tables=wp_users --path="${destinationsitedocroot}" --quiet
 
 
 if [ -n "$3" ] && [ -n "$4" ]; then
@@ -92,7 +88,7 @@ fi
 
 chown -R nginx: /home/nginx/domains/$destinationsite
 
-redis-cli flushall
+redis-cli flushall > /dev/null 2>&1
 
 "$NGINX" -t > /dev/null 2>&1
     if [ $? -eq 0 ]; then
