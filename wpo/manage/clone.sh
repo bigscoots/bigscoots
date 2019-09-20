@@ -58,7 +58,7 @@ rsync -aqhv --delete \
 
 wp ${WPCLIFLAGS} db reset --yes --path="${destinationsitedocroot}" --quiet 2>&1
 wp ${WPCLIFLAGS} db export - --path="${sourcesitedocroot}" --quiet | wp ${WPCLIFLAGS} --quiet db import - --path="${destinationsitedocroot}" --quiet 2>&1
-wp ${WPCLIFLAGS} config set table_prefix $(wp ${WPCLIFLAGS} config get table_prefix --path="${sourcesitedocroot}") --quiet 2>&1
+wp ${WPCLIFLAGS} config set table_prefix $(wp ${WPCLIFLAGS} config get table_prefix --path="${sourcesitedocroot}") --path="${destinationsitedocroot}" --quiet 2>&1
 siteurl=$(wp ${WPCLIFLAGS} option get siteurl --path="${sourcesitedocroot}" --quiet | sed -r 's/https?:\/\///g')
 wp ${WPCLIFLAGS} search-replace "//$siteurl" "//$destinationsite" --recurse-objects --skip-columns=guid --skip-tables=wp_users --path="${destinationsitedocroot}" --quiet
 
