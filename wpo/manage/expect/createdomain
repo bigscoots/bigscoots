@@ -6,6 +6,8 @@ set timeout -1
 
 spawn centmin
 
+expect "Enter option"
+
 send -- "22\r"
 send -- "\r"
 
