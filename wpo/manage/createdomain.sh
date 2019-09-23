@@ -1,35 +1,34 @@
-#!/usr/bin/expect -f
+#!/bin/bash
 
-set domain [lindex $argv 0]
+if [ -z "$1" ]; then
+  echo "Requires a domain."
+  exit 1
+fi
 
-set timeout -1
+# if [ -z "$2" ]; then
+#   echo "Requires fresh or existing."
+#   exit 1
+# fi
 
-spawn centmin
+domain="$1"
+domainip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 
-expect "Enter option"
+if [ -d /home/nginx/domains/"$domain" ]; then
+  echo "$domain already exists on the server."
+  exit 1
+fi
 
-send -- "22\r"
-send -- "\r"
+if [ "$2" == fresh ]; then
+  /bigscoots/wpo/manage/expect/createdomain "$domain"
+  cd /home/nginx/domains/"$domain"/public || exit
+  bash /bigscoots/wpo_theworks.sh fresh
 
-expect "Enter vhost domain name you want to add"
+else
 
-send -- "$domain\r"
+  /bigscoots/wpo/manage/expect/createdomain "$domain"
 
-send -- "\r"
-send -- "\r"
-send -- "\r"
-send -- "\r"
-send -- "\r"
-send -- "\r"
-send -- "\r"
-send -- "\r"
-send -- "\r"
-send -- "\r"
-send -- "\r"
-send -- "\r"
+fi
 
-expect "vhost for $domain wordpress setup successfully"
-send \x03
+sed "s/REPLACEDOMAIN/$domain/g ; s/REPLACEIP/$domainip/g" /bigscoots/wpo/extras/dnszone.txt > /home/nginx/domains/"$domain"/"$domain"-dnszone.txt
 
-# send -- "24\r"
-# expect eof
+cat /home/nginx/domains/"$domain"/.fresh | mail -s "$domain has been successfully created on  $HOSTNAME - DNS attached" -a /home/nginx/domains/"$domain"/"$domain"-dnszone.txt monitor@bigscoots.com
