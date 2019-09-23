@@ -1,4 +1,4 @@
-# /bin/bash
+#! /bin/bash
 
 if [[ ! -f /root/.ssh/authorized_keys ]]; then
 
@@ -16,7 +16,6 @@ office03='ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAgEAjOtX/QuK+gv+yxQRvCRe3gFDvCR3qmjByR
 office04='ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAgEA8Drkz4YtC2FOTYX3iBfkHcPTUoZm39ps3chvK/4jv5wdDtWPeVsPQ0/fmJDSCMqZ85ayuL0d6f7OhxJrhJvqE+AmVpx81O4BGSyjuWISTGg0AwMosNm4gEI8Tms4mP10iHA0nQL90OUYN3uFkp2a3/79bvYnJ2uHl2Sb50ygNOHnRGfds7FcembUCpGkitUqp+BRbRmGB1YFyT4NM+gvYhvdDyuZXgh37ReZpNKPLsqhBdpZOH57b708QUKltw0tLmbOD4e54i1mcyAmg60LZmVMJPfHUegUrb1SdCMCKuA+SKrzymdtCL38q4JmKbaNDc+F/evdfQhuh3fIrRcnMsY0PIf6CYFyVRidWafUCH3f0wTJYKwIOe8qIudEMULn8R1/6MmT4oQBy7NIe/UY7g+BzbXiuBXGgzEZIiyD8vCJym4XcCSL7heFR4Fe4mac1YjDQKoaV2reMbW6CcLGtIZyXnP2/xGWZxouQXr3OM/CAOX9fFxHIIj6OwabxugJu+uPmz+xty77U5YuRWiy73zWAftTZbMHfY187d6Q7KFVgxa3AWDZNYvKlv4vR3l2LOayNYG0Y6mxBkPGRfUnTXfxzYFSniieMPwCpxPyHRdAG68I1VLPd4dF7cZxu+UMJKSc1GfHew+ViResmExunCYCQGRVw3TO/Z+0a6MYWyE= dean'
 office05='ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDGYqBDuXSS1yNjJWLilLFGTm/3+fxV7qz6JF1rSKEmNbW6wymmjIkBoVBzSxtQ5Dl3nZ7ELqAgHgAaFokrgJVootxYCY6dfH0JDc2fM5aCPo3fVzlrJqZA4TX7d0s6VcxQ1D1MDz75Rf8avLpvVkcrTWFO5gtNHbbhpG3LwU72EZdtZhevxT19XY4jotEc+iH6TSTlnGgoQlUzhbOkQ4o5SQZmdMCy4R0Zl3oyb0/VwOE89BLvHmnYOApRIsqS6lO/SI+Ifkez3tkzc8DBQcB0x8LGoKkbSJzx41fQAEPAP9WzNJ33hZSaxfKNTHY+D4qBfsxCkr0oNbESfoBENolKxwdG1c2TpJMS1Kx7sHHAAriS0HT72u4zz3cm5vyJm4Nh+KB+g2ECvE6qkGgHb6sZLUV0SH7JRUh6Zp8Wvy2nVM8GRtxSXdt5D/Vtp7cokd02g8l9bVBM3V3smn6mZyejR4wn6DKbQ2BTb4FgbA+CJoLIlZ+V0O+f1M9VnPrwTEX6AiW7own7Tp3YUQMJvSQcY+3lTgGOQY8J4yJTFokk8+H1UOzeFVtf6Wu/oSId39lqa2hvxdQsJ5NynIW1poMv8gX/R/UzPz5aWJq+XaRcSOANzjHsHoTcsMlS2cw0nivmDczkyV+mqYmQ664jBeBHVkEtmz80pC3iIvyWnMCO1Q== NathanLopez'
 office06='ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDA/foTZ8x3DuXczqI3e7S2gU3dhxVKey+bZrq5jYqJ8iS3iEniTgta9TjnzD5zWVLx0ESLdWeA+2v/fBC0q/vjBNsIEsb0DIjssuOiYHmjrCp2TJEJCUhmp7rI+2v471SZAtRoQJ5r6KWyzt1eSD550af08rd37m05VxdXAaJuKa8+zU3n+mZeS7Kg//N6jnvmhAgnAPoBIJ7nSmPozm0yuPXImU9FZ+BUyW9qJcwYQ0EcMhZ30Vncimg0jJYF8zjgIy3Sx13//NE3EnI20bIeuA+s4DhGrgZRMocQFALPzDtzMUxAbyhWsUstKtAbk/VGTbNc2JxpC9iTki9sfl/LujXmIX/Out+KnnP5gCgi4mGLivfEdydvQ0MVagZGNu9bGaphGt45p8cGU3g2UkNaUOfvLrBw6e2GJNdL6dAYsLAFH93dFWvZRAhaQzpwX14WUAi809yjy6Dp5bOBn+vPZCMhDArzKZNOEjiQxiRr8+o7oA4o6QejZFjIHpmf9a37HjKsKAjm0Ijf5/xj4918xYPIWwUPqLEFx8gOvcVCVbfM6pDw5K820fXiCTapfKasyHNJEyBHrFYAUI4WhJacd/jOwapXie/ieTue4ePykQm6wv96n2gkz0qphQwKrxdc2DXkBSpTqgWPxlqAmpLLCzFghA8RmXmvG0+Y7dcO2Q== prasulsurendran@Prasuls-MacBook.local'
-# remove
 
 if grep -q tim@localhost.localdomain ~/.ssh/authorized_keys; then
 
@@ -65,3 +64,43 @@ fi
 	echo "# Office 6 - BigScoots.com" >> ~/.ssh/authorized_keys
 	echo "${office06}" >> ~/.ssh/authorized_keys
  fi
+ 
+if command -v csf >/dev/null 2>&1 ; then
+ 
+ unset csfrb
+ 
+  if ! grep -q 208.117.38.23 /etc/csf/csf.allow; then
+	echo "208.117.38.23 # office4.bigscoots.com" >> /etc/csf/csf.allow
+	csfrb=1
+ fi
+ 
+   if ! grep -q 69.162.134.47 /etc/csf/csf.allow; then
+	echo "69.162.134.47 # office5.bigscoots.com" >> /etc/csf/csf.allow
+	csfrb=1
+ fi
+ 
+   if ! grep -q 208.117.38.157 /etc/csf/csf.allow; then
+	echo "208.117.38.157 # office3.bigscoots.com" >> /etc/csf/csf.allow
+	csfrb=1
+ fi
+ 
+   if ! grep -q 50.31.114.76 /etc/csf/csf.allow; then
+	echo "50.31.114.76 # office2.bigscoots.com" >> /etc/csf/csf.allow
+	csfrb=1
+ fi
+ 
+   if ! grep -q 208.117.38.38 /etc/csf/csf.allow; then
+	echo "208.117.38.38 # office.bigscoots.com" >> /etc/csf/csf.allow
+	csfrb=1
+ fi
+ 
+   if ! grep -q 208.117.38.24 /etc/csf/csf.allow; then
+	echo "208.117.38.24 # office6.bigscoots.com" >> /etc/csf/csf.allow
+	csfrb=1
+ fi
+
+if [ "${csfrb}" == 1 ]; then
+$(command -v csf) -ra
+fi
+
+fi
