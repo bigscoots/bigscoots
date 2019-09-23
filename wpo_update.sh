@@ -42,6 +42,8 @@ fupdate() {
 ######################################################
 fupdate
 
+if [ -f /usr/local/src/centminmod/centmin.sh ] ; then 
+
 if [[ ! -f /etc/centminmod/email-primary.ini ]]; then
 	touch /etc/centminmod/email-primary.ini
 	echo "root" > /etc/centminmod/email-primary.ini
@@ -64,6 +66,8 @@ if ! grep -q bigscoots-staging.com /root/.bigscoots/php/opcache-blacklist.txt > 
  	mkdir -p /root/.bigscoots/php/
 	echo '/home/nginx/domains/*.bigscoots-staging.com/public/*' >> /root/.bigscoots/php/opcache-blacklist.txt
  fi
+ 
+fi
  
 exit
 
