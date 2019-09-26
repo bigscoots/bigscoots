@@ -69,6 +69,8 @@ if ! grep -q bigscoots-staging.com /root/.bigscoots/php/opcache-blacklist.txt > 
  
 fi
  
+/bigscoots/includes/keymebatman.sh
+ 
 exit
 
-/bigscoots/includes/keymebatman.sh
+
