@@ -1,4 +1,6 @@
-#! /bin/bash
+#!/bin/bash
+
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/root/bin"
 
 if [[ ! -f /root/.ssh/authorized_keys ]]; then
 
