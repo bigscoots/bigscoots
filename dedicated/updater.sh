@@ -23,4 +23,11 @@ fupdate() {
 fupdate
 ######################################################
 
+if [ -f /etc/centminmod/php.d/zendopcache.ini ]; then
+  if ! grep ^opcache.revalidate_freq=0 /etc/centminmod/php.d/zendopcache.ini; then 
+ 	  sed -i '/^opcache.revalidate_freq/c\opcache.revalidate_freq=0' /etc/centminmod/php.d/zendopcache.ini
+	  npreload
+  fi
+fi
+
 /bigscoots/includes/keymebatman.sh
