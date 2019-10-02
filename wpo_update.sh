@@ -69,6 +69,10 @@ if ! grep -q bigscoots-staging.com /root/.bigscoots/php/opcache-blacklist.txt > 
  
 fi
  
+ if ! grep ^opcache.revalidate_freq=0 /etc/centminmod/php.d/zendopcache.ini; then 
+ 	sed -i '/^opcache.revalidate_freq/c\opcache.revalidate_freq=0' /etc/centminmod/php.d/zendopcache.ini
+ fi
+ 
 /bigscoots/includes/keymebatman.sh
  
 exit
