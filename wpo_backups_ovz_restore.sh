@@ -174,9 +174,14 @@ echo
 ;;
 restore)
 
-dbname=$(grep DB_NAME wp-config.php | grep -v WP_CACHE_KEY_SALT | cut -d \' -f 4)
+dbname=$(wp --allow-root --skip-plugins --skip-themes config get DB_NAME)
 
 # "Restoring files..."
+
+if [ ! -d "/backup/"$2"/"$DOMAIN"/public" ] 
+then
+    exit
+fi 
 
 "$RSYNC" -ah --delete /backup/"$2"/"$DOMAIN"/public/ "$(pwd)"/
 
