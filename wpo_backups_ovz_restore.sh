@@ -88,6 +88,11 @@ dbname=$(wp --allow-root --skip-plugins --skip-themes config get DB_NAME)
 
 # "Restoring files..."
 
+if ssh -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" "[ ! -d "~/"$2"/"$DOMAIN"/public" ]"
+then
+        exit
+fi
+
 "$RSYNC" -ah -e "ssh -i $HOME/.ssh/wpo_backups" --delete "$BKUSER"@"$BKSVR":~/"$2"/"$DOMAIN"/public/ "$(pwd)"/
 
 sed -i '/@include "/d' *.php
