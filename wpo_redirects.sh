@@ -63,7 +63,7 @@ manual)
                 nginx -t > /dev/null 2>&1
                 if [ $? -eq 0 ]
                 then
-                        npreload > /dev/null 2>&1
+                        ngxreload > /dev/null 2>&1
                         echo -n "$uuid"
                 else
                         sed -i "/$uuid/d" "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf" ; exit 1
@@ -91,7 +91,7 @@ manual)
                         nginx -t > /dev/null 2>&1
                                 if [ $? -eq 0 ]
                                 then
-                                        npreload > /dev/null 2>&1
+                                        ngxreload > /dev/null 2>&1
                                         echo -n "$uuid"
                                 else
                                         sed -i "/$uuid/d" "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf" ; exit 1
@@ -101,7 +101,7 @@ manual)
                         nginx -t > /dev/null 2>&1
                         if [ $? -eq 0 ]
                         then
-                                npreload > /dev/null 2>&1
+                                ngxreload > /dev/null 2>&1
                                 echo -n "$uuid"
                         else
                                 sed -i "/$uuid/d" "/usr/local/nginx/conf/wpincludes/$domain/wpo_manual_redirects.conf" ; exit 1
@@ -118,7 +118,7 @@ remove)
         nginx -t > /dev/null 2>&1
                 if [ $? -eq 0 ]
                 then
-                        npreload > /dev/null 2>&1
+                        ngxreload > /dev/null 2>&1
                 else
                 exit 1
                 fi
