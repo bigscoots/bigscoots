@@ -32,4 +32,4 @@ if grep -q 'return 301 https' /usr/local/nginx/conf/conf.d/"$sourcedomain".conf;
     fi
 fi
 
-echo "" | mail -s "WPO Staging completed on  $HOSTNAME for $destinationdomain add DNS" monitor@bigscoots.com
+echo "" | mail -s "WPO Staging completed on  $HOSTNAME for  $destinationdomain add DNS" monitor@bigscoots.com
