@@ -48,7 +48,7 @@ pmapass=$(grep Password: /root/centminlogs/centminmod_phpmyadmin_install_*.log |
 pmadbuser=$(wp --allow-root config get DB_USER --path=/home/nginx/domains/"$domain"/public/)
 pmadbpass=$(wp --allow-root config get DB_PASSWORD --path=/home/nginx/domains/"$domain"/public/)
 
-vhostlog=$(grep -rl "FTP username created for $domain" "$(ls -1rt /root/centminlogs/centminmod_*_wordpress_addvhost.log | tail -n1)")
+vhostlog=$(grep -l "FTP username created for $domain" /root/centminlogs/centminmod*addvhost.log | xargs ls -rt | tail -1)
 grep -v "FTP Passive" "$vhostlog" | grep -C2 "FTP mode" > /tmp/tmpftp.txt
 
 ftphost=$(ip route get 1 | awk '{print $NF;exit}')
@@ -85,7 +85,7 @@ pmapass=$(grep Password: /root/centminlogs/centminmod_phpmyadmin_install_*.log |
 pmadbuser=$(wp --allow-root config get DB_USER --path=/home/nginx/domains/"$domain"/public/)
 pmadbpass=$(wp --allow-root config get DB_PASSWORD --path=/home/nginx/domains/"$domain"/public/)
 
-vhostlog=$(grep -rl "FTP username created for $domain" "$(ls -1rt /root/centminlogs/centminmod_*_wordpress_addvhost.log | tail -n1)")
+vhostlog=$(grep -l "FTP username created for $domain" /root/centminlogs/centminmod*addvhost.log | xargs ls -rt | tail -1)
 grep -v "FTP Passive" "$vhostlog" | grep -C2 "FTP mode" > /tmp/tmpftp.txt
 
 ftphost=$(ip route get 1 | awk '{print $NF;exit}')
