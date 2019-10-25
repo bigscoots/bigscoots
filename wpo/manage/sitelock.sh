@@ -1,29 +1,64 @@
 #!/bin/bash
 
 # add htpasswd protection
-# /bigscoots/wpo/manage/htpasswd.sh domain.com user pass
 
-if  ! grep -q wpolocksite /usr/local/nginx/conf/conf.d/"$1".ssl.conf ; then
 
-/usr/local/nginx/conf/htpasswd.sh create /home/nginx/domains/"$1"/wpolocksite "$2" "$3"
-sed -i "/location \/ {/a \  auth_basic_user_file /home/nginx/domains/$1/wpolocksite;" /usr/local/nginx/conf/conf.d/"$1".ssl.conf
-sed -i "/location \/ {/a \  auth_basic \"Private\";" /usr/local/nginx/conf/conf.d/"$1".ssl.conf
+if [[ ! $1 =~ (on|off) ]]; then
+  echo "1 was set to  $1" | mail -s "WPO - sitelock.sh fail - on/off not specified  -  $HOSTNAME" monitor@bigscoots.com
+  exit
+fi
 
-echo "htpasswd applied"
-        echo
-        echo
+if [ -z "$2" ]; then
+    echo "2 was set to  $2" | mail -s "WPO - sitelock.sh fail - domain not specified  -  $HOSTNAME" monitor@bigscoots.com
+    exit
+fi
 
-        sleep 1
+domain="$2"
+
+# /bigscoots/wpo/manage/sitelock.sh off domain.com
+
+if [[ $1 == off ]]; then
+
+    if  ! grep -q wpolocksite /usr/local/nginx/conf/conf.d/"$domain".ssl.conf; then
+        exit 3
+    fi
+
+    if grep -q \#auth_basic_user_file /home/nginx/domains/"$domain"/wpolocksite /usr/local/nginx/conf/conf.d/"$domain".ssl.conf; then
+        exit 3
+    fi
+
+    if ! grep -q \#auth_basic_user_file /home/nginx/domains/"$domain"/wpolocksite /usr/local/nginx/conf/conf.d/"$domain".ssl.conf; then
+        sed -i "s=auth_basic_user_file /home/nginx/domains/$domain/wpolocksite=#auth_basic_user_file /home/nginx/domains/$domain/wpolocksite=g" /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
+        exit 3
+    fi
+fi
+
+
+if [[ $1 == on ]]; then
+
+    if [ -z "$3" ]; then
+    echo "" | mail -s "WPO - sitelock.sh fail - username not specified  -  $HOSTNAME" monitor@bigscoots.com
+    exit
+    fi
+
+    if [ -z "$4" ]; then
+    echo "" | mail -s "WPO - sitelock.sh fail - password not specified  -  $HOSTNAME" monitor@bigscoots.com
+    exit
+    fi
+
+# /bigscoots/wpo/manage/sitelock.sh on domain.com user pass
+
+if  ! grep -q wpolocksite /usr/local/nginx/conf/conf.d/"$domain".ssl.conf ; then
+
+/usr/local/nginx/conf/htpasswd.sh create /home/nginx/domains/"$domain"/wpolocksite "$3" "$4" > /dev/null 2>&1
+sed -i "/location \/ {/a \  auth_basic_user_file /home/nginx/domains/$domain/wpolocksite;" /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
+sed -i "/location \/ {/a \  auth_basic \"Private\";" /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
 
 else
 
-/usr/local/nginx/conf/htpasswd.sh create /home/nginx/domains/"$1"/wpolocksite "$2" "$3"
+/usr/local/nginx/conf/htpasswd.sh create /home/nginx/domains/"$domain"/wpolocksite "$3" "$4" > /dev/null 2>&1
 
-        echo "htpasswd applied"
-        echo
-        echo
-
-        sleep 1
+fi
 
 fi
 
@@ -31,6 +66,6 @@ fi
     if [ $? -eq 0 ]; then
                 npreload > /dev/null 2>&1
         else
-                nginx -t 2>&1 | mail -s "WPO URGENT - Nginx conf fail while adding htpasswd protection -  $HOSTNAME" monitor@bigscoots.com
+                nginx -t 2>&1 | mail -s "WPO URGENT - Nginx conf fail while enabling/disabling htpasswd protection -  $HOSTNAME" monitor@bigscoots.com
                 exit 1
     fi
