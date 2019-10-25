@@ -9,7 +9,7 @@ if [[ ! $1 =~ (on|off) ]]; then
 fi
 
 if [ -z "$2" ]; then
-    echo "2 was set to  $2" | mail -s "WPO - sitelock.sh fail - domain not specified  -  $HOSTNAME" monitor@bigscoots.com
+    echo "" | mail -s "WPO - sitelock.sh fail - domain not specified  -  $HOSTNAME" monitor@bigscoots.com
     exit
 fi
 
