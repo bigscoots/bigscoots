@@ -23,11 +23,11 @@ if [[ $1 == off ]]; then
         exit 0
     fi
 
-    if grep -q \#auth_basic_user_file /home/nginx/domains/"$domain"/wpolocksite /usr/local/nginx/conf/conf.d/"$domain".ssl.conf; then
+    if grep -q "\#auth_basic_user_file /home/nginx/domains/"$domain"/wpolocksite" /usr/local/nginx/conf/conf.d/"$domain".ssl.conf; then
         exit 0
     fi
 
-    if ! grep -q \#auth_basic_user_file /home/nginx/domains/"$domain"/wpolocksite /usr/local/nginx/conf/conf.d/"$domain".ssl.conf; then
+    if ! grep -q "\#auth_basic_user_file /home/nginx/domains/"$domain"/wpolocksite" /usr/local/nginx/conf/conf.d/"$domain".ssl.conf; then
         sed -i "s=auth_basic_user_file /home/nginx/domains/$domain/wpolocksite=#auth_basic_user_file /home/nginx/domains/$domain/wpolocksite=g" /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
     fi
 fi
@@ -54,7 +54,7 @@ if [[ $1 == on ]]; then
     sed -i "/location \/ {/a \  auth_basic \"Private\";" /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
 
     else
-
+    sed -i "s=#auth_basic_user_file /home/nginx/domains/$domain/wpolocksite=auth_basic_user_file /home/nginx/domains/$domain/wpolocksite=g" /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
     /usr/local/nginx/conf/htpasswd.sh create /home/nginx/domains/"$domain"/wpolocksite "$3" "$4" > /dev/null 2>&1
 
     fi
