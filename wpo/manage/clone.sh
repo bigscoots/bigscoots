@@ -90,8 +90,8 @@ chown -R nginx: /home/nginx/domains/$destinationsite
 
 # Clear All Cache
 
-! command -v redis-cli  >/dev/null 2>&1 || redis-cli flushall >/dev/null 2>&1
-rm -rf ${destinationsitedocroot}/wp-content/cache/*
+! command -v redis-cli  >/dev/null 2>&1 || redis-cli flushall  >/dev/null 2>&1
+[ -d ${destinationsitedocroot}/wp-content/cache ] && rm -rf ${destinationsitedocroot}/wp-content/cache/* >/dev/null 2>&1
 
 "$NGINX" -t > /dev/null 2>&1
     if [ $? -eq 0 ]; then
