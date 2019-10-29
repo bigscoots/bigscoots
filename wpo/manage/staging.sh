@@ -18,7 +18,7 @@ if [ "$percentofreespace" -ge 45 ] ; then
         exit 1
 fi
 
-/bigscoots/bsi-nginx-live2dev.sh "$sourcedomain" "$destinationdomain" dev dev
+/bigscoots/wpo/manage/clone.sh "$sourcedomain" "$destinationdomain" dev dev
 
 if grep -q 'return 301 https' /usr/local/nginx/conf/conf.d/"$sourcedomain".conf; then
         echo "https redirect found, redirecting staging."
