@@ -68,6 +68,7 @@ if [[ $1 == wpe ]]; then
   mv wp-config.php wp-config.php.wpe
   mv ../wp-config.php .
   mv wp-content/mysql.sql bigscoots.sql
+  rm -rfv _wpeprivate
 
   wp ${WPCLIFLAGS} config set DB_CHARSET "$DB_CHARSET"
   wp ${WPCLIFLAGS} config set DB_COLLATE "$DB_COLLATE"
