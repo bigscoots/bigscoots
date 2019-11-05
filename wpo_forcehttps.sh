@@ -11,6 +11,7 @@ domain="${i//.conf/}"
 cp /usr/local/nginx/conf/conf.d/"$domain".conf{,.bak}
 
 {
+echo "# BigScoots Force HTTPS"
 echo "  server {"
 echo "            listen   80;"
 echo "            server_name $domain www.$domain;"
@@ -33,6 +34,7 @@ domain="$1"
 cp /usr/local/nginx/conf/conf.d/"$domain".conf{,.bak}
 
 {
+echo "# BigScoots Force HTTPS"
 echo "  server {"
 echo "            listen   80;"
 echo "            server_name $domain www.$domain;"
