@@ -93,10 +93,16 @@ chown -R nginx: /home/nginx/domains/$destinationsite
 ! command -v redis-cli  >/dev/null 2>&1 || redis-cli flushall  >/dev/null 2>&1
 [ -d ${destinationsitedocroot}/wp-content/cache ] && rm -rf ${destinationsitedocroot}/wp-content/cache/* >/dev/null 2>&1
 
+# Force HTTPS if not already.
+
+if ! grep -q '# BigScoots Force HTTPS' /usr/local/nginx/conf/conf.d/"$destinationsite".conf; then
+        /bigscoots/wpo_forcehttps.sh "$destinationsite"
+fi
+
 "$NGINX" -t > /dev/null 2>&1
     if [ $? -eq 0 ]; then
                 npreload > /dev/null 2>&1
         else
-                "$NGINX" -t 2>&1 | mail -s "WPO URGENT - Nginx conf fail during staging request -  $HOSTNAME" monitor@bigscoots.com
+                "$NGINX" -t 2>&1 | mail -s "WPO URGENT - Nginx conf fail during clone request - From: $sourcesite To: $destinationsite  -  $HOSTNAME" monitor@bigscoots.com
                 exit 1
     fi
