@@ -278,6 +278,11 @@ if [[ "$wprocket" == "y" ]]; then
 
 fi
 
+if [ -d "wp-content/plugins/migrate-guru" ]; then
+  wp plugin ${WPCLIFLAGS} deactivate migrate-guru
+  wp plugin ${WPCLIFLAGS} delete migrate-guru
+fi
+
 if [[ $(wp option get siteurl ${WPCLIFLAGS}) =~ http:// ]]; then
         HTTPDOMAIN=$(wp option get siteurl ${WPCLIFLAGS})
         HTTPSDOMAIN=$(wp option get siteurl ${WPCLIFLAGS} | sed 's/http:/https:/g')
