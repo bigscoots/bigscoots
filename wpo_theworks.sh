@@ -273,14 +273,18 @@ if [[ "$wprocket" == "y" ]]; then
 
   rm -f wp-content/advanced-cache.php
 
-  wp plugin ${WPCLIFLAGS} deactivate wp-rocket
-  wp plugin ${WPCLIFLAGS} activate wp-rocket
+  wp plugin deactivate wp-rocket ${WPCLIFLAGS}
+  wp plugin activate wp-rocket ${WPCLIFLAGS}
 
 fi
 
 if [ -d "wp-content/plugins/migrate-guru" ]; then
-  wp plugin ${WPCLIFLAGS} deactivate migrate-guru
-  wp plugin ${WPCLIFLAGS} delete migrate-guru
+  wp plugin deactivate migrate-guru ${WPCLIFLAGS}
+  wp plugin delete migrate-guru ${WPCLIFLAGS}
+fi
+
+if [[ $(wp plugin status akismet ${WPCLIFLAGS} |grep Status | awk '{print $2}') == Inactive ]]; then
+    wp plugin delete akismet ${WPCLIFLAGS}
 fi
 
 if [[ $(wp option get siteurl ${WPCLIFLAGS}) =~ http:// ]]; then
