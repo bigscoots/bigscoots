@@ -276,8 +276,6 @@ if [[ "$wprocket" == "y" ]]; then
   wp plugin ${WPCLIFLAGS} deactivate wp-rocket
   wp plugin ${WPCLIFLAGS} activate wp-rocket
 
-  echo "wprocket is detected check /usr/local/nginx/conf/conf.d/$i.ssl.conf for proper config" | mail -s "WPO  $i  $HOSTNAME - wprocket is detected check config" monitor@bigscoots.com
-
 fi
 
 if [[ $(wp option get siteurl ${WPCLIFLAGS}) =~ http:// ]]; then
