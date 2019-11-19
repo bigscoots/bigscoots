@@ -39,8 +39,9 @@ sleep 1
   echo PHP_LZF='y'
   echo PHP_PGO='y'
   echo PHP_ZSTD='y'
+  echo PHPFINFO='y'
   echo DISABLE_IPVSIX='y'
-} >> /etc/centminmod/custom_config.inc
+  } >> /etc/centminmod/custom_config.inc
 
 curl -O https://centminmod.com/betainstaller73.sh && chmod 0700 betainstaller73.sh && bash betainstaller73.sh
 
