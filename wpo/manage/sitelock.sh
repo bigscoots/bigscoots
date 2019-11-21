@@ -51,11 +51,17 @@ if [[ $1 == on ]]; then
 
     /usr/local/nginx/conf/htpasswd.sh create /home/nginx/domains/"$domain"/wpolocksite "$3" "$4" > /dev/null 2>&1
     sed -i "/location \/ {/a \  auth_basic_user_file /home/nginx/domains/$domain/wpolocksite;" /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
-    sed -i "/location \/ {/a \  auth_basic \"Private\";" /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
+    sed -i "/location \/ {/a \  auth_basic \"Private\"; #wpolocksiteauthbasic" /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
 
     else
     sed -i "s=#auth_basic_user_file /home/nginx/domains/$domain/wpolocksite=auth_basic_user_file /home/nginx/domains/$domain/wpolocksite=g" /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
     /usr/local/nginx/conf/htpasswd.sh create /home/nginx/domains/"$domain"/wpolocksite "$3" "$4" > /dev/null 2>&1
+
+        if  ! grep -q '#wpolocksiteauthbasic' /usr/local/nginx/conf/conf.d/"$domain".ssl.conf ; then
+            echo "Make sure to add the comment #wpolocksiteauthbasic to the end of the existing auth_basic in the / Location block and uncomment the begining of  auth_basic... Ask Justin if you are not sure." | mail -s "WPO Enable Sitelock check -  $domain -  $HOSTNAME" monitor@bigscoots.com
+        else
+            sed -i 's/#auth_basic "Private"; #wpolocksiteauthbasic/auth_basic "Private"; #wpolocksiteauthbasic/g' /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
+        fi
 
     fi
 
