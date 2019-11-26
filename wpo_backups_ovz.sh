@@ -5,7 +5,7 @@ HOMEDIR=/home/nginx/domains/
 BKSVR=backup3.bigscoots.com
 BSPATH=/root/.bigscoots
 PATH=/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/root/bin
-WPCLIFLAGS="--allow-root --skip-plugins --skip-themes"
+WPCLIFLAGS="--allow-root --skip-plugins --skip-themes --require=/bigscoots/includes/err_report.php"
 
 if [ ! -f "$BSPATH"/rsync/exclude ]; then
   mkdir -p "$BSPATH"/rsync
