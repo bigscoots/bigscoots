@@ -17,10 +17,10 @@ WPCLIFLAGS="--allow-root --skip-plugins --skip-themes"
 sed -i 's/add_filter/\/\/add_filter/g' wp-config.php
 
 if ! hash dos2unix 2>/dev/null; then
-    yum -y install dos2unix
+    yum -y install dos2unix > /dev/null 2>&1
 fi
 
-dos2unix wp-config.php
+dos2unix wp-config.php > /dev/null 2>&1
 
 NGINX=$(which nginx)
 
