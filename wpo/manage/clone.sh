@@ -56,12 +56,15 @@ rsync -aqhv --delete \
 --exclude wp-content/wpbackitup_backups \
 "$sourcesitedocroot/" "$destinationsitedocroot/"
 
-wp ${WPCLIFLAGS} db reset --yes --path="${destinationsitedocroot}" --quiet 2>&1
-wp ${WPCLIFLAGS} db export - --path="${sourcesitedocroot}" --quiet | wp ${WPCLIFLAGS} --quiet db import - --path="${destinationsitedocroot}" --quiet 2>&1
-wp ${WPCLIFLAGS} config set table_prefix $(wp ${WPCLIFLAGS} config get table_prefix --path="${sourcesitedocroot}") --path="${destinationsitedocroot}" --quiet 2>&1
-siteurl=$(wp ${WPCLIFLAGS} option get siteurl --path="${sourcesitedocroot}" --quiet | sed -r 's/https?:\/\///g')
-wp ${WPCLIFLAGS} search-replace "//$siteurl" "//$destinationsite" --recurse-objects --skip-columns=guid --skip-tables=wp_users --path="${destinationsitedocroot}" --quiet
+wp ${WPCLIFLAGS} db reset --yes --path="${destinationsitedocroot}" --quiet >/dev/null 2>&1
 
+wp ${WPCLIFLAGS} db export - --path="${sourcesitedocroot}" --quiet >/dev/null 2>&1 | wp ${WPCLIFLAGS} --quiet db import - --path="${destinationsitedocroot}" --quiet >/dev/null 2>&1
+
+wp ${WPCLIFLAGS} config set table_prefix $(wp ${WPCLIFLAGS} config get table_prefix --path="${sourcesitedocroot}" >/dev/null 2>&1) --path="${destinationsitedocroot}" --quiet >/dev/null 2>&1
+
+siteurl=$(wp ${WPCLIFLAGS} option get siteurl --path="${sourcesitedocroot}" --quiet >/dev/null 2>&1 | sed -r 's/https?:\/\///g') >/dev/null 2>&1
+
+wp ${WPCLIFLAGS} search-replace "//$siteurl" "//$destinationsite" --recurse-objects --skip-columns=guid --skip-tables=wp_users --path="${destinationsitedocroot}" --quiet >/dev/null 2>&1
 
 if [ -n "$3" ] && [ -n "$4" ]; then
 
@@ -73,7 +76,7 @@ if [ -n "$3" ] && [ -n "$4" ]; then
 
     else
 
-        /usr/local/nginx/conf/htpasswd.sh create /home/nginx/domains/"$2"/wpolocksite "$3" "$4"
+        /usr/local/nginx/conf/htpasswd.sh create /home/nginx/domains/"$2"/wpolocksite "$3" "$4" >/dev/null 2>&1
 
     fi
 fi
@@ -81,8 +84,8 @@ fi
 if [ -d "wp-content/plugins/wp-rocket" ]; then
 
     rm -f wp-content/advanced-cache.php
-    wp plugin ${WPCLIFLAGS} deactivate wp-rocket
-    wp plugin ${WPCLIFLAGS} activate wp-rocket
+    wp plugin ${WPCLIFLAGS} deactivate wp-rocket >/dev/null 2>&1
+    wp plugin ${WPCLIFLAGS} activate wp-rocket >/dev/null 2>&1
 
 fi
 
