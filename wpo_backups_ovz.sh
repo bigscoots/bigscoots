@@ -115,8 +115,6 @@ done
 
 gzip "$wpinstall$dbname".sql
 
-  done
-
     if  [[ $remote == y ]]; then
       
       rsync -ah \
@@ -197,8 +195,6 @@ for wpinstall in $(find /home/nginx/domains/*/public/ -type f -name wp-config.ph
 done
 
 gzip "$wpinstall$dbname".sql
-
-done
 
     if  [[ $remote == y ]]; then
       
