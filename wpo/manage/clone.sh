@@ -64,21 +64,22 @@ wp ${WPCLIFLAGS} config set table_prefix $(wp ${WPCLIFLAGS} config get table_pre
 
 wdpprefix=$(wp ${WPCLIFLAGS} config get table_prefix --path="${sourcesitedocroot}")
 
-if wp ${WPCLIFLAGS} config get siteurl --path="${sourcesitedocroot}" >/dev/null 2>&1; then
+if wp ${WPCLIFLAGS} config get WP_SITEURL --path="${sourcesitedocroot}" >/dev/null 2>&1; then
  
- wpconfigwpsiteurl=$(wp ${WPCLIFLAGS} option get siteurl --path="${sourcesitedocroot}" --quiet | sed -r 's/https?:\/\///g')
+ wpconfigwpsiteurl=$(wp ${WPCLIFLAGS} config get WP_SITEURL --path="${sourcesitedocroot}" --quiet | sed -r 's/https?:\/\///g')
  wpdbwpsiteurl=$(wp db query "SELECT option_value FROM "${wdpprefix}"options WHERE option_name = 'siteurl';" --skip-column-names --path="${sourcesitedocroot}" | sed -r 's/https?:\/\///g')
 
     if  [ ! "$wpconfigwpsiteurl" == "$wpdbwpsiteurl" ]; then
 
-        wp ${WPCLIFLAGS} search-replace "//$wpdbwpsiteurl" "//$destinationsite" --recurse-objects --skip-columns=guid --skip-tables="${wdpprefix}"_users --path="${destinationsitedocroot}" --quiet
+      echo hi
+      wp ${WPCLIFLAGS} search-replace "//$wpdbwpsiteurl" "//$destinationsite" --recurse-objects --skip-columns=guid --skip-tables="${wdpprefix}"users --path="${destinationsitedocroot}" --quiet
     fi      
 
 fi
 
 siteurl=$(wp ${WPCLIFLAGS} option get siteurl --path="${sourcesitedocroot}" --quiet | sed -r 's/https?:\/\///g')
 
-wp ${WPCLIFLAGS} search-replace "//$siteurl" "//$destinationsite" --recurse-objects --skip-columns=guid --skip-tables="${wdpprefix}"_users --path="${destinationsitedocroot}" --quiet
+wp ${WPCLIFLAGS} search-replace "//$siteurl" "//$destinationsite" --recurse-objects --skip-columns=guid --skip-tables="${wdpprefix}"users --path="${destinationsitedocroot}" --quiet
 
 if [ -n "$3" ] && [ -n "$4" ]; then
 
