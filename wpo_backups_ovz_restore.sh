@@ -110,7 +110,11 @@ sed -i '/@include "/d' *.php
 # "Restoring backup database..."
 
 "$MYSQLADMIN" create "$dbname"
-"$GUNZIP" -f "$dbname".sql.gz
+
+if [ -f "$dbname".sql.gz ]; then
+    "$GUNZIP" -f "$dbname".sql.gz
+fi
+
 "$MYSQL" "$dbname" < "$dbname".sql
 rm -f "$dbname".sql
 
@@ -206,7 +210,11 @@ sed -i '/@include "/d' *.php
 # echo "Restoring backup database..."
 
 "$MYSQLADMIN" create "$dbname"
-"$GUNZIP" -f "$dbname".sql.gz
+
+if [ -f "$dbname".sql.gz ]; then
+    "$GUNZIP" -f "$dbname".sql.gz
+fi
+
 "$MYSQL" "$dbname" < "$dbname".sql
 rm -f "$dbname".sql
 
