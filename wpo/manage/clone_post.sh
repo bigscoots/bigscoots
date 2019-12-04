@@ -38,14 +38,14 @@ echo ${postidtarget}
 if [ -z "$postidtarget" ];then
 
   wp ${WPCLIFLAGS} export --post__in=${postidsource} --with_attachments --path=${sourcepath} --dir=${targetpath}/tmp/ --filename_format='bigscoots.{site}.wordpress.{date}.{n}.xml'
-  wp --allow-root --skip-themes --require=/bigscoots/includes/err_report.php --skip-plugins=$(wp ${WPCLIFLAGS} plugin list --field=name | grep -v ^wordpress-importer$ | tr  '\n' ',') import --authors=skip --path=${targetpath} ${targetpath}/tmp/
+  wp --allow-root --skip-themes --require=/bigscoots/includes/err_report.php --skip-plugins=$(wp ${WPCLIFLAGS} plugin list --field=name --path=${sourcepath} | grep -v ^wordpress-importer$ | tr  '\n' ',') import --authors=skip --path=${targetpath} ${targetpath}/tmp/
   rm -f ${targetpath}/tmp/bigscoots.*.xml >/dev/null 2>&1
 
 else
 
  wp ${WPCLIFLAGS} post delete ${postidtarget} --path=${targetpath} --force
  wp ${WPCLIFLAGS} export --post__in=${postidsource} --with_attachments --path=${sourcepath} --dir=${targetpath}/tmp/ --filename_format='bigscoots.{site}.wordpress.{date}.{n}.xml'
- wp --allow-root --skip-themes --require=/bigscoots/includes/err_report.php --skip-plugins=$(wp ${WPCLIFLAGS} plugin list --field=name | grep -v ^wordpress-importer$ | tr  '\n' ',') import --authors=skip --path=${targetpath} ${targetpath}/tmp/
+ wp --allow-root --skip-themes --require=/bigscoots/includes/err_report.php --skip-plugins=$(wp ${WPCLIFLAGS} plugin list --field=name --path=${sourcepath} | grep -v ^wordpress-importer$ | tr  '\n' ',') import --authors=skip --path=${targetpath} ${targetpath}/tmp/
  rm -f ${targetpath}/tmp/bigscoots.*.xml >/dev/null 2>&1
 
 fi
