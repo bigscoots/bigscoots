@@ -67,7 +67,7 @@ wdpprefix=$(wp ${WPCLIFLAGS} config get table_prefix --path="${sourcesitedocroot
 if wp ${WPCLIFLAGS} config get WP_SITEURL --path="${sourcesitedocroot}" >/dev/null 2>&1; then
  
  wpconfigwpsiteurl=$(wp ${WPCLIFLAGS} config get WP_SITEURL --path="${sourcesitedocroot}" --quiet | sed -r 's/https?:\/\///g')
- wpdbwpsiteurl=$(wp db query "SELECT option_value FROM "${wdpprefix}"options WHERE option_name = 'siteurl';" --skip-column-names --path="${sourcesitedocroot}" | sed -r 's/https?:\/\///g')
+ wpdbwpsiteurl=$(wp ${WPCLIFLAGS} db query "SELECT option_value FROM "${wdpprefix}"options WHERE option_name = 'siteurl';" --skip-column-names --path="${sourcesitedocroot}" | sed -r 's/https?:\/\///g')
 
     if  [ ! "$wpconfigwpsiteurl" == "$wpdbwpsiteurl" ]; then
       wp ${WPCLIFLAGS} search-replace "//$wpdbwpsiteurl" "//$destinationsite" --recurse-objects --skip-columns=guid --skip-tables="${wdpprefix}"users --path="${destinationsitedocroot}" --quiet
