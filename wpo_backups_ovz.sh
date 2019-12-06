@@ -124,6 +124,9 @@ for wpinstall in $(find /home/nginx/domains/*/public/ -type f -name wp-config.ph
         cat "$wpinstall"database.err | mail -s "WPO Backup Failed - mysqldump error - mysqlcheck was attempted stil failed -   $dbname  $HOSTNAME" monitor@bigscoots.com
       fi
     fi
+
+rm -f "$wpinstall"database.err
+
 done
 
 gzip "$wpinstall$dbname".sql
@@ -211,6 +214,9 @@ for wpinstall in $(find /home/nginx/domains/*/public/ -type f -name wp-config.ph
         cat "$wpinstall"database.err | mail -s "WPO Backup Failed - mysqldump error - mysqlcheck was attempted stil failed -   $dbname  $HOSTNAME" monitor@bigscoots.com
       fi
     fi
+
+rm -f "$wpinstall"database.err
+    
 done
 
 gzip "$wpinstall$dbname".sql
