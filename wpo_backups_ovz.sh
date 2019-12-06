@@ -229,5 +229,5 @@ esac
 for wpinstall in $(find /home/nginx/domains/*/public/ -type f -name wp-config.php | sed 's/wp-config.php//g')
    do
     dbname=$(wp $WPCLIFLAGS config get DB_NAME --path="$wpinstall")
-    rm -f "$wpinstall$dbname".sql.gz
+    rm -f "$wpinstall$dbname".sql "$wpinstall$dbname".sql.gz
 done
