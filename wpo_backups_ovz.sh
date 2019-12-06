@@ -62,9 +62,15 @@ manual)
 
   dbname=$(wp $WPCLIFLAGS config get DB_NAME)
   mysqldump "$dbname"  > "$dbname".sql 2>database.err
+  if [ "$?" -eq 0 ]; then
+    gzip "$wpinstall$dbname".sql
+  fi
   if [ "$?" -eq 3 ]; then
     mysqlcheck "$dbname" --auto-repair --check
     mysqldump "$dbname"  > "$dbname".sql 2>database.err
+    if [ "$?" -eq 0 ]; then
+      gzip "$wpinstall$dbname".sql
+    fi
       if [ "$?" -eq 3 ]; then
       cat database.err | mail -s "WPO Backup Failed - mysqldump error - mysqlcheck was attempted stil failed -  $dbname  $HOSTNAME" monitor@bigscoots.com
       fi
@@ -104,9 +110,16 @@ manual)
 for wpinstall in $(find /home/nginx/domains/*/public/ -type f -name wp-config.php | sed 's/wp-config.php//g'); do
   dbname=$(wp $WPCLIFLAGS config get DB_NAME --path="$wpinstall")
   mysqldump "$dbname"  > "$wpinstall$dbname".sql 2>"$wpinstall"database.err
+
+    if [ "$?" -eq 0 ]; then
+      gzip "$wpinstall$dbname".sql
+    fi
     if [ "$?" -eq 3 ]; then
       mysqlcheck "$dbname" --auto-repair --check
       mysqldump "$dbname"  > "$wpinstall$dbname".sql 2>"$wpinstall"database.err
+    if [ "$?" -eq 0 ]; then
+      gzip "$wpinstall$dbname".sql
+    fi
       if [ "$?" -eq 3 ]; then
         cat "$wpinstall"database.err | mail -s "WPO Backup Failed - mysqldump error - mysqlcheck was attempted stil failed -   $dbname  $HOSTNAME" monitor@bigscoots.com
       fi
@@ -185,9 +198,15 @@ fi
 for wpinstall in $(find /home/nginx/domains/*/public/ -type f -name wp-config.php | sed 's/wp-config.php//g'); do
   dbname=$(wp $WPCLIFLAGS config get DB_NAME --path="$wpinstall")
   mysqldump "$dbname"  > "$wpinstall$dbname".sql 2>"$wpinstall"database.err
+    if [ "$?" -eq 0 ]; then
+      gzip "$wpinstall$dbname".sql
+    fi
     if [ "$?" -eq 3 ]; then
       mysqlcheck "$dbname" --auto-repair --check
       mysqldump "$dbname"  > "$wpinstall$dbname".sql 2>"$wpinstall"database.err
+      if [ "$?" -eq 0 ]; then
+      gzip "$wpinstall$dbname".sql
+      fi
       if [ "$?" -eq 3 ]; then
         cat "$wpinstall"database.err | mail -s "WPO Backup Failed - mysqldump error - mysqlcheck was attempted stil failed -   $dbname  $HOSTNAME" monitor@bigscoots.com
       fi
