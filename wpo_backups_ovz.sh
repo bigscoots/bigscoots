@@ -76,8 +76,6 @@ manual)
       fi
   fi
 
-  gzip "$dbname".sql
-
     if  [[ $remote == y ]]; then
       
       rsync -ah \
