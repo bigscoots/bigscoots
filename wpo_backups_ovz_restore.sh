@@ -151,8 +151,8 @@ else
 DOMAIN=$(echo "$(pwd)"| sed "s=/home/nginx/domains/==g ; s=/public==g")
 
 fi
-
-if ! grep -qs '/backup ' /proc/mounts ; then
+if ! grep -qs '/backup ' /proc/mounts && ! grep destination=remote "$BSPATH"/backupinfo >/dev/null 2>&1 ; then
+# if ! grep -qs '/backup ' /proc/mounts ; then
    echo "Backup drive not mounted in $HOSTNAME" | mail -s "Backup drive not mounted in $HOSTNAME" monitor@bigscoots.com
    exit
 fi
