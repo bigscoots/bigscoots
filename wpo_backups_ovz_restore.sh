@@ -26,6 +26,7 @@ elif ! grep -qs '/backup ' /proc/mounts && grep destination=remote "$BSPATH"/bac
   else
     BKUSER=wpo"${HOSTNAME//./}"
   fi
+fi
 
 
  if [[ ! -f wp-config.php ]] ; then
