@@ -3,6 +3,8 @@
 # wp import / export posts from source to target
 # will remove post if it exists on target
 
+# /bigscoots/wpo/manage/clone_post.sh -p some-post-name  -s sourcedomaincom -t targetdomain.com
+
 WPCLIFLAGS="--allow-root --skip-plugins --skip-themes --require=/bigscoots/includes/err_report.php"
 
 while getopts p:s:t:o: option
