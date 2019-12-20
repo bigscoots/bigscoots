@@ -11,7 +11,7 @@ if [ ! -d "${wpinstall}" ]; then
   exit 1
 fi
 
-if [ $2 = -c ]; then
+if [ "{$2}" = -c ]; then
   if ! wp ${WPCLIFLAGS} plugin is-active wp-rocket --path="${wpinstall}"; then
     exit 5 # installed but not active
   fi
