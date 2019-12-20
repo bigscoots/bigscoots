@@ -44,4 +44,11 @@ if [ -d "${wpinstall}/wp-content/plugins/wp-rocket" ]; then
 
   sed -i 's/#\?try_files /#try_files /g ; s/#try_files \$uri \$uri\/ \/index.php?\$/try_files \$uri \$uri\/ \/index.php?\$/g' "${sslconf}"
 
+  "$NGINX" -t > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+                npreload > /dev/null 2>&1
+    else
+                "$NGINX" -t 2>&1 | mail -s "WPO URGENT - Nginx conf fail when running wprocket_chk.sh on $domain -  $HOSTNAME" monitor@bigscoots.com
+    fi
+
 fi
