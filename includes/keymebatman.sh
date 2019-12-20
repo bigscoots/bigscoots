@@ -77,6 +77,11 @@ if command -v csf >/dev/null 2>&1 ; then
  
  unset csfrb
  
+   if ! grep -q 67.202.70.147 /etc/csf/csf.allow; then
+	echo "67.202.70.147 # WPO NEXUS - BigScoots.com" >> /etc/csf/csf.allow
+	csfrb=1
+ fi
+ 
    if ! grep -q 208.117.38.27 /etc/csf/csf.allow; then
 	echo "208.117.38.27 # office00.bigscoots.com" >> /etc/csf/csf.allow
 	csfrb=1
