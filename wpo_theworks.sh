@@ -9,7 +9,8 @@ exit_on_error() {
     fi
 }
 
-WPCLIFLAGS="--allow-root --skip-plugins --skip-themes"
+date=$(date "+%Y-%m-%dT%H_%M_%S")
+WPCLIFLAGS="--allow-root --skip-plugins --skip-themes --require=/bigscoots/includes/err_report.php"
 
 # Pre-checks
 # remove add_filter should be used in a mu-plugin, otherwise breaks wp-cli
@@ -127,12 +128,18 @@ else
   fi
 
 wp ${WPCLIFLAGS} config set DB_HOST localhost
-wp ${WPCLIFLAGS} db import bigscoots.sql
 
-exit_on_error $? MySQL Import
+  if [ -f bigscoots.sql ]; then
+  wp ${WPCLIFLAGS} db import bigscoots.sql
+  exit_on_error $? MySQL Import
+  mv bigscoots.sql ../bigscoots_original-"${date}".sql
+  fi
 
-mv bigscoots.sql ../
+fi
 
+if ! $(wp core is-installed); then
+    wp core is-installed 2>>/tmp/check.error || mail -s "WPO theworks failed - wp not installed or database info in  wpconfig broken -  $HOSTNAME" monitor@bigscoots.com </tmp/check.error >/dev/null
+    exit 1 
 fi
 
 # remove unnecessary files
