@@ -1,9 +1,7 @@
 #!/bin/bash
 
-
 domain="${1}"
 
-WPCLIFLAGS="--allow-root --skip-plugins --skip-themes --require=/bigscoots/includes/err_report.php"
 sslconf=$(echo /usr/local/nginx/conf/conf.d/"${domain}".ssl.conf)
 wpinstall=/home/nginx/domains/"${domain}"/public
 
@@ -13,8 +11,6 @@ if [ ! -d "${wpinstall}" ]; then
 fi
 
 if [ -d "${wpinstall}/wp-content/plugins/wp-rocket" ]; then
-
-  wprocket=y
 
   if [ ! -d "/usr/local/nginx/conf/rocket-nginx" ]; then
 
@@ -48,10 +44,4 @@ if [ -d "${wpinstall}/wp-content/plugins/wp-rocket" ]; then
 
   sed -i 's/#\?try_files /#try_files /g ; s/#try_files \$uri \$uri\/ \/index.php?\$/try_files \$uri \$uri\/ \/index.php?\$/g' "${sslconf}"
 
-else
-
-wp ${WPCLIFLAGS} plugin install cache-enabler --activate --path="${wpinstall}" --quiet ; wp ${WPCLIFLAGS} plugin delete comet-cache sg-cachepress wp-hummingbird wp-super-cache w3-total-cache nginx-helper wp-redis wp-fastest-cache --path="${wpinstall}" --quiet
-
 fi
-
-sed -i 's=#include /usr/local/nginx/conf/cloudflare.conf;=include /usr/local/nginx/conf/cloudflare.conf;=g' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
