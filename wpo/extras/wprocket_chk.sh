@@ -51,11 +51,11 @@ if wp ${WPCLIFLAGS} plugin is-installed wp-rocket --path="${wpinstall}"; then
   sed -i 's/#\?try_files /#try_files /g ; s/#try_files \$uri \$uri\/ \/index.php?\$/try_files \$uri \$uri\/ \/index.php?\$/g' "${sslconf}"
 
   if [ "${reloadconfig}" == 1 ]; then
-  "$NGINX" -t > /dev/null 2>&1
+  nginx -t > /dev/null 2>&1
     if [ $? -eq 0 ]; then
                 npreload > /dev/null 2>&1
     else
-                "$NGINX" -t 2>&1 | mail -s "WPO URGENT - Nginx conf fail when running wprocket_chk.sh on $domain -  $HOSTNAME" monitor@bigscoots.com
+                nginx -t 2>&1 | mail -s "WPO URGENT - Nginx conf fail when running wprocket_chk.sh on $domain -  $HOSTNAME" monitor@bigscoots.com
     fi
   fi
 fi
