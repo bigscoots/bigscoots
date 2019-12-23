@@ -137,8 +137,8 @@ else
 
 fi
 
-if ! wp core is-installed; then
-    wp core is-installed 2>>/tmp/check.error || mail -s "WPO theworks failed - wp not installed or database info in  wpconfig broken -  $HOSTNAME" monitor@bigscoots.com </tmp/check.error >/dev/null
+if ! wp ${WPCLIFLAGS} core is-installed; then
+    wp ${WPCLIFLAGS} core is-installed 2>>/tmp/check.error || mail -s "WPO theworks failed - wp not installed or database info in  wpconfig broken -  $HOSTNAME" monitor@bigscoots.com </tmp/check.error >/dev/null
     exit 1 
 fi
 
