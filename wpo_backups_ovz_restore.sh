@@ -10,7 +10,7 @@ MYSQL=$(which mysql)
 MYSQLDUMP=$(which mysqldump)
 RSYNC=$(which rsync)
 CHOWN=$(which chown)
-WPCLIFLAGS="${WPCLIFLAGS} --require=/bigscoots/includes/err_report.php"
+WPCLIFLAGS="--allow-root --skip-plugins --skip-themes --require=/bigscoots/includes/err_report.php"
 
 if [ -f /proc/vz/veinfo ];
 then
