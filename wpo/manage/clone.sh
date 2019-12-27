@@ -6,7 +6,7 @@
 
 sourcesite="$1"
 destinationsite="$2"
-
+BSPATH=/root/.bigscoots
 
 WPCLIFLAGS="--allow-root --skip-plugins --skip-themes --require=/bigscoots/includes/err_report.php"
 NGINX=$(which nginx)
@@ -54,6 +54,7 @@ rsync -aqhv --delete \
 --exclude wp-content/updraft \
 --exclude wp-content/cache/ \
 --exclude wp-content/wpbackitup_backups \
+--exclude-from="${BSPATH}"/rsync/exclude \
 "$sourcesitedocroot/" "$destinationsitedocroot/"
 
 wp ${WPCLIFLAGS} db reset --yes --path="${destinationsitedocroot}" --quiet
@@ -65,13 +66,13 @@ wp ${WPCLIFLAGS} config set table_prefix $(wp ${WPCLIFLAGS} config get table_pre
 wdpprefix=$(wp ${WPCLIFLAGS} config get table_prefix --path="${sourcesitedocroot}")
 
 if wp ${WPCLIFLAGS} config get WP_SITEURL --path="${sourcesitedocroot}" >/dev/null 2>&1; then
- 
+
  wpconfigwpsiteurl=$(wp ${WPCLIFLAGS} config get WP_SITEURL --path="${sourcesitedocroot}" --quiet | sed -r 's/https?:\/\///g')
  wpdbwpsiteurl=$(wp ${WPCLIFLAGS} db query "SELECT option_value FROM "${wdpprefix}"options WHERE option_name = 'siteurl';" --skip-column-names --path="${sourcesitedocroot}" | sed -r 's/https?:\/\///g')
 
     if  [ ! "$wpconfigwpsiteurl" == "$wpdbwpsiteurl" ]; then
       wp ${WPCLIFLAGS} search-replace "//$wpdbwpsiteurl" "//$destinationsite" --recurse-objects --skip-columns=guid --skip-tables="${wdpprefix}"users --path="${destinationsitedocroot}" --quiet
-    fi      
+    fi
 
 fi
 
