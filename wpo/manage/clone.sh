@@ -59,7 +59,7 @@ rsync -aqhv --delete \
 
 wp ${WPCLIFLAGS} db reset --yes --path="${destinationsitedocroot}" --quiet
 
-wp ${WPCLIFLAGS} db export - --path="${sourcesitedocroot}" --quiet --single-transaction --quick --lock-tables=false | wp ${WPCLIFLAGS} --quiet db import - --path="${destinationsitedocroot}" --quiet
+wp ${WPCLIFLAGS} db export - --path="${sourcesitedocroot}" --quiet --single-transaction --quick --lock-tables=false | wp ${WPCLIFLAGS} --quiet db import - --path="${destinationsitedocroot}" --quiet --force
 
 wp ${WPCLIFLAGS} config set table_prefix $(wp ${WPCLIFLAGS} config get table_prefix --path="${sourcesitedocroot}") --path="${destinationsitedocroot}" --quiet
 
