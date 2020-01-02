@@ -41,6 +41,9 @@ if [[ $sourcesitedb == $destinationsitedb ]]; then
     fi
 fi
 
+mkdir -p "${BSPATH}"/rsync/"${destinationsite}"
+touch "${BSPATH}"/rsync/"${destinationsite}"/exclude
+
 rsync -aqhv --delete \
 --exclude 'wp-content/uploads/backupbuddy*' \
 --exclude 'wp-content/backup*' \
@@ -55,6 +58,7 @@ rsync -aqhv --delete \
 --exclude wp-content/cache/ \
 --exclude wp-content/wpbackitup_backups \
 --exclude-from="${BSPATH}"/rsync/exclude \
+--exclude-from="${BSPATH}"/rsync/"${destinationsite}"/exclude \
 "$sourcesitedocroot/" "$destinationsitedocroot/"
 
 wp ${WPCLIFLAGS} db reset --yes --path="${destinationsitedocroot}" --quiet
