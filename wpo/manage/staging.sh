@@ -6,7 +6,11 @@
 BSPATH=/root/.bigscoots
 sourcedomain="$1"
 destinationdomain="$2"
-sourcedomainsize="$(du --exclude-from="${BSPATH}"/rsync/"${destinationsite}"/exclude --exclude updraft --exclude ai1wm-backups --exclude cache -s /home/nginx/domains/"$sourcedomain" | awk '{print $1}')"
+
+mkdir -p "${BSPATH}"/rsync/"${destinationdomain}"
+touch "${BSPATH}"/rsync/"${destinationdomain}"/exclude
+
+sourcedomainsize="$(du --exclude-from="${BSPATH}"/rsync/"${destinationdomain}"/exclude --exclude updraft --exclude ai1wm-backups --exclude cache -s /home/nginx/domains/"$sourcedomain" | awk '{print $1}')"
 freespace="$(df -k / | tr -s ' ' | cut -d" " -f 4 | grep -v Available)"
 percentofreespace=$((sourcedomainsize*100/freespace))
 
