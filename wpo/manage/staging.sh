@@ -7,7 +7,7 @@ BSPATH=/root/.bigscoots
 sourcedomain="$1"
 destinationdomain="$2"
 
-mkdir -p "${BSPATH}"/rsync/"${destinationdomain}" "${BSPATH}"/rsync/exclude
+mkdir -p "${BSPATH}"/rsync/"${destinationdomain}"
 touch "${BSPATH}"/rsync/"${destinationdomain}"/exclude "${BSPATH}"/rsync/exclude
 
 sourcedomainsize="$(du --exclude-from="${BSPATH}"/rsync/"${destinationdomain}"/exclude --exclude updraft --exclude ai1wm-backups --exclude cache -s /home/nginx/domains/"$sourcedomain" | awk '{print $1}')"

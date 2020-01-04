@@ -41,7 +41,7 @@ if [[ $sourcesitedb == $destinationsitedb ]]; then
     fi
 fi
 
-mkdir -p "${BSPATH}"/rsync/"${destinationsite}" "${BSPATH}"/rsync/exclude
+mkdir -p "${BSPATH}"/rsync/"${destinationsite}"
 touch "${BSPATH}"/rsync/"${destinationsite}"/exclude "${BSPATH}"/rsync/exclude
 
 rsync -aqhv --delete \
