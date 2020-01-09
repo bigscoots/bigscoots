@@ -99,11 +99,11 @@ if [ -n "$3" ] && [ -n "$4" ]; then
     fi
 fi
 
-if [ -d "wp-content/plugins/wp-rocket" ]; then
+if [ -d "$destinationsitedocroot/wp-content/plugins/wp-rocket" ]; then
 
-    rm -f wp-content/advanced-cache.php
-    wp plugin ${WPCLIFLAGS} deactivate wp-rocket
-    wp plugin ${WPCLIFLAGS} activate wp-rocket
+    rm -f "$destinationsitedocroot"/wp-content/advanced-cache.php
+    wp plugin ${WPCLIFLAGS} deactivate wp-rocket --path="${destinationsitedocroot}"
+    wp plugin ${WPCLIFLAGS} activate wp-rocket --path="${destinationsitedocroot}"
 
 fi
 
