@@ -11,7 +11,7 @@ fi
 # fi
 
 domain="$1"
-domainip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+domainip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1\|192.168.')
 
 if [ -d /home/nginx/domains/"$domain" ]; then
   echo "$domain already exists on the server."
