@@ -41,6 +41,8 @@ fi
 
 sed -i "/\/usr\/local\/nginx\/conf\/503include-only.conf/a \  include \/usr\/local\/nginx\/conf\/wpincludes\/$domain\/redirects.conf;" /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
 sed -i 's/include \/usr\/local\/nginx\/conf\/autoprotect/#include \/usr\/local\/nginx\/conf\/autoprotect/g' /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
+sed -i 's/ssl_dhparam/#ssl_dhparam/g' /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
+
 crontab -l | grep -v '/root/tools/wp_updater'  | crontab -
 
 wp ${WPCLIFLAGS} plugin delete --all --path=/home/nginx/domains/"$domain"/public
