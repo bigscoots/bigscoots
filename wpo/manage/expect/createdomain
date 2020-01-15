@@ -1,6 +1,8 @@
 #!/usr/bin/expect -f
 
 set domain [lindex $argv 0]
+set ftpuser [lindex $argv 1]
+set email [lindex $argv 2]
 
 set timeout -1
 
@@ -9,24 +11,31 @@ spawn centmin
 expect "Enter option"
 
 send -- "22\r"
-send -- "\r"
+send -- "y\r"
 
 expect "Enter vhost domain name you want to add"
 
 send -- "$domain\r"
 
+send -- "y\r"
+send -- "n\r"
 send -- "\r"
-send -- "\r"
-send -- "\r"
-send -- "\r"
-send -- "\r"
-send -- "\r"
-send -- "\r"
-send -- "\r"
-send -- "\r"
-send -- "\r"
-send -- "\r"
-send -- "\r"
+send \010
+send -- "n\r"
+send \010
+send -- "n\r"
+send \010
+send -- "n\r"
+send -- "n\r"
+send -- "n\r"
+send -- "n\r"
+send -- "y\r"
+send -- "$email\r"
+expect "Enter option"
+send -- "1\r"
+send -- "$ftpuser\r"
+send -- "y\r"
+send -- "n\r"
 
 expect "vhost for $domain wordpress setup successfully"
 send \x03

@@ -11,6 +11,13 @@ fi
 # fi
 
 domain="$1"
+ftpuser="${domain//./}"
+email=admin@"$domain"
+
+if [[ ${domain} == *"bigscoots-staging"* ]]; then
+    email=admin@"$(echo $domain | sed '/\..*\./s/^[^.]*\.//')"
+fi
+
 domainip=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1\|192.168.')
 
 if [ -d /home/nginx/domains/"$domain" ]; then
@@ -19,13 +26,13 @@ if [ -d /home/nginx/domains/"$domain" ]; then
 fi
 
 if [ "$2" == fresh ]; then
-  /bigscoots/wpo/manage/expect/createdomain "$domain"
+  /bigscoots/wpo/manage/expect/createdomain "$domain" "$ftpuser" "$email"
   cd /home/nginx/domains/"$domain"/public || exit
   bash /bigscoots/wpo_theworks.sh fresh
 
 else
 
-  /bigscoots/wpo/manage/expect/createdomain "$domain"
+  /bigscoots/wpo/manage/expect/createdomain "$domain" "$ftpuser" "$email"
 
 fi
 
