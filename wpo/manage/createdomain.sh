@@ -28,28 +28,24 @@ fi
 
 sed -i 's/openssl dhparam/#openssl dhparam/g' /usr/local/src/centminmod/inc/wpsetup.inc
 
-if [ "$2" == fresh ]; then
-  /bigscoots/wpo/manage/expect/createdomain "$domain" "$ftpuser" "$email"
-  cd /home/nginx/domains/"$domain"/public || exit
-  bash /bigscoots/wpo_theworks.sh fresh
-
-else
-
-  /bigscoots/wpo/manage/expect/createdomain "$domain" "$ftpuser" "$email"
-
-fi
+/bigscoots/wpo/manage/expect/createdomain "$domain" "$ftpuser" "$email"
+touch /usr/local/nginx/conf/wpincludes/"$domain"/redirects.conf
 
 sed -i "/\/usr\/local\/nginx\/conf\/503include-only.conf/a \  include \/usr\/local\/nginx\/conf\/wpincludes\/$domain\/redirects.conf;" /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
 sed -i 's/include \/usr\/local\/nginx\/conf\/autoprotect/#include \/usr\/local\/nginx\/conf\/autoprotect/g' /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
 sed -i 's/ssl_dhparam/#ssl_dhparam/g' /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
+
+if [ "$2" == fresh ]; then
+  cd /home/nginx/domains/"$domain"/public || exit
+  bash /bigscoots/wpo_theworks.sh fresh
+fi
+
 
 crontab -l | grep -v '/root/tools/wp_updater'  | crontab -
 
 wp ${WPCLIFLAGS} plugin delete --all --path=/home/nginx/domains/"$domain"/public
 
 sed "s/REPLACEDOMAIN/$domain/g ; s/REPLACEIP/$domainip/g" /bigscoots/wpo/extras/dnszone.txt > /home/nginx/domains/"$domain"/"$domain"-dnszone.txt
-
-touch /usr/local/nginx/conf/wpincludes/"$domain"/redirects.conf
 
 if [ -f /home/nginx/domains/"$domain"/.fresh ]; then
   cat /home/nginx/domains/"$domain"/.fresh | mail -s "$domain has been successfully created on  $HOSTNAME - DNS attached" -a /home/nginx/domains/"$domain"/"$domain"-dnszone.txt monitor@bigscoots.com
