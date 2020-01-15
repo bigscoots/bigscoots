@@ -13,6 +13,7 @@ fi
 domain="$1"
 ftpuser="${domain//./}"
 email=admin@"$domain"
+WPCLIFLAGS="--allow-root --skip-plugins --skip-themes --require=/bigscoots/includes/err_report.php"
 
 if [[ ${domain} == *"bigscoots-staging"* ]]; then
     email=admin@"$(echo $domain | sed '/\..*\./s/^[^.]*\.//')"
@@ -41,6 +42,8 @@ fi
 sed -i "/\/usr\/local\/nginx\/conf\/503include-only.conf/a \  include \/usr\/local\/nginx\/conf\/wpincludes\/$domain\/redirects.conf;" /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
 sed -i 's/include \/usr\/local\/nginx\/conf\/autoprotect/#include \/usr\/local\/nginx\/conf\/autoprotect/g' /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
 crontab -l | grep -v '/root/tools/wp_updater'  | crontab -
+
+wp ${WPCLIFLAGS} plugin delete --all --path=/home/nginx/domains/"$domain"/public
 
 sed "s/REPLACEDOMAIN/$domain/g ; s/REPLACEIP/$domainip/g" /bigscoots/wpo/extras/dnszone.txt > /home/nginx/domains/"$domain"/"$domain"-dnszone.txt
 
