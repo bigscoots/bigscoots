@@ -25,6 +25,8 @@ if [ -d /home/nginx/domains/"$domain" ]; then
   exit
 fi
 
+sed -i 's/openssl dhparam/#openssl dhparam/g' /usr/local/src/centminmod/inc/wpsetup.inc
+
 if [ "$2" == fresh ]; then
   /bigscoots/wpo/manage/expect/createdomain "$domain" "$ftpuser" "$email"
   cd /home/nginx/domains/"$domain"/public || exit
