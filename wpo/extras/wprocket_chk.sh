@@ -20,6 +20,10 @@ fi
 
 if wp ${WPCLIFLAGS} plugin is-installed wp-rocket --path="${wpinstall}"; then
 
+  if wp ${WPCLIFLAGS} plugin is-active cache-enabler --path="${wpinstall}"; then
+    wp ${WPCLIFLAGS} plugin delete cache-enabler --path="${wpinstall}"
+  fi
+
   if [ ! -d "/usr/local/nginx/conf/rocket-nginx" ]; then
     bringmeback=$(pwd)
     cd /usr/local/nginx/conf/ || exit
