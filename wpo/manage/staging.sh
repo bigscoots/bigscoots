@@ -26,11 +26,12 @@ fi
 
 /bigscoots/wpo/manage/clone.sh "$sourcedomain" "$destinationdomain" dev dev
 
-if grep -q 'return 301 https' /usr/local/nginx/conf/conf.d/"$sourcedomain".conf; then
+if grep -q 'return 301 https' /usr/local/nginx/conf/conf.d/"$sourcedomain".conf && ! grep -q 'BigScoots Force HTTPS' /usr/local/nginx/conf/conf.d/"$destinationdomain".conf; then
         echo "https redirect found, redirecting staging."
         /bigscoots/wpo_forcehttps.sh "$destinationdomain"
     nginx -t > /dev/null 2>&1
     if [ $? -eq 0 ]; then
+                sleep 15
                 npreload > /dev/null 2>&1
         else
                 nginx -t 2>&1 | mail -s "WPO URGENT - Nginx conf fail during staging request -  $HOSTNAME" monitor@bigscoots.com
