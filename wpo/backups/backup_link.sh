@@ -16,5 +16,5 @@ mv "$backup" /var/www/html/"$rando1"/"$rando2"/
 
 screen -dmS "$backup" bash -c "sleep 30 ; rm -rf /var/www/html/$rando1"
 
-echo "Path: /var/www/html/$rando1/$rando2/$rando1"
+echo "Path: /var/www/html/$rando1/$rando2/$backup"
 echo "URL: http://$HOSTNAME/$rando1/$rando2/$backup"
