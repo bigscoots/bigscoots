@@ -14,6 +14,7 @@ fi
 mkdir -p /var/www/html/"$rando1"/"$rando2"/
 mv "$backup" /var/www/html/"$rando1"/"$rando2"/
 
-screen -dmS "$backup" bash -c "sleep 5 ; rm -rf /var/www/html/$rando1"
+screen -dmS "$backup" bash -c "sleep 30 ; rm -rf /var/www/html/$rando1"
 
-echo http://"$HOSTNAME"/"$rando1"/"$rando2"/"$backup"
+echo "Path: /var/www/html/$rando1/$rando2/$rando1"
+echo "URL: http://$HOSTNAME/$rando1/$rando2/$backup"
