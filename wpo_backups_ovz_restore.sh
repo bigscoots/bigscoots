@@ -2,7 +2,7 @@
 # options
 # h = human readable
 
-BKSVR=$(grep BKSVR= /bigscoots/wpo_backups_ovz.sh | sed 's/BKSVR=//g')
+BKSVR=$(grep BKSVR= /bigscoots/wpo_backups_ovz.sh | sed 's/BKSVR=//g' | head -1)
 MYSQLADMIN=$(which mysqladmin)
 GUNZIP=$(which gunzip)
 GZIP=$(which gzip)
