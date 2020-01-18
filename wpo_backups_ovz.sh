@@ -7,6 +7,10 @@ BSPATH=/root/.bigscoots
 PATH=/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/root/bin
 WPCLIFLAGS="--allow-root --skip-plugins --skip-themes --require=/bigscoots/includes/err_report.php"
 
+if grep bksvr "$BSPATH"/backupinfo >/dev/null 2>&1 ; then
+  BKSVR=$(grep bksvr "$BSPATH"/backupinfo | sed 's/bksvr=//g')
+fi
+
 if [ ! -f "$BSPATH"/rsync/exclude ]; then
   mkdir -p "$BSPATH"/rsync
 
