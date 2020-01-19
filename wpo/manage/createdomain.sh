@@ -27,6 +27,7 @@ if [ -d /home/nginx/domains/"$domain" ]; then
 fi
 
 sed -i 's/openssl dhparam/#openssl dhparam/g' /usr/local/src/centminmod/inc/wpsetup.inc
+sed -i 's/ssl_dhparam/#ssl_dhparam/g' /usr/local/src/centminmod/inc/wpsetup.inc
 
 /bigscoots/wpo/manage/expect/createdomain "$domain" "$ftpuser" "$email"
 touch /usr/local/nginx/conf/wpincludes/"$domain"/redirects.conf
