@@ -33,6 +33,11 @@ send -- "y\r"
 send -- "$email\r"
 expect "Enter option"
 send -- "1\r"
+expect -exact "1\r
+\r
+you selected option 1 (KeyCDN Cache Enabler) \[wpscache=n\]\r
+\r
+Create FTP username for vhost domain (enter username): "
 send -- "$ftpuser\r"
 send -- "y\r"
 send -- "n\r"
