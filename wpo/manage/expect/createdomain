@@ -1,49 +1,57 @@
 #!/usr/bin/expect -f
 
+set force_conservative 1  ;# set to 1 to force conservative mode even if
+                          ;# script wasn't run conservatively originally
+if {$force_conservative} {
+        set send_slow {1 .1}
+        proc send {ignore arg} {
+                sleep .50
+                exp_send -s -- $arg
+        }
+}
+
 set domain [lindex $argv 0]
 set ftpuser [lindex $argv 1]
 set email [lindex $argv 2]
 
 set timeout -1
-
 spawn centmin
-
-expect "Enter option"
-
+expect "\[ 1 - 24 \]"
 send -- "22\r"
+expect "Do you want to continue with Nginx vhost site creation"
 send -- "y\r"
-
-expect "Enter vhost domain name you want to add"
-
+expect "Enter vhost domain name you want to add (without www. prefix):"
 send -- "$domain\r"
-
+expect "Create a self-signed SSL certificate Nginx vhost"
 send -- "y\r"
-send -- "n\r"
+expect "Install CyberChimps Responsive Theme"
 send -- "\r"
-send \010
+expect "Install Classic Editor Wordpress Plugin"
+send -- "
 send -- "n\r"
-send \010
+expect "Install Autoptimize Gzip Companion Wordpress Plugin"
+send -- "
 send -- "n\r"
-send \010
+expect "Install Google Native LazyLoad Plugin"
+send -- "
 send -- "n\r"
+expect "Set custom WP Admin Display Name"
 send -- "n\r"
+expect "Install Wordpress in subdirectory"
 send -- "n\r"
+expect "Disable Auto Generated WP Admin Username"
 send -- "n\r"
+expect "Disable wp-login.php password protection"
 send -- "y\r"
+expect "Enter email address for Admin User for Wordpress Installation"
 send -- "$email\r"
-expect "Enter option"
+expect "\[ 1 - 3 \] "
 send -- "1\r"
-expect -exact "1\r
-\r
-you selected option 1 (KeyCDN Cache Enabler) \[wpscache=n\]\r
-\r
-Create FTP username for vhost domain (enter username): "
+expect "Create FTP username for vhost domain"
 send -- "$ftpuser\r"
+expect "Do you want to auto generate FTP password"
 send -- "y\r"
+expect "Do you want to exclude mobile/tablet devices from full page caching"
 send -- "n\r"
-
 expect "vhost for $domain wordpress setup successfully"
-send \x03
-
-# send -- "24\r"
-# expect eof
+exp_send "\x03"
