@@ -29,6 +29,8 @@ fi
 sed -i 's/openssl dhparam/#openssl dhparam/g' /usr/local/src/centminmod/inc/wpsetup.inc
 sed -i 's/ssl_dhparam/#ssl_dhparam/g' /usr/local/src/centminmod/inc/wpsetup.inc
 
+touch /etc/centminmod/custom_config.inc
+
 if ! grep -q LETSENCRYPT_DETECT /etc/centminmod/custom_config.inc ;then
 	echo "LETSENCRYPT_DETECT='y'" >> /etc/centminmod/custom_config.inc
 fi
