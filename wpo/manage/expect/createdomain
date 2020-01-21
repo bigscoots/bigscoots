@@ -1,11 +1,12 @@
 #!/usr/bin/expect -f
 
+
 set force_conservative 1  ;# set to 1 to force conservative mode even if
                           ;# script wasn't run conservatively originally
 if {$force_conservative} {
         set send_slow {1 .1}
         proc send {ignore arg} {
-                sleep .50
+                sleep 1
                 exp_send -s -- $arg
         }
 }
@@ -14,9 +15,13 @@ set domain [lindex $argv 0]
 set ftpuser [lindex $argv 1]
 set email [lindex $argv 2]
 
+log_file -a /root/centminlogs/$domain.txt
+
+
 set timeout -1
 spawn centmin
 expect "\[ 1 - 24 \]"
+sleep 10
 send -- "22\r"
 expect "Do you want to continue with Nginx vhost site creation"
 send -- "y\r"
