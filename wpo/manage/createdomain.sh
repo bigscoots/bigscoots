@@ -29,6 +29,10 @@ fi
 sed -i 's/openssl dhparam/#openssl dhparam/g' /usr/local/src/centminmod/inc/wpsetup.inc
 sed -i 's/ssl_dhparam/#ssl_dhparam/g' /usr/local/src/centminmod/inc/wpsetup.inc
 
+if ! grep -q LETSENCRYPT_DETECT /etc/centminmod/custom_config.inc ;then
+	echo "LETSENCRYPT_DETECT='y'" >> /etc/centminmod/custom_config.inc
+fi
+
 /bigscoots/wpo/manage/expect/createdomain "$domain" "$ftpuser" "$email"
 touch /usr/local/nginx/conf/wpincludes/"$domain"/redirects.conf
 
