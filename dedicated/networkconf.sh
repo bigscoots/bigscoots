@@ -17,7 +17,7 @@ fi
 if [[ $ipaddress == *"50.31.98"* ]] || [[ $ipaddress == *"50.31.99"* ]] ; then
 
 ipgateway=50.31.98.1
-ipnetmask=252.255.254.0
+ipnetmask=255.255.254.0
 
 else
 
