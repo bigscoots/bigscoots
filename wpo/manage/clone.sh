@@ -101,10 +101,11 @@ fi
 
 if [ -d "$destinationsitedocroot/wp-content/plugins/wp-rocket" ]; then
 
-    rm -f "$destinationsitedocroot"/wp-content/advanced-cache.php
-    wp plugin ${WPCLIFLAGS} deactivate wp-rocket --path="${destinationsitedocroot}"
-    wp plugin ${WPCLIFLAGS} activate wp-rocket --path="${destinationsitedocroot}"
-
+    if wp ${WPCLIFLAGS} plugin is-active wp-rocket --path="${destinationsitedocroot}"; then 
+        rm -f "$destinationsitedocroot"/wp-content/advanced-cache.php
+        wp plugin ${WPCLIFLAGS} deactivate wp-rocket --path="${destinationsitedocroot}"
+        wp plugin ${WPCLIFLAGS} activate wp-rocket --path="${destinationsitedocroot}"
+    fi
 fi
 
 chown -R nginx: /home/nginx/domains/$destinationsite
