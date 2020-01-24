@@ -80,6 +80,8 @@ mv -n .infected/plugins.replace/* wp-content/plugins/
 
 for i in $(wp user list --role=administrator --field=ID --allow-root --skip-plugins --skip-themes) ; do wp user reset-password $i --allow-root --skip-plugins --skip-themes ; done
 
+rm -rf wp-content/cache
+
 mv .infected ".infected_$(date +%m%d%y-%H%M)"
 find . -type f -exec chmod 644 {} \; &
 find . -type d -exec chmod 755 {} \; &
