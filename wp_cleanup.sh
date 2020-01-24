@@ -28,7 +28,7 @@ wp plugin list --skip-plugins --skip-themes --allow-root >> .infected/.infected_
 /scripts/restartsrv_apache_php_fpm
 npreload
 
-mv wp-config.php wp-content .keep/
+mv wp-config.php wp-content ads.txt apple-touch-icon* robots.txt bigscoots.html .keep/
 
 mv ./* .infected/
 wp core download --skip-content --skip-plugins --skip-themes --allow-root
