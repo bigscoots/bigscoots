@@ -45,7 +45,7 @@ elif ! grep -qs '/backup ' /proc/mounts && ! grep destination=remote "$BSPATH"/b
   echo "Make sure to set destination=remote in "${BSPATH}"/backupinfo if supposed to be remote backups." | mail -s "Backup drive not mounted in $HOSTNAME" monitor@bigscoots.com
   remote=y
   BKUSER=wpo"${HOSTNAME//./}"
-elif ! grep -qs '/backup ' /proc/mounts && grep destination=remote "$BSPATH"/backupinfo q ; then
+elif ! grep -qs '/backup ' /proc/mounts && grep destination=remote "$BSPATH"/backupinfo >/dev/null 2>&1 ; then
   remote=y
   if [[ -n $(grep bkuser= "${BSPATH}"/backupinfo | sed 's/=/ /g' | awk '{print $2}') ]]; then
     BKUSER=$(grep bkuser= "${BSPATH}"/backupinfo | sed 's/=/ /g' | awk '{print $2}')
@@ -214,8 +214,9 @@ if ! ssh -q -o BatchMode=yes -o StrictHostKeyChecking=no -o PasswordAuthenticati
 fi
 
   echo {\"sshprivkey\":\"$(sed ':a;N;$!ba;s/\n/\\n/g' /root/.ssh/wpo_backups)\"} | jq .
-  backupinfo="backupserver|backupuser|backuplimit
-$BKSVR|$BKUSER|$BKLIMIT"
+
+  backupinfo="sshprivkey|backupserver|backupuser|backuplimit
+$(sed ':a;N;$!ba;s/\n/\\n/g' /root/.ssh/wpo_backups)|$BKSVR|$BKUSER|$BKLIMIT"
   jq -Rn '
 ( input  | split("|") ) as $keys |
 ( inputs | split("|") ) as $vals |
