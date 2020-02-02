@@ -6,10 +6,10 @@ BKSVR=backup3.bigscoots.com
 BSPATH=/root/.bigscoots
 PATH=/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/root/bin
 WPCLIFLAGS="--allow-root --skip-plugins --skip-themes --require=/bigscoots/includes/err_report.php"
+BKLIMIT=30
 
-if grep bksvr "$BSPATH"/backupinfo >/dev/null 2>&1 ; then
-  BKSVR=$(grep bksvr "$BSPATH"/backupinfo | sed 's/bksvr=//g')
-fi
+mkdir -p "$BSPATH"
+touch "$BSPATH"/backupinfo
 
 if [ ! -f "$BSPATH"/rsync/exclude ]; then
   mkdir -p "$BSPATH"/rsync
@@ -28,23 +28,30 @@ if [ ! -f "$BSPATH"/rsync/exclude ]; then
   echo "*/wp-content/uploads/ShortpixelBackups"
   } > "$BSPATH"/rsync/exclude
 
+if grep bksvr "$BSPATH"/backupinfo >/dev/null 2>&1 ; then
+  BKSVR=$(grep bksvr "$BSPATH"/backupinfo | sed 's/bksvr=//g')
+fi
+
 fi
 
 if [ -f /proc/vz/veinfo ]; then
   remote=y
+  if grep -q bkuser= "${BSPATH}"/backupinfo; then 
+    BKUSER=$(grep bkuser= "${BSPATH}"/backupinfo | sed 's/=/ /g' | awk '{print $2}')
+  else
   BKUSER=wpo$(awk '{print $1}' /proc/vz/veinfo)
+  fi
 elif ! grep -qs '/backup ' /proc/mounts && ! grep destination=remote "$BSPATH"/backupinfo >/dev/null 2>&1 ; then
   echo "Make sure to set destination=remote in "${BSPATH}"/backupinfo if supposed to be remote backups." | mail -s "Backup drive not mounted in $HOSTNAME" monitor@bigscoots.com
   remote=y
   BKUSER=wpo"${HOSTNAME//./}"
-elif ! grep -qs '/backup ' /proc/mounts && grep destination=remote "$BSPATH"/backupinfo >/dev/null 2>&1 ; then
+elif ! grep -qs '/backup ' /proc/mounts && grep destination=remote "$BSPATH"/backupinfo q ; then
   remote=y
   if [[ -n $(grep bkuser= "${BSPATH}"/backupinfo | sed 's/=/ /g' | awk '{print $2}') ]]; then
     BKUSER=$(grep bkuser= "${BSPATH}"/backupinfo | sed 's/=/ /g' | awk '{print $2}')
   else
     BKUSER=wpo"${HOSTNAME//./}"
   fi
-
 fi
 
 if  [[ $remote == y ]]; then
@@ -194,6 +201,32 @@ delete)
     fi
 
 fi
+
+;;
+initial_client)
+
+if ! rpm -q jq >/dev/null 2>&1 ; then 
+  yum -q -y install jq
+fi
+
+if ! ssh -q -o BatchMode=yes -o StrictHostKeyChecking=no -o PasswordAuthentication=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@$BKSVR exit; then
+    ssh-keygen -b 4096 -t rsa -f ~/.ssh/wpo_backups -q -N '' <<< y >/dev/null 2>&1
+fi
+
+  echo {\"sshprivkey\":\"$(sed ':a;N;$!ba;s/\n/\\n/g' /root/.ssh/wpo_backups)\"} | jq .
+  backupinfo="backupserver|backupuser|backuplimit
+$BKSVR|$BKUSER|$BKLIMIT"
+  jq -Rn '
+( input  | split("|") ) as $keys |
+( inputs | split("|") ) as $vals |
+[[$keys, $vals] | transpose[] | {key:.[0],value:.[1]}] | from_entries
+' <<<"$backupinfo"
+
+;;
+initial_server)
+
+adduser -b /home/wpo_users "$BKUSER"
+runuser -l "$BKUSER" -c 'ssh-keygen -b 4096 -t rsa -f ~/.ssh/id_rsa -q -N "" <<< y >/dev/null 2>&1 ; touch ~/.ssh/authorized_keys ; chmod 600 ~/.ssh/authorized_keys'
 
 ;;
 *)
