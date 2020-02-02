@@ -213,10 +213,9 @@ if ! ssh -q -o BatchMode=yes -o StrictHostKeyChecking=no -o PasswordAuthenticati
     ssh-keygen -b 4096 -t rsa -f ~/.ssh/wpo_backups -q -N '' <<< y >/dev/null 2>&1
 fi
 
-  echo {\"sshprivkey\":\"$(sed ':a;N;$!ba;s/\n/\\n/g' /root/.ssh/wpo_backups)\"} | jq .
-
-  backupinfo="sshprivkey|backupserver|backupuser|backuplimit
+backupinfo="sshprivkey|backupserver|backupuser|backuplimit
 $(sed ':a;N;$!ba;s/\n/\\n/g' /root/.ssh/wpo_backups)|$BKSVR|$BKUSER|$BKLIMIT"
+
   jq -Rn '
 ( input  | split("|") ) as $keys |
 ( inputs | split("|") ) as $vals |
