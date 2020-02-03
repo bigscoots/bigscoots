@@ -213,8 +213,8 @@ if ! ssh -q -o BatchMode=yes -o StrictHostKeyChecking=no -o PasswordAuthenticati
     ssh-keygen -b 4096 -t rsa -f ~/.ssh/wpo_backups -q -N '' <<< y >/dev/null 2>&1
 fi
 
-backupinfo="sshprivkey|backupserver|backupuser|backuplimit
-$(sed ':a;N;$!ba;s/\n/\\n/g' /root/.ssh/wpo_backups)|$BKSVR|$BKUSER|$BKLIMIT"
+backupinfo="sshpubkey|backupserver|backupuser|backuplimit
+$(awk '{print $2}' /root/.ssh/wpo_backups.pub)|$BKSVR|$BKUSER|$BKLIMIT"
 
   jq -Rn '
 ( input  | split("|") ) as $keys |
@@ -225,8 +225,12 @@ $(sed ':a;N;$!ba;s/\n/\\n/g' /root/.ssh/wpo_backups)|$BKSVR|$BKUSER|$BKLIMIT"
 ;;
 initial_server)
 
+BKUSER="$1"
+SSHPUBKEY="$2"
+
 adduser -b /home/wpo_users "$BKUSER"
 runuser -l "$BKUSER" -c 'ssh-keygen -b 4096 -t rsa -f ~/.ssh/id_rsa -q -N "" <<< y >/dev/null 2>&1 ; touch ~/.ssh/authorized_keys ; chmod 600 ~/.ssh/authorized_keys'
+echo "ssh-rsa $SSHPUBKEY" >> /home/wpo_users/"$BKUSER"/.ssh/authorized_keys
 
 ;;
 *)
