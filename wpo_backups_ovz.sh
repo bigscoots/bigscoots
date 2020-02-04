@@ -32,6 +32,10 @@ if grep bksvr "$BSPATH"/backupinfo >/dev/null 2>&1 ; then
   BKSVR=$(grep bksvr "$BSPATH"/backupinfo | sed 's/bksvr=//g')
 fi
 
+if ! rpm -q jq >/dev/null 2>&1 ; then 
+  yum -q -y install jq
+fi
+
 fi
 
 if [ -f /proc/vz/veinfo ]; then
@@ -207,10 +211,6 @@ initial_client)
 
 pushkey=false
 
-if ! rpm -q jq >/dev/null 2>&1 ; then 
-  yum -q -y install jq
-fi
-
 if [ ! -s ~/.ssh/wpo_backups ]; then
   ssh-keygen -b 4096 -t rsa -f ~/.ssh/wpo_backups -q -N '' <<< y >/dev/null 2>&1
 fi
@@ -248,9 +248,9 @@ echo "ssh-rsa $SSHPUBKEY" >> /home/wpo_users/"$BKUSER"/.ssh/authorized_keys
 ;;
 download)
 
-BKUSER="$3"
-DOMAIN="$4"
-BACKUP="$5"
+BKUSER="$2"
+DOMAIN="$3"
+BACKUP="$4"
 
 cd /home/wpo_users/"$BKUSER"/"$BACKUP"
 tar -zcf "$DOMAIN"-"$BACKUP".tar.gz "$DOMAIN"
