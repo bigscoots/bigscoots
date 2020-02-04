@@ -17,4 +17,13 @@ mv "$backup" /var/www/html/"$rando1"/"$rando2"/
 screen -dmS "$backup" bash -c "sleep 172800 ; rm -rf /var/www/html/$rando1"
 
 echo "Path: /var/www/html/$rando1/$rando2/$backup"
-echo "URL: http://$HOSTNAME/$rando1/$rando2/$backup"
+link="$(http://$HOSTNAME/$rando1/$rando2/$backup)"
+
+downloadinfo="DownloadLink
+$link"
+
+  jq -Rn '
+( input  | split("|") ) as $keys |
+( inputs | split("|") ) as $vals |
+[[$keys, $vals] | transpose[] | {key:.[0],value:.[1]}] | from_entries
+' <<<"$backupinfo"

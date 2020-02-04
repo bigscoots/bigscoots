@@ -54,7 +54,7 @@ elif ! grep -qs '/backup ' /proc/mounts && grep destination=remote "$BSPATH"/bac
   fi
 fi
 
-if  [[ $remote == y ]] && [[ $1 != initial_* ]]; then
+if  [[ $remote == y ]] && [[ ! $1 =~ (initial_*|download) ]]; then
   SSHOPTIONS="ssh -oStrictHostKeyChecking=no -i $HOME/.ssh/wpo_backups"
   RSYNCLOCATION="$BKUSER@$BKSVR:"
   if ssh -oBatchMode=yes -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" 'uptime' >/dev/null 2>&1 ; [ $? -eq 255 ]
@@ -246,6 +246,18 @@ runuser -l "$BKUSER" -c 'ssh-keygen -b 4096 -t rsa -f ~/.ssh/id_rsa -q -N "" <<<
 echo "ssh-rsa $SSHPUBKEY" >> /home/wpo_users/"$BKUSER"/.ssh/authorized_keys
 
 ;;
+download)
+
+BKUSER="$2"
+DOMAIN="$3"
+BACKUP="$4"
+
+cd /home/wpo_users/"$BKUSER"/"$BACKUP"
+tar -zcf "$DOMAIN"-"$BACKUP".tar.gz "$DOMAIN"
+
+bash /bigscoots/wpo/backups/backup_link.sh "$DOMAIN"-"$BACKUP".tar.gz
+
+;;
 *)
 
 for wpinstall in $(find /home/nginx/domains/*/public/ -type f -name wp-config.php | sed 's/wp-config.php//g'); do
@@ -299,7 +311,7 @@ gzip "$wpinstall$dbname".sql >/dev/null 2>&1
 ;;
 esac
 
-if [[ $1 != initial_* ]]; then
+if [[ ! $1 =~ (initial_*|download) ]]; then
 
 for wpinstall in $(find /home/nginx/domains/*/public/ -type f -name wp-config.php | sed 's/wp-config.php//g')
    do
