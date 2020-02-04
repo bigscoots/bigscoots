@@ -11,6 +11,10 @@ BKLIMIT=30
 mkdir -p "$BSPATH"
 touch "$BSPATH"/backupinfo
 
+if ! rpm -q jq >/dev/null 2>&1 ; then 
+  yum -q -y install jq
+fi
+
 if [ ! -f "$BSPATH"/rsync/exclude ]; then
   mkdir -p "$BSPATH"/rsync
 
@@ -30,10 +34,6 @@ if [ ! -f "$BSPATH"/rsync/exclude ]; then
 
 if grep bksvr "$BSPATH"/backupinfo >/dev/null 2>&1 ; then
   BKSVR=$(grep bksvr "$BSPATH"/backupinfo | sed 's/bksvr=//g')
-fi
-
-if ! rpm -q jq >/dev/null 2>&1 ; then 
-  yum -q -y install jq
 fi
 
 fi
