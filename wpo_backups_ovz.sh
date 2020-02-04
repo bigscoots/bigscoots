@@ -220,8 +220,14 @@ if ! ssh -q -o BatchMode=yes -o StrictHostKeyChecking=no -o PasswordAuthenticati
     pushkey=true
 fi
 
+if [ ! -s ~/.ssh/wpo_backups.pub ]; then
+  pubkey=null
+else
+  pubkey=$(awk '{print $2}' /root/.ssh/wpo_backups.pub)
+fi
+
 backupinfo="runSecondScript|sshpubkey|backupserver|backupuser|backuplimit
-$pushkey|$(awk '{print $2}' /root/.ssh/wpo_backups.pub)|$BKSVR|$BKUSER|$BKLIMIT"
+$pushkey|$pubkey|$BKSVR|$BKUSER|$BKLIMIT"
 
   jq -Rn '
 ( input  | split("|") ) as $keys |
