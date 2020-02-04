@@ -54,7 +54,7 @@ elif ! grep -qs '/backup ' /proc/mounts && grep destination=remote "$BSPATH"/bac
   fi
 fi
 
-if  [[ $remote == y ]]; then
+if  [[ $remote == y ]] && [[ $1 != initial_* ]]; then
   SSHOPTIONS="ssh -oStrictHostKeyChecking=no -i $HOME/.ssh/wpo_backups"
   RSYNCLOCATION="$BKUSER@$BKSVR:"
   if ssh -oBatchMode=yes -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" 'uptime' >/dev/null 2>&1 ; [ $? -eq 255 ]
@@ -205,6 +205,8 @@ fi
 ;;
 initial_client)
 
+push=false
+
 if ! rpm -q jq >/dev/null 2>&1 ; then 
   yum -q -y install jq
 fi
@@ -215,10 +217,11 @@ fi
 
 if ! ssh -q -o BatchMode=yes -o StrictHostKeyChecking=no -o PasswordAuthentication=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@$BKSVR exit; then
     ssh-keygen -b 4096 -t rsa -f ~/.ssh/wpo_backups -q -N '' <<< y >/dev/null 2>&1
+    pushkey=true
 fi
 
-backupinfo="sshpubkey|backupserver|backupuser|backuplimit
-$(awk '{print $2}' /root/.ssh/wpo_backups.pub)|$BKSVR|$BKUSER|$BKLIMIT"
+backupinfo="runSecondScript|sshpubkey|backupserver|backupuser|backuplimit
+$pushkey|$(awk '{print $2}' /root/.ssh/wpo_backups.pub)|$BKSVR|$BKUSER|$BKLIMIT"
 
   jq -Rn '
 ( input  | split("|") ) as $keys |
@@ -290,8 +293,12 @@ gzip "$wpinstall$dbname".sql >/dev/null 2>&1
 ;;
 esac
 
+if [[ $1 != initial_* ]]; then
+
 for wpinstall in $(find /home/nginx/domains/*/public/ -type f -name wp-config.php | sed 's/wp-config.php//g')
    do
     dbname=$(wp $WPCLIFLAGS config get DB_NAME --path="$wpinstall")
     rm -f "$wpinstall$dbname".sql "$wpinstall$dbname".sql.gz "$wpinstall"database.err
 done
+
+fi
