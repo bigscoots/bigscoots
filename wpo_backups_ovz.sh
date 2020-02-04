@@ -248,9 +248,9 @@ echo "ssh-rsa $SSHPUBKEY" >> /home/wpo_users/"$BKUSER"/.ssh/authorized_keys
 ;;
 download)
 
-BKUSER="$2"
-DOMAIN="$3"
-BACKUP="$4"
+BKUSER="$3"
+DOMAIN="$4"
+BACKUP="$5"
 
 cd /home/wpo_users/"$BKUSER"/"$BACKUP"
 tar -zcf "$DOMAIN"-"$BACKUP".tar.gz "$DOMAIN"

@@ -16,7 +16,7 @@ mv "$backup" /var/www/html/"$rando1"/"$rando2"/
 
 screen -dmS "$backup" bash -c "sleep 172800 ; rm -rf /var/www/html/$rando1"
 
-echo "Path: /var/www/html/$rando1/$rando2/$backup"
+# echo "Path: /var/www/html/$rando1/$rando2/$backup"
 link="$(http://$HOSTNAME/$rando1/$rando2/$backup)"
 
 downloadinfo="DownloadLink
