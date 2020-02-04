@@ -205,7 +205,7 @@ fi
 ;;
 initial_client)
 
-push=false
+pushkey=false
 
 if ! rpm -q jq >/dev/null 2>&1 ; then 
   yum -q -y install jq
