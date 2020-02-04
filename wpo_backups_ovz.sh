@@ -209,6 +209,10 @@ if ! rpm -q jq >/dev/null 2>&1 ; then
   yum -q -y install jq
 fi
 
+if [ ! -s ~/.ssh/wpo_backups ]; then
+  ssh-keygen -b 4096 -t rsa -f ~/.ssh/wpo_backups -q -N '' <<< y >/dev/null 2>&1
+fi
+
 if ! ssh -q -o BatchMode=yes -o StrictHostKeyChecking=no -o PasswordAuthentication=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@$BKSVR exit; then
     ssh-keygen -b 4096 -t rsa -f ~/.ssh/wpo_backups -q -N '' <<< y >/dev/null 2>&1
 fi
