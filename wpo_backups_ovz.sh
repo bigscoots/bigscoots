@@ -232,8 +232,8 @@ $pushkey|$(awk '{print $2}' /root/.ssh/wpo_backups.pub)|$BKSVR|$BKUSER|$BKLIMIT"
 ;;
 initial_server)
 
-BKUSER="$1"
-SSHPUBKEY="$2"
+BKUSER="$2"
+SSHPUBKEY="$3"
 
 adduser -b /home/wpo_users "$BKUSER"
 runuser -l "$BKUSER" -c 'ssh-keygen -b 4096 -t rsa -f ~/.ssh/id_rsa -q -N "" <<< y >/dev/null 2>&1 ; touch ~/.ssh/authorized_keys ; chmod 600 ~/.ssh/authorized_keys'
