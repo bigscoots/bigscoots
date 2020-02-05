@@ -44,13 +44,12 @@ sed -i 's/ssl_dhparam/#ssl_dhparam/g' /usr/local/nginx/conf/conf.d/"$domain".ssl
 
 if [ "$2" == fresh ]; then
   cd /home/nginx/domains/"$domain"/public || exit
+  wp ${WPCLIFLAGS} plugin delete --all --path=/home/nginx/domains/"$domain"/public
   bash /bigscoots/wpo_theworks.sh fresh
 fi
 
 
 crontab -l | grep -v '/root/tools/wp_updater'  | crontab -
-
-wp ${WPCLIFLAGS} plugin delete --all --path=/home/nginx/domains/"$domain"/public
 
 sed "s/REPLACEDOMAIN/$domain/g ; s/REPLACEIP/$domainip/g" /bigscoots/wpo/extras/dnszone.txt > /home/nginx/domains/"$domain"/"$domain"-dnszone.txt
 
