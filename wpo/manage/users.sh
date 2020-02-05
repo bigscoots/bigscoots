@@ -7,7 +7,7 @@ WPCLIFLAGS="--allow-root --skip-plugins --skip-themes --require=/bigscoots/inclu
 case $1 in
 list_admins)
 
-# /bigscoots/wpo/manage/users.sh list_admins ${DOMAIN} ${EMAIL}
+# /bigscoots/wpo/manage/users.sh list_admins ${DOMAIN}
 
 wp ${WPCLIFLAGS} user list --role=administrator --fields=ID,user_login,user_email,user_registered --format=json --path=/home/nginx/domains/"$domain"/public
 
