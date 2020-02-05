@@ -110,6 +110,12 @@ if [ -d "$destinationsitedocroot/wp-content/plugins/wp-rocket" ]; then
     fi
 fi
 
+if
+
+if [ -f "$destinationsitedocroot"/.user.ini ]; then
+    sed -i "s/$sourcesite/$destinationsite/g" "$destinationsitedocroot"/.user.ini
+fi
+
 chown -R nginx: /home/nginx/domains/$destinationsite
 
 # Clear All Cache
