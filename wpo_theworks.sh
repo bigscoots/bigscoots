@@ -311,13 +311,14 @@ if [[ "$wprocket" == "y" ]]; then
 
 fi
 
-if [ -d "wp-content/plugins/migrate-guru" ]; then
-  wp plugin deactivate migrate-guru ${WPCLIFLAGS}
-  wp plugin delete migrate-guru ${WPCLIFLAGS}
+if wp ${WPCLIFLAGS} plugin is-installed migrate-guru; then
+    wp ${WPCLIFLAGS} plugin delete migrate-guru
 fi
 
-if [[ $(wp plugin status akismet ${WPCLIFLAGS} |grep Status | awk '{print $2}') == Inactive ]]; then
+if wp ${WPCLIFLAGS} plugin is-installed akismet; then
+  if [[ $(wp plugin status akismet ${WPCLIFLAGS}  |grep Status | awk '{print $2}') == Inactive ]]; then
     wp plugin delete akismet ${WPCLIFLAGS}
+  fi
 fi
 
 if [[ $(wp option get siteurl ${WPCLIFLAGS}) =~ http:// ]]; then
