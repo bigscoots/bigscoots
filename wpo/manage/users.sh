@@ -32,4 +32,24 @@ password="$4"
 wp ${WPCLIFLAGS} user update "$id" --user_pass="$password" --path=/home/nginx/domains/"$domain"/public
 
 ;;
+add_admin)
+
+# /bigscoots/wpo/manage/users.sh add_admin ${DOMAIN} ${USER} ${EMAIL}
+
+user="$3"
+email="$4"
+
+wp ${WPCLIFLAGS} user create "$user" "$email" --role=administrator --porcelain --path=/home/nginx/domains/"$domain"/public
+
+;;
+del_admin)
+
+# /bigscoots/wpo/manage/users.sh del_admin ${DOMAIN} ${USER} ${REASSIGN_ID}
+
+user="$3"
+reassign_id="$4"
+
+wp ${WPCLIFLAGS} user delete "$user" --reassign="$reassign_id" --yes --path=/home/nginx/domains/"$domain"/public
+
+;;
 esac
