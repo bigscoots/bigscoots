@@ -18,6 +18,21 @@ if [ ! -f "/root/.wpocf" ] || [ ! -s "/root/.wpocf" ]
     :
  fi
 
+if [ ! -d /usr/local/nginx/html/*mysqladmin* ]; then
+  cd /usr/local/src/centminmod/addons
+  wget --no-check-certificate https://github.com/centminmod/phpmyadmin/raw/master/phpmyadmin.sh -O phpmyadmin.sh
+  chmod 0700 /usr/local/src/centminmod/addons/phpmyadmin.sh
+  bash phpmyadmin.sh install
+    if [ ! -d /usr/local/nginx/html/*mysqladmin* ]; then
+      rm -f /usr/local/nginx/conf/phpmyadmin_check
+      rm -f /usr/local/nginx/conf/conf.d/phpmyadmin_ssl.conf
+      bash /usr/local/src/centminmod/addons/phpmyadmin.sh install
+        if [ ! -d /usr/local/nginx/html/*mysqladmin* ]; then
+          echo "" | mail -s "WPO /bigscoots/wpo_json.sh failed because of phpmyadmin -  $HOSTNAME" monitor@bigscoots.com
+          exit 
+        fi
+    fi
+fi
 
 pmadirectory=$(echo /usr/local/nginx/html/*mysqladmin* | sed 's/\/usr\/local\/nginx\/html\///g' | head -1)
 
