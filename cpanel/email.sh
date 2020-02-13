@@ -8,7 +8,7 @@ list_emails)
 
 # bash /bigscoots/cpanel/email.sh list_emails ${CPUSER} ${DOMAIN}
 
-uapi --user="${CPUSER}" Email list_pops_with_disk domain="${DOMAIN}" maxaccounts=500
+uapi --user="${CPUSER}" Email list_pops_with_disk domain="${DOMAIN}"
 
 ;;
 create_email)
