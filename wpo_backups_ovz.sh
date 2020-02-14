@@ -32,10 +32,10 @@ if [ ! -f "$BSPATH"/rsync/exclude ]; then
   echo "*/wp-content/uploads/ShortpixelBackups"
   } > "$BSPATH"/rsync/exclude
 
-if grep bksvr "$BSPATH"/backupinfo >/dev/null 2>&1 ; then
-  BKSVR=$(grep bksvr "$BSPATH"/backupinfo | sed 's/bksvr=//g')
 fi
 
+if grep bksvr "$BSPATH"/backupinfo >/dev/null 2>&1 ; then
+  BKSVR=$(grep bksvr "$BSPATH"/backupinfo | sed 's/bksvr=//g')
 fi
 
 if [ -f /proc/vz/veinfo ]; then
