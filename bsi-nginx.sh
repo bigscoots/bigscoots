@@ -156,6 +156,7 @@ sed -i 's/#include \/usr\/local\/nginx\/conf\/php.conf/include \/usr\/local\/ngi
 sed -i 's/location = \/robots.txt/#location = \/robots.txt/g' /usr/local/nginx/conf/drop.conf
 sed -i 's/default-character-set/#default-character-set/g' /etc/my.cnf
 sed -i 's/character-set-server/#character-set-server/g' /etc/my.cnf
+sed -i 's/;request_slowlog_timeout = 0/request_slowlog_timeout = 20/g' /usr/local/etc/php-fpm.conf
 
 npreload
 systemctl daemon-reload

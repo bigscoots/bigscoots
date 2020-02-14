@@ -73,7 +73,12 @@ fi
  	sed -i '/^opcache.revalidate_freq/c\opcache.revalidate_freq=0' /etc/centminmod/php.d/zendopcache.ini
 	npreload
  fi
- 
+
+if grep \;request_slowlog_timeout /usr/local/etc/php-fpm.conf >/dev/null 2>&1 ; then 
+  sed -i '/;request_slowlog_timeout/c\request_slowlog_timeout = 20' /usr/local/etc/php-fpm.conf
+  /etc/init.d/php-fpm reload
+fi
+
 /bigscoots/includes/keymebatman.sh
  
 exit

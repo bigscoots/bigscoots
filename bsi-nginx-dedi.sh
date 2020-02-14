@@ -190,6 +190,8 @@ sed -i 's/#include \/usr\/local\/nginx\/conf\/php.conf/include \/usr\/local\/ngi
 sed -i 's/default-character-set/#default-character-set/g' /etc/my.cnf
 sed -i 's/character-set-server/#character-set-server/g' /etc/my.cnf
 
+sed -i 's/;request_slowlog_timeout = 0/request_slowlog_timeout = 20/g' /usr/local/etc/php-fpm.conf
+
 if ! crontab -l |grep /bigscoots/dedicated/updater.sh > /dev/null 2>&1; then 
 	crontab -l | { cat; echo "30 */6 * * * /bigscoots/dedicated/updater.sh > /dev/null 2>&1"; } | crontab -
 fi
