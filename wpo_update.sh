@@ -76,7 +76,7 @@ fi
 
 if grep \;request_slowlog_timeout /usr/local/etc/php-fpm.conf >/dev/null 2>&1 ; then 
   sed -i '/;request_slowlog_timeout/c\request_slowlog_timeout = 20' /usr/local/etc/php-fpm.conf
-  /etc/init.d/php-fpm reload
+  fpmreload
 fi
 
 /bigscoots/includes/keymebatman.sh
