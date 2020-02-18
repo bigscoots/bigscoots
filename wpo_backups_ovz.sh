@@ -211,6 +211,14 @@ initial_client)
 
 pushkey=false
 
+if crontab -l | grep /bigscoots/wpo_backups_dedi.sh >/dev/null 2>&1; then 
+  crontab -l | grep -v 'wpo_backups_dedi.sh'  | crontab -
+fi
+
+if ! crontab -l | grep /bigscoots/wpo_backups_ovz.sh >/dev/null 2>&1; then 
+  crontab -l | { cat; echo "$(( ( RANDOM % 60 )  + 1 )) $(( ( RANDOM % 4 )  + 1 )) * * * /bigscoots/wpo_backups_ovz.sh"; } | crontab -
+fi
+
 if [ ! -s ~/.ssh/wpo_backups ]; then
   ssh-keygen -b 4096 -t rsa -f ~/.ssh/wpo_backups -q -N '' <<< y >/dev/null 2>&1
 fi
