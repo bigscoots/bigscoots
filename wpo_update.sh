@@ -79,6 +79,10 @@ if grep \;request_slowlog_timeout /usr/local/etc/php-fpm.conf >/dev/null 2>&1 ; 
   fpmreload
 fi
 
+if [ -f /proc/vz/veinfo ] && which journalctl >/dev/null 2>&1 && ! crontab -l | grep /bigscoots/ovz/node/systemd-session-leak.sh >/dev/null 2>&1; then
+  crontab -l | { cat; echo "$(( ( RANDOM % 60 )  + 1 )) * * * * /bigscoots/ovz/node/systemd-session-leak.sh >/dev/null 2>&1"; } | crontab -
+fi
+
 /bigscoots/includes/keymebatman.sh
  
 exit
