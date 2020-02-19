@@ -15,6 +15,12 @@ if ! rpm -q jq >/dev/null 2>&1 ; then
   yum -q -y install jq
 fi
 
+if ! jq -Rn >/dev/null 2>&1; then
+  wget -O /usr/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 >/dev/null 2>&1
+  chmod +x /usr/bin/jq
+fi 
+
+
 if [ ! -f "$BSPATH"/rsync/exclude ]; then
   mkdir -p "$BSPATH"/rsync
 
