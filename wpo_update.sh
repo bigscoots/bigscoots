@@ -44,42 +44,42 @@ fupdate
 
 if [ -f /usr/local/src/centminmod/centmin.sh ] ; then 
 
-if [[ ! -f /etc/centminmod/email-primary.ini ]]; then
+  if [[ ! -f /etc/centminmod/email-primary.ini ]]; then
 	touch /etc/centminmod/email-primary.ini
 	echo "root" > /etc/centminmod/email-primary.ini
-fi
+  fi
 
-if [[ ! -f /etc/centminmod/email-secondary.ini ]]; then
+  if [[ ! -f /etc/centminmod/email-secondary.ini ]]; then
 	touch /etc/centminmod/email-secondary.ini
 	echo "root" > /etc/centminmod/email-secondary.ini
-fi
+  fi
 
- if ! grep -q @ /etc/centminmod/email-primary.ini > /dev/null 2>&1 ; then
+  if ! grep -q @ /etc/centminmod/email-primary.ini > /dev/null 2>&1 ; then
  	echo "root" > /etc/centminmod/email-primary.ini
- fi
+  fi
 
- if ! grep -q @ /etc/centminmod/email-secondary.ini > /dev/null 2>&1 ; then
+  if ! grep -q @ /etc/centminmod/email-secondary.ini > /dev/null 2>&1 ; then
  	echo "root" > /etc/centminmod/email-secondary.ini
- fi
+  fi
 
-if ! grep -q bigscoots-staging.com /root/.bigscoots/php/opcache-blacklist.txt > /dev/null 2>&1 ; then
+  if ! grep -q bigscoots-staging.com /root/.bigscoots/php/opcache-blacklist.txt > /dev/null 2>&1 ; then
  	mkdir -p /root/.bigscoots/php/
 	echo '/home/nginx/domains/*.bigscoots-staging.com/public/*' >> /root/.bigscoots/php/opcache-blacklist.txt
- fi
- 
-fi
- 
- if ! grep ^opcache.revalidate_freq=0 /etc/centminmod/php.d/zendopcache.ini  >/dev/null 2>&1; then 
- 	sed -i '/^opcache.revalidate_freq/c\opcache.revalidate_freq=0' /etc/centminmod/php.d/zendopcache.ini
-	npreload
- fi
+  fi
 
-if grep \;request_slowlog_timeout /usr/local/etc/php-fpm.conf >/dev/null 2>&1 ; then 
+  if ! grep ^opcache.revalidate_freq=0 /etc/centminmod/php.d/zendopcache.ini  >/dev/null 2>&1; then 
+  sed -i '/^opcache.revalidate_freq/c\opcache.revalidate_freq=0' /etc/centminmod/php.d/zendopcache.ini
+  npreload
+  fi
+
+  if grep \;request_slowlog_timeout /usr/local/etc/php-fpm.conf >/dev/null 2>&1 ; then 
   sed -i '/;request_slowlog_timeout/c\request_slowlog_timeout = 20' /usr/local/etc/php-fpm.conf
   fpmreload
+  fi
+ 
 fi
-
-if [ -f /proc/vz/veinfo ] && which journalctl >/dev/null 2>&1 && ! crontab -l | grep /bigscoots/ovz/node/systemd-session-leak.sh >/dev/null 2>&1; then
+ 
+if [ -f /proc/vz/veinfo ] && which journalctl >/dev/null 2>&1 && uname -r |grep -q ^3 &&  ! crontab -l | grep /bigscoots/ovz/node/systemd-session-leak.sh >/dev/null 2>&1; then
   crontab -l | { cat; echo "$(( ( RANDOM % 60 )  + 1 )) * * * * /bigscoots/ovz/node/systemd-session-leak.sh >/dev/null 2>&1"; } | crontab -
 fi
 
