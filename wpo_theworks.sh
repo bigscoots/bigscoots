@@ -352,3 +352,21 @@ fi
 chown -R nginx: .
 find . -type f -exec chmod 644 {} \; &
 find . -type d -exec chmod 755 {} \; &
+
+if [ -f .htaccess ]; then 
+  echo
+  echo
+  echo
+  echo "################# Possible Redirects #################"
+  echo
+  echo
+  echo
+  grep -i 'Redirect 301\|RewriteRule' .htaccess
+  echo
+  echo
+  echo
+  echo "################# Possible Redirects #################"
+  echo
+  echo
+  echo
+fi
