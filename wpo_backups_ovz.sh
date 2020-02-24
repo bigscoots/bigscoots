@@ -193,6 +193,7 @@ delete)
       rsync -a \
       -e "$SSHOPTIONS" \
       --ignore-errors \
+      --ignore-missing-arg \
       --delete \
       "$HOMEDIR"/.empty/ "$BKUSER"@"$BKSVR":"$2"/"$(dirname "$PWD" | sed 's/\// /g' | awk '{print $4}')"
 
@@ -203,6 +204,7 @@ delete)
       mkdir -p "$HOMEDIR"/.empty
       rsync -a \
       --ignore-errors \
+      --ignore-missing-arg \
       --delete \
       "$HOMEDIR"/.empty/ /backup/"$2"/"$(dirname $PWD | sed 's/\// /g' | awk '{print $4}')"
 
