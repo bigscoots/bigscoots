@@ -10,7 +10,7 @@ destinationdomain="$2"
 mkdir -p "${BSPATH}"/rsync/"${destinationdomain}"
 touch "${BSPATH}"/rsync/"${destinationdomain}"/exclude "${BSPATH}"/rsync/exclude
 
-sourcedomainsize="$(du --exclude-from="${BSPATH}"/rsync/"${destinationdomain}"/exclude --exclude updraft --exclude ai1wm-backups --exclude cache -s /home/nginx/domains/"$sourcedomain" | awk '{print $1}')"
+sourcedomainsize="$(du --exclude-from="${BSPATH}"/rsync/exclude --exclude-from="${BSPATH}"/rsync/"${destinationdomain}"/exclude --exclude updraft --exclude ai1wm-backups --exclude cache -s /home/nginx/domains/"$sourcedomain" | awk '{print $1}')"
 freespace="$(df -k / | tr -s ' ' | cut -d" " -f 4 | grep -v Available)"
 percentofreespace=$((sourcedomainsize*100/freespace))
 
