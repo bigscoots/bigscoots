@@ -36,6 +36,7 @@ if [ ! -f "$BSPATH"/rsync/exclude ]; then
   echo "*/wp-content/uploads/ithemes-security"
   echo "*/wp-content/uploads/wpallimport"
   echo "*/wp-content/uploads/ShortpixelBackups"
+  echo "backupbuddy_backups"
   } > "$BSPATH"/rsync/exclude
 
 fi
