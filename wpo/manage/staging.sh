@@ -38,3 +38,16 @@ if grep -q 'return 301 https' /usr/local/nginx/conf/conf.d/"$sourcedomain".conf 
                 exit 1
     fi
 fi
+
+if ! grep -q "function wp_mail()" /home/nginx/domains/"$destinationdomain"/public/wp-config.php > /dev/null 2>&1 ; then
+
+cat <<EOT >> /home/nginx/domains/"$destinationdomain"/public/wp-config.php
+
+
+// Disable Outgoing WordPress Emails Should exist in Staging only
+function wp_mail() {
+    //
+}
+EOT
+
+fi
