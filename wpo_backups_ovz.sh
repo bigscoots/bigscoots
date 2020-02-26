@@ -65,6 +65,10 @@ elif ! grep -qs '/backup ' /proc/mounts && grep destination=remote "$BSPATH"/bac
   fi
 fi
 
+if ! grep -q bkuser= "${BSPATH}"/backupinfo; then 
+  echo bkuser=${BKUSER} >> "${BSPATH}"/backupinfo
+fi
+
 if  [[ $remote == y ]] && [[ ! $1 =~ (initial_*|download) ]]; then
   SSHOPTIONS="ssh -oStrictHostKeyChecking=no -i $HOME/.ssh/wpo_backups"
   RSYNCLOCATION="$BKUSER@$BKSVR:"

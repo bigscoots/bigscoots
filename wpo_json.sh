@@ -1,5 +1,7 @@
 #!/bin/bash
 
+BSPATH=/root/.bigscoots
+
 {
 
 if [ ! -f "/root/.wpocf" ] || [ ! -s "/root/.wpocf" ]
@@ -73,10 +75,25 @@ ftphost=$(ip route get 1 | awk '{print $NF;exit}')
 ftpusername=$(grep "FTP username created for $domain" "$vhostlog" | grep -oE '[^ ]+$')
 ftppassword=$(grep "FTP password auto generated:" "$vhostlog" | grep -oE '[^ ]+$' | sed 's/\\/\\\\/g' | sed 's/"/\\"/g')
 
-if ! awk '{print $1}' /proc/vz/veinfo > /dev/null 2>&1 ; then
-     bkuser=wpo
-     else
-     bkuser=$(echo wpo$(awk '{print $1}' /proc/vz/veinfo))
+if [ ! -d "${BSPATH}" ]; then
+  mkdir -p "$BSPATH"
+  touch "$BSPATH"/backupinfo
+fi
+
+if [ -f /proc/vz/veinfo ]; then
+  if grep -q bkuser= "${BSPATH}"/backupinfo; then
+    BKUSER=$(grep bkuser= "${BSPATH}"/backupinfo | sed 's/=/ /g' | awk '{print $2}')
+  else
+  BKUSER=wpo$(awk '{print $1}' /proc/vz/veinfo)
+  fi
+elif [[ ${HOSTNAME} =~ bigscoots-wpo.com ]]; then
+ BKUSER=wpo$(hostname -s)
+else
+  BKUSER=wpo"${HOSTNAME//./}"
+fi
+
+if ! grep -q bkuser= "${BSPATH}"/backupinfo; then 
+  echo bkuser="${BKUSER}" >> "${BSPATH}"/backupinfo
 fi
 
 rm -f /tmp/tmpftp.txt

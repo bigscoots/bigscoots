@@ -211,5 +211,10 @@ systemctl daemon-reload
 /etc/init.d/mysql restart
 npreload
 
+BSPATH=/root/.bigscoots
+
+mkdir -p "$BSPATH"
+touch "$BSPATH"/backupinfo
+
 sleep 2
 echo "nginx install for $HOSTNAME completed" | mail -s "nginx install for $HOSTNAME completed" monitor@bigscoots.com
