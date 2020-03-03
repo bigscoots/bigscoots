@@ -16,6 +16,7 @@ WPCLIFLAGS="--allow-root --skip-plugins --skip-themes --require=/bigscoots/inclu
 # remove add_filter should be used in a mu-plugin, otherwise breaks wp-cli
 
 sed -i 's/add_filter/\/\/add_filter/g' wp-config.php
+sed -i '/wp-salt.php/d' wp-config.php
 
 if ! hash dos2unix 2>/dev/null; then
     yum -y install dos2unix > /dev/null 2>&1
