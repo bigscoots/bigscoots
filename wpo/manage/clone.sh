@@ -26,7 +26,6 @@ if ! sourcesitedb=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${sourcesitedocro
         exit 1
         fi
     fi
-else
     exit 1
 fi
 
@@ -38,7 +37,6 @@ if ! destinationsitedb=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${destinatio
         exit 1
         fi
     fi
-else
     exit 1
 fi
 
