@@ -19,11 +19,27 @@ sourcesitedocroot=/home/nginx/domains/"${sourcesite}"/public
 destinationsitedocroot=/home/nginx/domains/"${destinationsite}"/public
 
 if ! sourcesitedb=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${sourcesitedocroot} 2>&1); then
-    exit 3
+    if [ $? -eq 255 ]; then
+    sed -i '/wp-salt.php/d' ${sourcesitedocroot}/wp-config.php
+        if ! sourcesitedb=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${sourcesitedocroot} 2>&1); then
+        echo "Something is wrong when trying to get the database name from $sourcesite site: https://github.com/jcatello/bigscoots/blob/master/wpo/manage/clone.sh#L21" | mail -s "WPO Clone failed to pull $sourcesite database name - From: $sourcesite To: $destinationsite  -  $HOSTNAME" monitor@bigscoots.com
+        exit 1
+        fi
+    fi
+else
+    exit 1
 fi
 
 if ! destinationsitedb=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${destinationsitedocroot} 2>&1); then
-    exit 3
+    if [ $? -eq 255 ]; then
+    sed -i '/wp-salt.php/d' ${destinationsitedocroot}/wp-config.php
+        if ! destinationsitedb=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${destinationsitedocroot} 2>&1); then
+        echo "Something is wrong when trying to get the database name from $destinationsite site: https://github.com/jcatello/bigscoots/blob/master/wpo/manage/clone.sh#L21" | mail -s "WPO Clone failed to pull $destinationsite database name - From: $sourcesite To: $destinationsite  -  $HOSTNAME" monitor@bigscoots.com
+        exit 1
+        fi
+    fi
+else
+    exit 1
 fi
 
 if [[ $sourcesitedb == $destinationsitedb ]]; then
