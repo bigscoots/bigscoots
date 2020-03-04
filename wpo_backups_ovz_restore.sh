@@ -2,21 +2,43 @@
 # options
 # h = human readable
 
-BKSVR=$(grep BKSVR= /bigscoots/wpo_backups_ovz.sh | sed 's/BKSVR=//g' | head -1)
-MYSQLADMIN=$(which mysqladmin)
-GUNZIP=$(which gunzip)
-GZIP=$(which gzip)
-MYSQL=$(which mysql)
-MYSQLDUMP=$(which mysqldump)
-RSYNC=$(which rsync)
-CHOWN=$(which chown)
+date=$(date "+%Y-%m-%dT%H_%M_%S")
+HOMEDIR=/home/nginx/domains/
+BKSVR=backup3.bigscoots.com
 BSPATH=/root/.bigscoots
+PATH=/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/root/bin
 WPCLIFLAGS="--allow-root --skip-plugins --skip-themes --require=/bigscoots/includes/err_report.php"
+BKLIMIT=30
 
-if [ -f /proc/vz/veinfo ];
+if grep bksvr "$BSPATH"/backupinfo >/dev/null 2>&1 ; then
+  BKSVR=$(grep bksvr "$BSPATH"/backupinfo | sed 's/bksvr=//g')
+fi
+
+if [ -f /proc/vz/veinfo ]; then
+  remote=y
+  if grep -q bkuser= "${BSPATH}"/backupinfo; then
+    BKUSER=$(grep bkuser= "${BSPATH}"/backupinfo | sed 's/=/ /g' | awk '{print $2}')
+  else
+  BKUSER=wpo$(awk '{print $1}' /proc/vz/veinfo)
+  fi
+elif ! grep -qs '/backup ' /proc/mounts && ! grep destination=remote "$BSPATH"/backupinfo >/dev/null 2>&1 ; then
+  echo "Make sure to set destination=remote in "${BSPATH}"/backupinfo if supposed to be remote backups." | mail -s "Backup drive not mounted in $HOSTNAME" monitor@bigscoots.com
+  remote=y
+  BKUSER=wpo"${HOSTNAME//./}"
+elif ! grep -qs '/backup ' /proc/mounts && grep destination=remote "$BSPATH"/backupinfo >/dev/null 2>&1 ; then
+  remote=y
+  if [[ -n $(grep bkuser= "${BSPATH}"/backupinfo | sed 's/=/ /g' | awk '{print $2}') ]]; then
+    BKUSER=$(grep bkuser= "${BSPATH}"/backupinfo | sed 's/=/ /g' | awk '{print $2}')
+  else
+    BKUSER=wpo"${HOSTNAME//./}"
+  fi
+fi
+
+
+if [ -f /proc/vz/veinfo ] || grep -q destination=remote "$BSPATH"/backupinfo ;
 then
 
-BKUSER=wpo$(awk '{print $1}' /proc/vz/veinfo)
+# BKUSER=wpo$(awk '{print $1}' /proc/vz/veinfo)
 
 if [[ ! -f wp-config.php ]] ; then
 
