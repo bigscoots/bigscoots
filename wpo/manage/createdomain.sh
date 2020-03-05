@@ -42,9 +42,10 @@ sed -i "/\/usr\/local\/nginx\/conf\/503include-only.conf/a \  include \/usr\/loc
 sed -i 's/include \/usr\/local\/nginx\/conf\/autoprotect/#include \/usr\/local\/nginx\/conf\/autoprotect/g' /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
 sed -i 's/ssl_dhparam/#ssl_dhparam/g' /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
 
+cd /home/nginx/domains/"$domain"/public || exit
+wp ${WPCLIFLAGS} plugin delete --all --path=/home/nginx/domains/"$domain"/public
+
 if [ "$2" == fresh ]; then
-  cd /home/nginx/domains/"$domain"/public || exit
-  wp ${WPCLIFLAGS} plugin delete --all --path=/home/nginx/domains/"$domain"/public
   bash /bigscoots/wpo_theworks.sh fresh
 fi
 
