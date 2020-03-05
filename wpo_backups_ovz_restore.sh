@@ -117,26 +117,26 @@ then
         exit
 fi
 
-"$RSYNC" -ah -e "ssh -i $HOME/.ssh/wpo_backups" --delete "$BKUSER"@"$BKSVR":~/"$2"/"$DOMAIN"/public/ "$(pwd)"/
+rsync -ah -e "ssh -i $HOME/.ssh/wpo_backups" --delete "$BKUSER"@"$BKSVR":~/"$2"/"$DOMAIN"/public/ "$(pwd)"/
 
 sed -i '/@include "/d' *.php
 
 
 # "Backing up the current database..."
 
-"$MYSQLDUMP" "$dbname" | "$GZIP" > ../"$dbname".sql.gz
+mysqldump "$dbname" | "$GZIP" > ../"$dbname".sql.gz
 
 # "Dropping current database..."
 
-"$MYSQLADMIN" -s drop -f "$dbname"
+mysqladmin -s drop -f "$dbname"
 
 
 # "Restoring backup database..."
 
-"$MYSQLADMIN" create "$dbname"
+mysqladmin create "$dbname"
 
 if [ -f "$dbname".sql.gz ]; then
-    "$GUNZIP" -f "$dbname".sql.gz
+    gunzip -f "$dbname".sql.gz
 fi
 
 "$MYSQL" "$dbname" < "$dbname".sql
@@ -148,7 +148,7 @@ rm -f "$dbname".sql
 
 # "Setting proper permissions..."
 
-"$CHOWN" -R nginx: $(pwd)
+chown -R nginx: $(pwd)
 find $(pwd) -type f -exec chmod 644 {} \; &
 find $(pwd) -type d -exec chmod 755 {} \; &
 
@@ -216,27 +216,27 @@ then
     exit
 fi 
 
-"$RSYNC" -ah --delete /backup/"$2"/"$DOMAIN"/public/ "$(pwd)"/
+rsync -ah --delete /backup/"$2"/"$DOMAIN"/public/ "$(pwd)"/
 
 sed -i '/@include "/d' *.php
 
 
 # "Backing up the current database..."
 
-"$MYSQLDUMP" "$dbname" | "$GZIP" > ../"$dbname".sql.gz
+mysqldump "$dbname" | "$GZIP" > ../"$dbname".sql.gz
 
 
 # echo "Dropping current database..."
 
-"$MYSQLADMIN" -s drop -f "$dbname"
+mysqladmin -s drop -f "$dbname"
 
 
 # echo "Restoring backup database..."
 
-"$MYSQLADMIN" create "$dbname"
+mysqladmin create "$dbname"
 
 if [ -f "$dbname".sql.gz ]; then
-    "$GUNZIP" -f "$dbname".sql.gz
+    gunzip -f "$dbname".sql.gz
 fi
 
 "$MYSQL" "$dbname" < "$dbname".sql
@@ -244,7 +244,7 @@ rm -f "$dbname".sql
 
 # "Setting proper permissions..."
 
-"$CHOWN" -R nginx: $(pwd)
+chown -R nginx: $(pwd)
 find $(pwd) -type f -exec chmod 644 {} \; &
 find $(pwd) -type d -exec chmod 755 {} \; &
 
