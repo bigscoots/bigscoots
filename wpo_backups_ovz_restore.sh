@@ -124,7 +124,7 @@ sed -i '/@include "/d' *.php
 
 # "Backing up the current database..."
 
-mysqldump "$dbname" | "$GZIP" > ../"$dbname".sql.gz
+mysqldump "$dbname" | gzip > ../"$dbname".sql.gz
 
 # "Dropping current database..."
 
@@ -139,7 +139,7 @@ if [ -f "$dbname".sql.gz ]; then
     gunzip -f "$dbname".sql.gz
 fi
 
-"$MYSQL" "$dbname" < "$dbname".sql
+mysql "$dbname" < "$dbname".sql
 rm -f "$dbname".sql
 
 
@@ -223,7 +223,7 @@ sed -i '/@include "/d' *.php
 
 # "Backing up the current database..."
 
-mysqldump "$dbname" | "$GZIP" > ../"$dbname".sql.gz
+mysqldump "$dbname" | gzip > ../"$dbname".sql.gz
 
 
 # echo "Dropping current database..."
@@ -239,7 +239,7 @@ if [ -f "$dbname".sql.gz ]; then
     gunzip -f "$dbname".sql.gz
 fi
 
-"$MYSQL" "$dbname" < "$dbname".sql
+mysql "$dbname" < "$dbname".sql
 rm -f "$dbname".sql
 
 # "Setting proper permissions..."
