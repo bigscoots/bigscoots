@@ -20,8 +20,7 @@ log_file -a /root/centminlogs/$domain.txt
 
 set timeout -1
 spawn centmin
-expect "\[ 1 - 24 \]"
-sleep 10
+expect "Enter option"
 send -- "22\r"
 expect "Do you want to continue with Nginx vhost site creation"
 send -- "y\r"
