@@ -36,7 +36,7 @@ uninstall_plugin)
 
 plugin="$3"
 
-wp ${WPCLIFLAGS} plugin uninstall "$plugin" --deactivate --path=/home/nginx/domains/"$domain"/public
+wp ${WPCLIFLAGS} plugin uninstall "$plugin" --deactivate --path=/home/nginx/domains/"$domain"/public 2>/dev/null || exit 0
 
 ;;
 esac
