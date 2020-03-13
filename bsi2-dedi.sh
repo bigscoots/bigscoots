@@ -307,7 +307,3 @@ echo "######################################################"
 sleep 3
 
 echo "cPanel install for $HOSTNAME completed" | mail -s "cPanel install for $HOSTNAME completed" monitor@bigscoots.com
-
-sleep 1
-
-/usr/sbin/reboot
