@@ -82,14 +82,13 @@ destinationsitereplace=$(wp ${WPCLIFLAGS} option get siteurl --path="${destinati
 
 sourcesitedbuser=$(wp ${WPCLIFLAGS} config get DB_USER --path="${sourcesitedocroot}")
 destinationsitedbuser=$(wp ${WPCLIFLAGS} config get DB_USER --path="${destinationsitedocroot}")
+wdpprefix=$(wp ${WPCLIFLAGS} config get table_prefix --path="${sourcesitedocroot}")
 
 wp ${WPCLIFLAGS} db reset --yes --path="${destinationsitedocroot}" --quiet
 
-wp ${WPCLIFLAGS} db export - --path="${sourcesitedocroot}" --quiet --single-transaction --quick --lock-tables=false --max_allowed_packet=1G | sed "s/DEFINER=\`${sourcesitedbuser}\`/DEFINER=\`${destinationsitedbuser}\`/g" | wp ${WPCLIFLAGS} --quiet db import - --path="${destinationsitedocroot}" --quiet --force --max_allowed_packet=1G
+wp ${WPCLIFLAGS} db export - --path="${sourcesitedocroot}" --exclude_tables=$(wp ${WPCLIFLAGS} db tables '${wdpprefix}_swp_*' --format=csv --all-tables --path="${sourcesitedocroot}") --quiet --single-transaction --quick --lock-tables=false --max_allowed_packet=1G | sed "s/DEFINER=\`${sourcesitedbuser}\`/DEFINER=\`${destinationsitedbuser}\`/g" | wp ${WPCLIFLAGS} --quiet db import - --path="${destinationsitedocroot}" --quiet --force --max_allowed_packet=1G
 
-wp ${WPCLIFLAGS} config set table_prefix $(wp ${WPCLIFLAGS} config get table_prefix --path="${sourcesitedocroot}") --path="${destinationsitedocroot}" --quiet
-
-wdpprefix=$(wp ${WPCLIFLAGS} config get table_prefix --path="${sourcesitedocroot}")
+wp ${WPCLIFLAGS} config set table_prefix ${wdpprefix} --path="${destinationsitedocroot}" --quiet
 
 if wp ${WPCLIFLAGS} config get WP_SITEURL --path="${sourcesitedocroot}" >/dev/null 2>&1; then
 
