@@ -12,7 +12,11 @@ fi
 
 domain="$1"
 ftpuser="${domain//./}"
-email=admin@"$domain"
+if [[ $domain == *.*.* ]]; then
+  email=admin@${domain#*.}
+else
+  email=admin@"$domain"
+fi
 WPCLIFLAGS="--allow-root --skip-plugins --skip-themes --require=/bigscoots/includes/err_report.php"
 
 if [[ ${domain} == *"bigscoots-staging"* ]]; then
