@@ -100,14 +100,14 @@ if wp ${WPCLIFLAGS} config get WP_SITEURL --path="${sourcesitedocroot}" >/dev/nu
  wpdbwpsiteurl=$(wp ${WPCLIFLAGS} db query "SELECT option_value FROM "${wdpprefix}"options WHERE option_name = 'siteurl';" --skip-column-names --path="${sourcesitedocroot}" | sed -r 's/https?:\/\///g')
 
     if  [ ! "$wpconfigwpsiteurl" == "$wpdbwpsiteurl" ]; then
-      wp ${WPCLIFLAGS} search-replace "//$wpdbwpsiteurl" "//$destinationsitereplace" --recurse-objects --skip-columns=guid --skip-tables="${wdpprefix}"users --path="${destinationsitedocroot}" --quiet
+      wp ${WPCLIFLAGS} search-replace "$wpdbwpsiteurl" "$destinationsitereplace" --recurse-objects --skip-columns=guid --skip-tables="${wdpprefix}"users --path="${destinationsitedocroot}" --quiet
     fi
 
 fi
 
 siteurl=$(wp ${WPCLIFLAGS} option get siteurl --path="${sourcesitedocroot}" --quiet | sed -r 's/https?:\/\///g')
 
-wp ${WPCLIFLAGS} search-replace "//$siteurl" "//$destinationsitereplace" --recurse-objects --skip-columns=guid --skip-tables="${wdpprefix}"users --path="${destinationsitedocroot}" --quiet
+wp ${WPCLIFLAGS} search-replace "$siteurl" "$destinationsitereplace" --recurse-objects --skip-columns=guid --skip-tables="${wdpprefix}"users --path="${destinationsitedocroot}" --quiet
 
 if [ -n "$3" ] && [ -n "$4" ]; then
 
