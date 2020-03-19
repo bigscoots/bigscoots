@@ -138,7 +138,7 @@ if [ -f "$destinationsitedocroot"/.user.ini ]; then
 fi
 
 if wp ${WPCLIFLAGS} plugin is-installed elementor --path="${destinationsitedocroot}" >/dev/null 2>&1; then
-    wp ${WPCLIFLAGS} elementor flush_css
+    wp ${WPCLIFLAGS} elementor flush_css --path="${destinationsitedocroot}"
 fi
 
 chown -R nginx: /home/nginx/domains/$destinationsite &
