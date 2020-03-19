@@ -137,7 +137,11 @@ if [ -f "$destinationsitedocroot"/.user.ini ]; then
     sed -i "s/$sourcesite/$destinationsite/g" "$destinationsitedocroot"/.user.ini
 fi
 
-chown -R nginx: /home/nginx/domains/$destinationsite
+if wp ${WPCLIFLAGS} plugin is-installed elementor --path="${destinationsitedocroot}" >/dev/null 2>&1; then
+    wp ${WPCLIFLAGS} elementor flush_css
+fi
+
+chown -R nginx: /home/nginx/domains/$destinationsite &
 
 # Clear All Cache
 
