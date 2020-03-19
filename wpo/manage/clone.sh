@@ -86,7 +86,11 @@ wdpprefix=$(wp ${WPCLIFLAGS} config get table_prefix --path="${sourcesitedocroot
 
 wp ${WPCLIFLAGS} db reset --yes --path="${destinationsitedocroot}" --quiet
 
-wp ${WPCLIFLAGS} db export - --path="${sourcesitedocroot}" --exclude_tables=$(wp ${WPCLIFLAGS} db tables "${wdpprefix}swp_*" --format=csv --all-tables --path="${sourcesitedocroot}") --quiet --single-transaction --quick --lock-tables=false --max_allowed_packet=1G | sed "s/DEFINER=\`${sourcesitedbuser}\`/DEFINER=\`${destinationsitedbuser}\`/g" | wp ${WPCLIFLAGS} --quiet db import - --path="${destinationsitedocroot}" --quiet --force --max_allowed_packet=1G
+if wp ${WPCLIFLAGS} db tables "${wdpprefix}swp_*" --format=csv --all-tables --path="${sourcesitedocroot}" >/dev/null 2>&1; then
+    wp ${WPCLIFLAGS} db export - --path="${sourcesitedocroot}" --exclude_tables=$(wp ${WPCLIFLAGS} db tables "${wdpprefix}swp_*" --format=csv --all-tables --path="${sourcesitedocroot}") --quiet --single-transaction --quick --lock-tables=false --max_allowed_packet=1G | sed "s/DEFINER=\`${sourcesitedbuser}\`/DEFINER=\`${destinationsitedbuser}\`/g" | wp ${WPCLIFLAGS} --quiet db import - --path="${destinationsitedocroot}" --quiet --force --max_allowed_packet=1G
+else
+    wp ${WPCLIFLAGS} db export - --path="${sourcesitedocroot}" --quiet --single-transaction --quick --lock-tables=false --max_allowed_packet=1G | sed "s/DEFINER=\`${sourcesitedbuser}\`/DEFINER=\`${destinationsitedbuser}\`/g" | wp ${WPCLIFLAGS} --quiet db import - --path="${destinationsitedocroot}" --quiet --force --max_allowed_packet=1G    
+fi
 
 wp ${WPCLIFLAGS} config set table_prefix ${wdpprefix} --path="${destinationsitedocroot}" --quiet
 
