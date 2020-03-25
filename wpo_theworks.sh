@@ -26,7 +26,6 @@ dos2unix wp-config.php > /dev/null 2>&1
 
 NGINX=$(which nginx)
 
-
 if [[ $1 == cpanel ]]; then
 
   if [[ ! $(pwd | sed 's/\// /g' | grep -oE '[^ ]+$')  == public ]]; then
@@ -143,6 +142,13 @@ if ! wp ${WPCLIFLAGS} core is-installed; then
     exit 1 
 fi
 
+if ! wp ${WPCLIFLAGS} config get DB_CHARSET > /dev/null 2>&1; then
+  wp ${WPCLIFLAGS} config set DB_CHARSET "utf8"
+fi
+if ! wp ${WPCLIFLAGS} config get DB_COLLATE > /dev/null 2>&1; then
+  wp ${WPCLIFLAGS} config set DB_COLLATE ''
+fi
+
 # remove unnecessary files
 
 rm -rfv wp-content/mu-plugins/SupportCenterMUAutoloader.php \
@@ -184,8 +190,6 @@ rm -rfv wp-content/mu-plugins/SupportCenterMUAutoloader.php \
 
 
 # CACHING
-
-#!/bin/bash
 
 sslconf=$(echo /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf)
 
