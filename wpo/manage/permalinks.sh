@@ -3,8 +3,6 @@
 WPCLIFLAGS="--allow-root --skip-plugins --skip-themes --require=/bigscoots/includes/err_report.php"
 DOMAIN=$2
 
-PERMALINKS=$(wp ${WPCLIFLAGS} option get permalink_structure --path=/home/nginx/domains/"${DOMAIN}"/public)
-
 case $1 in
 permalinks_curent)
 
@@ -17,6 +15,7 @@ permalinks_remove)
 
 # /bigscoots/wpo/manage/permalinks.sh permalinks_remove ${DOMAIN}
 
+PERMALINKS=$(wp ${WPCLIFLAGS} option get permalink_structure --path=/home/nginx/domains/"${DOMAIN}"/public)
 FULLURL=$(wp ${WPCLIFLAGS} option get siteurl --path=/home/nginx/domains/"${DOMAIN}"/public)
 
 if [[ ${PERMALINKS} = '/%year%/%monthnum%/%postname%.html' ]]; then
