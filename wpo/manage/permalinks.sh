@@ -15,34 +15,34 @@ wp ${WPCLIFLAGS} option get permalink_structure --path=/home/nginx/domains/"${DO
 ;;
 permalinks_remove)
 
-# /bigscoots/wpo/manage/plugins.sh permalinks_remove ${DOMAIN}
+# /bigscoots/wpo/manage/permalinks.sh permalinks_remove ${DOMAIN}
 
 FULLURL=$(wp ${WPCLIFLAGS} option get siteurl --path=/home/nginx/domains/"${DOMAIN}"/public)
 
 if [[ ${PERMALINKS} = '/%year%/%monthnum%/%postname%.html' ]]; then
 
 cat <<EOT >> /usr/local/nginx/conf/wpincludes/"${DOMAIN}"/redirects.conf
-	# Keep these rewrite rules on the bottom of this file #
-	rewrite "^/[0-9]{4}/[0-9]{2}/(.*).html$" ${FULLURL}/\$1/ permanent;
-	rewrite "^/([0-9]{4})/([0-9]{2})/(?!page/)(.+)$" ${FULLURL}/\$3 permanent;
-	rewrite "^/(.+?)\.html?$" ${FULLURL}/\$1/ permanent;
-	# Keep these rewrite rules on the bottom of this file #
+# Keep these rewrite rules on the bottom of this file #
+rewrite "^/[0-9]{4}/[0-9]{2}/(.*).html$" ${FULLURL}/\$1/ permanent;
+rewrite "^/([0-9]{4})/([0-9]{2})/(?!page/)(.+)$" ${FULLURL}/\$3 permanent;
+rewrite "^/(.+?)\.html?$" ${FULLURL}/\$1/ permanent;
+# Keep these rewrite rules on the bottom of this file #
 EOT
 
 elif [[ ${PERMALINKS} = '/%year%/%monthnum%/%day%/%postname%/' ]]; then
-	cat <<EOT >> /usr/local/nginx/conf/wpincludes/"${DOMAIN}"/redirects.conf
+cat <<EOT >> /usr/local/nginx/conf/wpincludes/"${DOMAIN}"/redirects.conf
 
-	# Keep these rewrite rules on the bottom of this file #
-	rewrite "^/([0-9]{4})/([0-9]{2})/([0-9]{2})/(?!page/)(.+)$" ${FULLURL}/\$4 permanent;
-	# Keep these rewrite rules on the bottom of this file #
+# Keep these rewrite rules on the bottom of this file #
+rewrite "^/([0-9]{4})/([0-9]{2})/([0-9]{2})/(?!page/)(.+)$" ${FULLURL}/\$4 permanent;
+# Keep these rewrite rules on the bottom of this file #
 EOT
 
 elif [[ ${PERMALINKS} = '/%year%/%monthnum%/%postname%/' ]]; then
 
 cat <<EOT >> /usr/local/nginx/conf/wpincludes/"${DOMAIN}"/redirects.conf
-	# Keep these rewrite rules on the bottom of this file #
-	rewrite "^/([0-9]{4})/([0-9]{2})/(?!page/)(.+)$" ${FULLURL}/\$3 permanent;
-	# Keep these rewrite rules on the bottom of this file #
+# Keep these rewrite rules on the bottom of this file #
+rewrite "^/([0-9]{4})/([0-9]{2})/(?!page/)(.+)$" ${FULLURL}/\$3 permanent;
+# Keep these rewrite rules on the bottom of this file #
 EOT
 
 else 
