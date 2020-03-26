@@ -64,4 +64,10 @@ nginx -t > /dev/null 2>&1
     fi
 
 ;;
+*)
+    echo "Must use one of the following options:
+    /bigscoots/wpo/manage/permalinks.sh permalinks_curent ${DOMAIN}
+    /bigscoots/wpo/manage/permalinks.sh permalinks_remove ${DOMAIN}"
+    exit
+    ;;
 esac
