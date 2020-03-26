@@ -18,6 +18,11 @@ permalinks_remove)
 PERMALINKS=$(wp ${WPCLIFLAGS} option get permalink_structure --path=/home/nginx/domains/"${DOMAIN}"/public)
 FULLURL=$(wp ${WPCLIFLAGS} option get siteurl --path=/home/nginx/domains/"${DOMAIN}"/public)
 
+if ! touch /usr/local/nginx/conf/wpincludes/"${DOMAIN}"/redirects.conf >/dev/null 2>&1; then
+    echo "" | mail -s "WPO URGENT - Failed to create redirects.conf for  ${DOMAIN} -  $HOSTNAME" monitor@bigscoots.com
+    exit
+fi
+
 if [[ ${PERMALINKS} = '/%year%/%monthnum%/%postname%.html' ]]; then
 
 cat <<EOT >> /usr/local/nginx/conf/wpincludes/"${DOMAIN}"/redirects.conf
@@ -64,9 +69,9 @@ nginx -t > /dev/null 2>&1
 
 ;;
 *)
-    echo "Must use one of the following options:
-    /bigscoots/wpo/manage/permalinks.sh permalinks_curent ${DOMAIN}
-    /bigscoots/wpo/manage/permalinks.sh permalinks_remove ${DOMAIN}"
-    exit
+echo "Must use one of the following options:
+/bigscoots/wpo/manage/permalinks.sh permalinks_curent ${DOMAIN}
+/bigscoots/wpo/manage/permalinks.sh permalinks_remove ${DOMAIN}"
+exit
     ;;
 esac
