@@ -16,7 +16,7 @@ NGINX=$(which nginx)
 SOURCESITEDOCROOT=/home/nginx/domains/"${SOURCESITE}"/public
 DESTINATIONSITEDOCROOT=/home/nginx/domains/"${DESTINATIONSITE}"/public
 
-if wp ${WPCLIFLAGS} core is-installed --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" && wp ${WPCLIFLAGS} core is-installed --path="${DESTINATIONSITEDOCROOT}" ; then
+if wp ${WPCLIFLAGS} core is-installed --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" && wp ${WPCLIFLAGS} core is-installed --path="${DESTINATIONSITEDOCROOT}" ; then
 	echo "${SOURCESITE} or ${DESTINATIONSITE} does not exist."
     exit
 fi
