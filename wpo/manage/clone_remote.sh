@@ -16,17 +16,17 @@ NGINX=$(which nginx)
 SOURCESITEDOCROOT=/home/nginx/domains/"${SOURCESITE}"/public
 DESTINATIONSITEDOCROOT=/home/nginx/domains/"${DESTINATIONSITE}"/public
 
-if wp ${WPCLIFLAGS} core is-installed --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" && wp ${WPCLIFLAGS} core is-installed --path="${DESTINATIONSITEDOCROOT}" ; then
+if wp ${WPCLIFLAGS} core is-installed --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" && wp ${WPCLIFLAGS} core is-installed --path="${DESTINATIONSITEDOCROOT}" ; then
 	echo "${SOURCESITE} or ${DESTINATIONSITE} does not exist."
     exit
 fi
 
-if ! SOURCESITEDB=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${SOURCESITEDOCROOT} > /dev/null 2>&1); then
-    wp ${WPCLIFLAGS} config get DB_NAME --path=${SOURCESITEDOCROOT} > /dev/null 2>&1
+if ! SOURCESITEDB=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${SOURCESITEDOCROOT} --ssh="${REMOTEHOST}":"${REMOTEPORT}" > /dev/null 2>&1); then
+    wp ${WPCLIFLAGS} config get DB_NAME --path=${SOURCESITEDOCROOT} --ssh="${REMOTEHOST}":"${REMOTEPORT}" > /dev/null 2>&1
     if [ $? -eq 255 ]; then
         echo $?
         sed -i '/wp-salt.php/d' ${SOURCESITEDOCROOT}/wp-config.php
-        if ! SOURCESITEDB=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${SOURCESITEDOCROOT} 2>&1); then
+        if ! SOURCESITEDB=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${SOURCESITEDOCROOT} --ssh="${REMOTEHOST}":"${REMOTEPORT}" 2>&1); then
         echo "Something is wrong when trying to get the database name from $SOURCESITE site: https://github.com/jcatello/bigscoots/blob/master/wpo/manage/clone.sh#L21" | mail -s "WPO Clone failed to pull $SOURCESITE database name - From: $SOURCESITE To: $DESTINATIONSITE  -  $HOSTNAME" monitor@bigscoots.com
         # exit 1
         fi
@@ -63,7 +63,8 @@ fi
 mkdir -p "${BSPATH}"/rsync/"${DESTINATIONSITE}"
 touch "${BSPATH}"/rsync/"${DESTINATIONSITE}"/exclude "${BSPATH}"/rsync/exclude
 
-rsync -aqhv --delete \
+rsync -aqhv -e "ssh -p ${REMOTEPORT}" \
+--delete \
 --exclude 'wp-content/uploads/backupbuddy*' \
 --exclude 'wp-content/backup*' \
 --exclude wp-content/uploads/backup \
@@ -78,39 +79,39 @@ rsync -aqhv --delete \
 --exclude wp-content/wpbackitup_backups \
 --exclude-from="${BSPATH}"/rsync/exclude \
 --exclude-from="${BSPATH}"/rsync/"${DESTINATIONSITE}"/exclude \
-"$SOURCESITEDOCROOT/" "$DESTINATIONSITEDOCROOT/"
+"${REMOTEHOST}":"${SOURCESITEDOCROOT}/" "${DESTINATIONSITEDOCROOT}/"
 
-DESTINATIONSITEreplace=$(wp ${WPCLIFLAGS} option get siteurl --path="${DESTINATIONSITEDOCROOT}" --quiet | sed -r 's/https?:\/\///g')
+DESTINATIONSITEREPLACE=$(wp ${WPCLIFLAGS} option get siteurl --path="${DESTINATIONSITEDOCROOT}" --quiet | sed -r 's/https?:\/\///g')
 
 
-SOURCESITEDBuser=$(wp ${WPCLIFLAGS} config get DB_USER --path="${SOURCESITEDOCROOT}")
-DESTINATIONSITEDBuser=$(wp ${WPCLIFLAGS} config get DB_USER --path="${DESTINATIONSITEDOCROOT}")
-WDPPREFIX=$(wp ${WPCLIFLAGS} config get table_prefix --path="${SOURCESITEDOCROOT}")
+SOURCESITEDBUSER=$(wp ${WPCLIFLAGS} config get DB_USER --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}")
+DESTINATIONSITEDBUSER=$(wp ${WPCLIFLAGS} config get DB_USER --path="${DESTINATIONSITEDOCROOT}")
+WDPPREFIX=$(wp ${WPCLIFLAGS} config get table_prefix --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}")
 
 wp ${WPCLIFLAGS} db reset --yes --path="${DESTINATIONSITEDOCROOT}" --quiet
 
-if wp ${WPCLIFLAGS} db tables "${WDPPREFIX}swp_*" --format=csv --all-tables --path="${SOURCESITEDOCROOT}" >/dev/null 2>&1; then
-    wp ${WPCLIFLAGS} db export - --path="${SOURCESITEDOCROOT}" --exclude_tables=$(wp ${WPCLIFLAGS} db tables "${WDPPREFIX}swp_*" --format=csv --all-tables --path="${SOURCESITEDOCROOT}") --quiet --single-transaction --quick --lock-tables=false --max_allowed_packet=1G | sed "s/DEFINER=\`${SOURCESITEDBuser}\`/DEFINER=\`${DESTINATIONSITEDBuser}\`/g" | wp ${WPCLIFLAGS} --quiet db import - --path="${DESTINATIONSITEDOCROOT}" --quiet --force --max_allowed_packet=1G
+if wp ${WPCLIFLAGS} db tables "${WDPPREFIX}swp_*" --format=csv --all-tables --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" >/dev/null 2>&1; then
+    wp ${WPCLIFLAGS} db export - --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" --exclude_tables=$(wp ${WPCLIFLAGS} db tables "${WDPPREFIX}swp_*" --format=csv --all-tables --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}") --quiet --single-transaction --quick --lock-tables=false --max_allowed_packet=1G | sed "s/DEFINER=\`${SOURCESITEDBUSER}\`/DEFINER=\`${DESTINATIONSITEDBUSER}\`/g" | wp ${WPCLIFLAGS} --quiet db import - --path="${DESTINATIONSITEDOCROOT}" --quiet --force --max_allowed_packet=1G
 else
-    wp ${WPCLIFLAGS} db export - --path="${SOURCESITEDOCROOT}" --quiet --single-transaction --quick --lock-tables=false --max_allowed_packet=1G | sed "s/DEFINER=\`${SOURCESITEDBuser}\`/DEFINER=\`${DESTINATIONSITEDBuser}\`/g" | wp ${WPCLIFLAGS} --quiet db import - --path="${DESTINATIONSITEDOCROOT}" --quiet --force --max_allowed_packet=1G    
+    wp ${WPCLIFLAGS} db export - --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" --quiet --single-transaction --quick --lock-tables=false --max_allowed_packet=1G | sed "s/DEFINER=\`${SOURCESITEDBUSER}\`/DEFINER=\`${DESTINATIONSITEDBUSER}\`/g" | wp ${WPCLIFLAGS} --quiet db import - --path="${DESTINATIONSITEDOCROOT}" --quiet --force --max_allowed_packet=1G    
 fi
 
 wp ${WPCLIFLAGS} config set table_prefix ${WDPPREFIX} --path="${DESTINATIONSITEDOCROOT}" --quiet
 
-if wp ${WPCLIFLAGS} config get WP_SITEURL --path="${SOURCESITEDOCROOT}" >/dev/null 2>&1; then
+if wp ${WPCLIFLAGS} config get WP_SITEURL --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" >/dev/null 2>&1; then
 
- wpconfigwpsiteurl=$(wp ${WPCLIFLAGS} config get WP_SITEURL --path="${SOURCESITEDOCROOT}" --quiet | sed -r 's/https?:\/\///g')
- wpdbwpsiteurl=$(wp ${WPCLIFLAGS} db query "SELECT option_value FROM "${WDPPREFIX}"options WHERE option_name = 'siteurl';" --skip-column-names --path="${SOURCESITEDOCROOT}" | sed -r 's/https?:\/\///g')
+ WPCONFIGWPSITEURL=$(wp ${WPCLIFLAGS} config get WP_SITEURL --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" --quiet | sed -r 's/https?:\/\///g')
+ WPDBWPSITEURL=$(wp ${WPCLIFLAGS} db query "SELECT option_value FROM "${WDPPREFIX}"options WHERE option_name = 'siteurl';" --skip-column-names --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" | sed -r 's/https?:\/\///g')
 
-    if  [ ! "$wpconfigwpsiteurl" == "$wpdbwpsiteurl" ]; then
-      wp ${WPCLIFLAGS} search-replace "$wpdbwpsiteurl" "$DESTINATIONSITEreplace" --recurse-objects --skip-columns=guid --skip-tables="${WDPPREFIX}"users --path="${DESTINATIONSITEDOCROOT}" --quiet
+    if  [ ! "$WPCONFIGWPSITEURL" == "$WPDBWPSITEURL" ]; then
+      wp ${WPCLIFLAGS} search-replace "$WPDBWPSITEURL" "$DESTINATIONSITEREPLACE" --recurse-objects --skip-columns=guid --skip-tables="${WDPPREFIX}"users --path="${DESTINATIONSITEDOCROOT}" --quiet
     fi
 
 fi
 
-siteurl=$(wp ${WPCLIFLAGS} option get siteurl --path="${SOURCESITEDOCROOT}" --quiet | sed -r 's/https?:\/\///g')
+SITEURLSOURCE=$(wp ${WPCLIFLAGS} option get siteurl --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" --quiet | sed -r 's/https?:\/\///g')
 
-wp ${WPCLIFLAGS} search-replace "$siteurl" "$DESTINATIONSITEreplace" --recurse-objects --skip-columns=guid --skip-tables="${WDPPREFIX}"users --path="${DESTINATIONSITEDOCROOT}" --quiet
+wp ${WPCLIFLAGS} search-replace "$SITEURLSOURCE" "$DESTINATIONSITEREPLACE" --recurse-objects --skip-columns=guid --skip-tables="${WDPPREFIX}"users --path="${DESTINATIONSITEDOCROOT}" --quiet
 
 if [ -n "$3" ] && [ -n "$4" ]; then
 
