@@ -235,9 +235,9 @@ fi
 pushkey=false
 
 if grep -q destination=local /root/.bigscoots/backupinfo >/dev/null 2>&1; then
-  sshpubkey=null
-  backupserver=local
-  backupuser=/backup
+  pubkey=null
+  BKSVR=local
+  BKUSER=/backup
 else
   if [ ! -s ~/.ssh/wpo_backups ]; then
     ssh-keygen -b 4096 -t rsa -f ~/.ssh/wpo_backups -q -N '' <<< y >/dev/null 2>&1
