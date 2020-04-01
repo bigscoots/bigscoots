@@ -58,11 +58,14 @@ crontab -l | grep -v '/root/tools/wp_updater'  | crontab -
 
 sed "s/REPLACEDOMAIN/$domain/g ; s/REPLACEIP/$domainip/g" /bigscoots/wpo/extras/dnszone.txt > /home/nginx/domains/"$domain"/"$domain"-dnszone.txt
 
-if [[ ! $domain =~ (bigscoots-staging.com) ]]; then
-
-	if [ -f /home/nginx/domains/"$domain"/.fresh ]; then
-  		cat /home/nginx/domains/"$domain"/.fresh | mail -s "$domain has been successfully created on  $HOSTNAME - DNS attached" -a /home/nginx/domains/"$domain"/"$domain"-dnszone.txt monitor@bigscoots.com
-	else
-  		echo "" | mail -s "$domain has been successfully created on  $HOSTNAME - DNS attached" -a /home/nginx/domains/"$domain"/"$domain"-dnszone.txt monitor@bigscoots.com
-	fi
-fi
+# These emails are no longer necessary since its all available in WPO
+#
+# if [[ ! $domain =~ (bigscoots-staging.com) ]]; then
+# 
+# 	if [ -f /home/nginx/domains/"$domain"/.fresh ]; then
+#   		cat /home/nginx/domains/"$domain"/.fresh | mail -s "$domain has been successfully created on  $HOSTNAME - DNS attached" -a /home/nginx/domains/"$domain"/"$domain"-dnszone.txt monitor@bigscoots.com
+# 	else
+#   		echo "" | mail -s "$domain has been successfully created on  $HOSTNAME - DNS attached" -a /home/nginx/domains/"$domain"/"$domain"-dnszone.txt monitor@bigscoots.com
+# 	fi
+# fi
+#
