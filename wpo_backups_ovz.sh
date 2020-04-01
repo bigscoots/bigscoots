@@ -280,10 +280,15 @@ BKUSER="$2"
 DOMAIN="$3"
 BACKUP="$4"
 
-cd /home/wpo_users/"$BKUSER"/"$BACKUP"
-tar -zcf "$DOMAIN"-"$BACKUP".tar.gz "$DOMAIN"
-
-bash /bigscoots/wpo/backups/backup_link.sh "$DOMAIN"-"$BACKUP".tar.gz
+if [[ ${BKUSER} = '/backup' ]]; then 
+  cd /backup/"$BACKUP" || echo "Tried to cd into /backup/$BACKUP on  $HOSTNAME but failed during creating a backup for $DOMAIN" | mail -s "WPO - Local download backup failed on  $HOSTNAME check ticket message" monitor@bigscoots.com ; exit
+  tar -zcf "$DOMAIN"-"$BACKUP".tar.gz "$DOMAIN"
+  bash /bigscoots/wpo/backups/backup_link.sh "$DOMAIN"-"$BACKUP".tar.gz local
+else
+  cd /home/wpo_users/"$BKUSER"/"$BACKUP" || echo "Tried to cd into /home/wpo_users/$BKUSER/$BACKUP on  $HOSTNAME but failed during creating a backup for $DOMAIN" | mail -s "WPO - Download backup failed on  $HOSTNAME check ticket message" monitor@bigscoots.com ; exit
+  tar -zcf "$DOMAIN"-"$BACKUP".tar.gz "$DOMAIN"
+  bash /bigscoots/wpo/backups/backup_link.sh "$DOMAIN"-"$BACKUP".tar.gz
+fi
 
 ;;
 *)
