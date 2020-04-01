@@ -281,14 +281,11 @@ DOMAIN="$3"
 BACKUP="$4"
 
 if [[ ${BKUSER} = '/backup' ]]; then
-  echo 1
   if ! cd /backup/"$BACKUP" ; then 
     echo "Tried to cd into /backup/$BACKUP on  $HOSTNAME but failed during creating a backup for $DOMAIN" | mail -s "WPO - Local download backup failed on  $HOSTNAME check ticket message" monitor@bigscoots.com
     exit 
   fi
-  echo 2
   tar -zcf "$DOMAIN"-"$BACKUP".tar.gz "$DOMAIN"
-  echo 3
   bash /bigscoots/wpo/backups/backup_link.sh "$DOMAIN"-"$BACKUP".tar.gz local
 else
   if ! cd /home/wpo_users/"$BKUSER"/"$BACKUP"; then 
