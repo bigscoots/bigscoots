@@ -30,12 +30,12 @@ else
 fi
 
 if [ ! -z "$link" ]; then
-	downloadinfo="DownloadLink
-	$link"
+downloadinfo="DownloadLink
+$link"
 	
 	  jq -Rn '
-	( input  | split("|") ) as $keys |
-	( inputs | split("|") ) as $vals |
-	[[$keys, $vals] | transpose[] | {key:.[0],value:.[1]}] | from_entries
-	' <<<"$downloadinfo"
+( input  | split("|") ) as $keys |
+( inputs | split("|") ) as $vals |
+[[$keys, $vals] | transpose[] | {key:.[0],value:.[1]}] | from_entries
+' <<<"$downloadinfo"
 fi
