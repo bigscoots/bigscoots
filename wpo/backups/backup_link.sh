@@ -16,19 +16,20 @@ if [[ $2 == local ]]; then
 	ln -s "${PWD}"/"${BACKUP}" /usr/local/nginx/html/"${RANDO1}"/"${RANDO2}"/"${BACKUP}"
 	screen -dmS "${BACKUP}" bash -c "sleep 172800 ; [ -d /usr/local/nginx/html/${RANDO1} ] && rm -rf /usr/local/nginx/html/${RANDO1} ; [ -f ${PWD}/${BACKUP} ] && rm -f ${PWD}/${BACKUP}"
 
-	echo "Path: ${PWD}/${BACKUP}"
-	echo "Sympath: /usr/local/nginx/html/${RANDO1}/${RANDO2}/${BACKUP}"
+	# echo "Path: ${PWD}/${BACKUP}"
+	# echo "Sympath: /usr/local/nginx/html/${RANDO1}/${RANDO2}/${BACKUP}"
 	link="https://$HOSTNAME/${RANDO1}/${RANDO2}/${BACKUP}"
 else
 
 	mkdir -p /var/www/html/"${RANDO1}"/"${RANDO2}"/
 	mv "${BACKUP}" /var/www/html/"${RANDO1}"/"${RANDO2}"/
-
 	screen -dmS "${BACKUP}" bash -c "sleep 172800 ; rm -rf /var/www/html/${RANDO1}"
 
 	# echo "Path: /var/www/html/${RANDO1}/${RANDO2}/${BACKUP}"
 	link="http://$HOSTNAME/${RANDO1}/${RANDO2}/${BACKUP}"
+fi
 
+if [ ! -z "$link" ]; then
 	downloadinfo="DownloadLink
 	$link"
 	
