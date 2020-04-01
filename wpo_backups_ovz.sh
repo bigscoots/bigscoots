@@ -45,23 +45,25 @@ if grep bksvr "$BSPATH"/backupinfo >/dev/null 2>&1 ; then
   BKSVR=$(grep bksvr "$BSPATH"/backupinfo | sed 's/bksvr=//g')
 fi
 
-if [ -f /proc/vz/veinfo ] && ! grep -q destination=local /root/.bigscoots/backupinfo >/dev/null 2>&1; then
-  remote=y
-  if grep -q bkuser= "${BSPATH}"/backupinfo; then 
-    BKUSER=$(grep bkuser= "${BSPATH}"/backupinfo | sed 's/=/ /g' | awk '{print $2}')
-  else
-  BKUSER=wpo$(awk '{print $1}' /proc/vz/veinfo)
-  fi
-elif ! grep -qs '/backup ' /proc/mounts && ! grep destination=remote "$BSPATH"/backupinfo >/dev/null 2>&1 ; then
-  echo "Make sure to set destination=remote in "${BSPATH}"/backupinfo if supposed to be remote backups." | mail -s "Backup drive not mounted in $HOSTNAME" monitor@bigscoots.com
-  remote=y
-  BKUSER=wpo"${HOSTNAME//./}"
-elif ! grep -qs '/backup ' /proc/mounts && grep destination=remote "$BSPATH"/backupinfo >/dev/null 2>&1 ; then
-  remote=y
-  if [[ -n $(grep bkuser= "${BSPATH}"/backupinfo | sed 's/=/ /g' | awk '{print $2}') ]]; then
-    BKUSER=$(grep bkuser= "${BSPATH}"/backupinfo | sed 's/=/ /g' | awk '{print $2}')
-  else
+if ! grep -q destination=local /root/.bigscoots/backupinfo >/dev/null 2>&1; then
+  if [ -f /proc/vz/veinfo ] && ! grep -q destination=local /root/.bigscoots/backupinfo >/dev/null 2>&1; then
+    remote=y
+    if grep -q bkuser= "${BSPATH}"/backupinfo; then 
+      BKUSER=$(grep bkuser= "${BSPATH}"/backupinfo | sed 's/=/ /g' | awk '{print $2}')
+    else
+      BKUSER=wpo$(awk '{print $1}' /proc/vz/veinfo)
+    fi
+  elif ! grep -qs '/backup ' /proc/mounts && ! grep destination=remote "$BSPATH"/backupinfo >/dev/null 2>&1 ; then
+    echo "Make sure to set destination=remote in ${BSPATH}/backupinfo if supposed to be remote backups." | mail -s "Backup drive not mounted in $HOSTNAME" monitor@bigscoots.com
+    remote=y
     BKUSER=wpo"${HOSTNAME//./}"
+  elif ! grep -qs '/backup ' /proc/mounts && grep destination=remote "$BSPATH"/backupinfo >/dev/null 2>&1 ; then
+    remote=y
+    if [[ -n $(grep bkuser= "${BSPATH}"/backupinfo | sed 's/=/ /g' | awk '{print $2}') ]]; then
+      BKUSER=$(grep bkuser= "${BSPATH}"/backupinfo | sed 's/=/ /g' | awk '{print $2}')
+    else
+      BKUSER=wpo"${HOSTNAME//./}"
+    fi
   fi
 fi
 
@@ -222,8 +224,6 @@ fi
 ;;
 initial_client)
 
-pushkey=false
-
 if crontab -l | grep /bigscoots/wpo_backups_dedi.sh >/dev/null 2>&1; then 
   crontab -l | grep -v 'wpo_backups_dedi.sh'  | crontab -
 fi
@@ -232,20 +232,27 @@ if ! crontab -l | grep /bigscoots/wpo_backups_ovz.sh >/dev/null 2>&1; then
   crontab -l | { cat; echo "$(( ( RANDOM % 60 )  + 1 )) $(( ( RANDOM % 4 )  + 1 )) * * * /bigscoots/wpo_backups_ovz.sh"; } | crontab -
 fi
 
-if [ ! -s ~/.ssh/wpo_backups ]; then
-  ssh-keygen -b 4096 -t rsa -f ~/.ssh/wpo_backups -q -N '' <<< y >/dev/null 2>&1
-fi
+pushkey=false
 
-if ! ssh -q -o BatchMode=yes -o StrictHostKeyChecking=no -o PasswordAuthentication=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@$BKSVR exit; then
+if grep -q destination=local /root/.bigscoots/backupinfo >/dev/null 2>&1; then
+  sshpubkey=null
+  backupserver=local
+  backupuser=/backup
+else
+  if [ ! -s ~/.ssh/wpo_backups ]; then
+    ssh-keygen -b 4096 -t rsa -f ~/.ssh/wpo_backups -q -N '' <<< y >/dev/null 2>&1
+  fi
+  if ! ssh -q -o BatchMode=yes -o StrictHostKeyChecking=no -o PasswordAuthentication=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" exit; then
     ssh-keygen -b 4096 -t rsa -f ~/.ssh/wpo_backups -q -N '' <<< y >/dev/null 2>&1
     pushkey=true
+  fi
+  if [ ! -s ~/.ssh/wpo_backups.pub ]; then
+    pubkey=null
+  else
+    pubkey=$(awk '{print $2}' /root/.ssh/wpo_backups.pub)
+  fi
 fi
 
-if [ ! -s ~/.ssh/wpo_backups.pub ]; then
-  pubkey=null
-else
-  pubkey=$(awk '{print $2}' /root/.ssh/wpo_backups.pub)
-fi
 
 backupinfo="runSecondScript|sshpubkey|backupserver|backupuser|backuplimit
 $pushkey|$pubkey|$BKSVR|$BKUSER|$BKLIMIT"

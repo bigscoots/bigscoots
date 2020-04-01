@@ -113,21 +113,6 @@ SITEURLSOURCE=$(wp ${WPCLIFLAGS} option get siteurl --path="${SOURCESITEDOCROOT}
 
 wp ${WPCLIFLAGS} search-replace "$SITEURLSOURCE" "$DESTINATIONSITEREPLACE" --recurse-objects --skip-columns=guid --skip-tables="${WDPPREFIX}"users --path="${DESTINATIONSITEDOCROOT}" --quiet
 
-if [ -n "$3" ] && [ -n "$4" ]; then
-
-    if  ! grep -q wpolocksite /usr/local/nginx/conf/conf.d/"$2".ssl.conf ; then
-
-        /usr/local/nginx/conf/htpasswd.sh create /home/nginx/domains/"$2"/wpolocksite "$3" "$4"
-        sed -i "/location \/ {/a \  auth_basic_user_file /home/nginx/domains/$2/wpolocksite;" /usr/local/nginx/conf/conf.d/"$2".ssl.conf
-        sed -i "/location \/ {/a \  auth_basic \"Private\";" /usr/local/nginx/conf/conf.d/"$2".ssl.conf
-
-    else
-
-        /usr/local/nginx/conf/htpasswd.sh create /home/nginx/domains/"$2"/wpolocksite "$3" "$4" >/dev/null 2>&1
-
-    fi
-fi
-
 if [ -d "$DESTINATIONSITEDOCROOT/wp-content/plugins/wp-rocket" ]; then
 
     if wp ${WPCLIFLAGS} plugin is-active wp-rocket --path="${DESTINATIONSITEDOCROOT}"; then 
