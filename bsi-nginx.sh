@@ -171,6 +171,8 @@ wget -O /usr/local/src/centminmod/inc/wpsetup.inc https://raw.githubusercontent.
 
 yum -y remove mlocate
 
+touch /root/.bigscoots/wpo.installed
+
 sleep 2
 echo "nginx install for $HOSTNAME completed" | mail -s "nginx install for $HOSTNAME completed" monitor@bigscoots.com
 sleep 5
