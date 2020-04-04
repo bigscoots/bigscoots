@@ -5,7 +5,13 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
-[[ $1 == check ]] && [ ! -f /root/.bigscoots/wpo.installed ] && exit
+if [[ $1 == check ]]; then 
+  if [ ! -f /root/.bigscoots/wpo.installed ]; then 
+    exit 1
+  else
+    exit 0
+  fi
+fi
 
 # if [ -z "$2" ]; then
 #   echo "Requires fresh or existing."
