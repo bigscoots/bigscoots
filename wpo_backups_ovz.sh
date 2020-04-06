@@ -83,6 +83,8 @@ if  [[ $remote == y ]] && [[ ! $1 =~ (initial_*|download) ]]; then
     elif ! grep -q bksvr= "${BSPATH}"/backupinfo; then 
       echo bksvr=backup06.bigscoots.com >> /root/.bigscoots/backupinfo
       BKSVR=$(grep bksvr "${BSPATH}"/backupinfo | sed 's/bksvr=//g')
+      /bigscoots/wpo_backups_ovz.sh
+      exit
     fi
   fi
 else
