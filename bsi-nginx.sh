@@ -173,6 +173,8 @@ yum -y remove mlocate
 
 touch /root/.bigscoots/wpo.installed
 
+echo bksvr=backup06.bigscoots.com >> /root/.bigscoots/backupinfo
+
 sleep 2
 echo "nginx install for $HOSTNAME completed" | mail -s "nginx install for $HOSTNAME completed" monitor@bigscoots.com
 sleep 5
