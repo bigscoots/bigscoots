@@ -106,6 +106,8 @@ manual)
 
     if  [[ $remote == y ]]; then
       
+      ssh -oStrictHostKeyChecking=no -i "${HOME}"/.ssh/wpo_backups "${BKUSER}"@"${BKSVR}" "[ ! -d current ] && ln -s .ssh current"
+
       rsync -ah \
       -e "${SSHOPTIONS}" \
       --ignore-errors \
@@ -118,6 +120,8 @@ manual)
       ssh -oStrictHostKeyChecking=no -i "${HOME}"/.ssh/wpo_backups "${BKUSER}"@"${BKSVR}" "mv incomplete_back-$date ${2} && rm -f current && ln -s ${2} current"
 
     else
+
+      [ ! -d /backup/current ] && ln -s /bigscoots /backup/current
 
       rsync -ah \
       -e "$SSHOPTIONS" \
@@ -156,6 +160,8 @@ done
 gzip -f "$wpinstall$dbname".sql >/dev/null 2>&1
 
     if  [[ $remote == y ]]; then
+
+      ssh -oStrictHostKeyChecking=no -i "${HOME}"/.ssh/wpo_backups "${BKUSER}"@"${BKSVR}" "[ ! -d current ] && ln -s .ssh current"
       
       rsync -ah \
       -e "${SSHOPTIONS}" \
@@ -169,6 +175,8 @@ gzip -f "$wpinstall$dbname".sql >/dev/null 2>&1
       ssh -oStrictHostKeyChecking=no -i "${HOME}"/.ssh/wpo_backups "${BKUSER}"@"${BKSVR}" "mv incomplete_back-$date manual-${date} && rm -f current && ln -s manual-${date} current"
 
     else
+
+      [ ! -d /backup/current ] && ln -s /bigscoots /backup/current
       
       rsync -ah \
       -e "$SSHOPTIONS" \
@@ -321,6 +329,8 @@ done
 gzip -f "$wpinstall$dbname".sql >/dev/null 2>&1
 
     if  [[ $remote == y ]]; then
+
+      ssh -oStrictHostKeyChecking=no -i "${HOME}"/.ssh/wpo_backups "${BKUSER}"@"${BKSVR}" "[ ! -d current ] && ln -s .ssh current"
       
       rsync -ah \
       -e "${SSHOPTIONS}" \
@@ -334,6 +344,8 @@ gzip -f "$wpinstall$dbname".sql >/dev/null 2>&1
       ssh -oStrictHostKeyChecking=no -i "${HOME}"/.ssh/wpo_backups "${BKUSER}"@"${BKSVR}" "mv incomplete_back-$date back-${date} && rm -f current && ln -s back-${date} current"
 
     else
+
+      [ ! -d /backup/current ] && ln -s /bigscoots /backup/current
       
       rsync -ah \
       -e "$SSHOPTIONS" \
