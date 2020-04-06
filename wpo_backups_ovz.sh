@@ -76,8 +76,14 @@ if  [[ $remote == y ]] && [[ ! $1 =~ (initial_*|download) ]]; then
   RSYNCLOCATION="$BKUSER@$BKSVR:"
   if ssh -oBatchMode=yes -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" 'uptime' >/dev/null 2>&1 ; [ $? -eq 255 ]
   then
-    echo "Mark for Justin" | mail -s "$HOSTNAME- WPO failed to SSH to backup server." monitor@bigscoots.com
-    exit 1
+    if ssh -oBatchMode=yes -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"backup06.bigscoots.com" 'uptime' >/dev/null 2>&1 ; [ $? -eq 255 ]
+    then
+      echo "Mark for Justin" | mail -s "$HOSTNAME- WPO failed to SSH to backup server." monitor@bigscoots.com
+      exit 1
+    elif ! grep -q bksvr= "${BSPATH}"/backupinfo; then 
+      echo bksvr=backup06.bigscoots.com >> /root/.bigscoots/backupinfo
+      BKSVR=$(grep bksvr "${BSPATH}"/backupinfo | sed 's/bksvr=//g')
+    fi
   fi
 else
   RSYNCLOCATION=/backup/
