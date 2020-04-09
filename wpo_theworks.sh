@@ -57,10 +57,13 @@ if [[ $1 == wpe ]]; then
   exit
   fi
 
+if [ -f site-archive-*.zip ]; then
+
   mv site-archive-*.zip wp-config.php ..
   rm -rf * .htaccess
   mv ../site-archive-*.zip .
   unzip site-archive-*.zip
+fi
 
   DB_CHARSET=$(wp ${WPCLIFLAGS} config get DB_CHARSET)
   DB_COLLATE=$(wp ${WPCLIFLAGS} config get DB_COLLATE)
@@ -68,7 +71,13 @@ if [[ $1 == wpe ]]; then
 
   mv wp-config.php wp-config.php.wpe
   mv ../wp-config.php .
+
+if [ ! -f bigscoots.sql ]; then 
+
   mv wp-content/mysql.sql bigscoots.sql
+
+fi
+
   rm -rfv _wpeprivate
 
   wp ${WPCLIFLAGS} config set DB_CHARSET "$DB_CHARSET"
