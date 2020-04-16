@@ -240,8 +240,10 @@ if [ -d "wp-content/plugins/wp-rocket" ]; then
 
 else
 
-wp plugin install cache-enabler --activate ${WPCLIFLAGS} --quiet ; wp plugin delete comet-cache sg-cachepress wp-hummingbird wp-super-cache w3-total-cache nginx-helper wp-redis wp-fastest-cache ${WPCLIFLAGS} --quiet
-
+  if ! grep -q skipplugin=1 /root/.bigscoots/wp/options >/dev/null 2>&1; then 
+    wp plugin install cache-enabler --activate ${WPCLIFLAGS} --quiet ; wp plugin delete comet-cache sg-cachepress wp-hummingbird wp-super-cache w3-total-cache nginx-helper wp-redis wp-fastest-cache ${WPCLIFLAGS} --quiet
+  fi
+  
 fi
 
 sed -i 's=#include /usr/local/nginx/conf/cloudflare.conf;=include /usr/local/nginx/conf/cloudflare.conf;=g' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
