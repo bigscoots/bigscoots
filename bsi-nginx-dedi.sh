@@ -216,5 +216,7 @@ BSPATH=/root/.bigscoots
 mkdir -p "$BSPATH"
 touch "$BSPATH"/backupinfo
 
+/usr/bin/cmupdate 2>/dev/null ; /bigscoots/wpo_update.sh 2>/dev/null ; wget -O /usr/local/src/centminmod/inc/wpsetup.inc https://raw.githubusercontent.com/jcatello/centminmod/master/inc/wpsetup.inc
+
 sleep 2
 echo "nginx install for $HOSTNAME completed" | mail -s "nginx install for $HOSTNAME completed" monitor@bigscoots.com
