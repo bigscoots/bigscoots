@@ -6,6 +6,8 @@ yum -y install lldpad
 
 lldpad -d
 
+chkconfig lldpad on
+
 for i in $(ls /sys/class/net/ | grep 'eth\|ens\|eno') ; do
 echo "enabling lldp for interface: $i" ;
 lldptool set-lldp -i $i adminStatus=rxtx ;
