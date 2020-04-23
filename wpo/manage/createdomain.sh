@@ -54,6 +54,10 @@ sed -i "/\/usr\/local\/nginx\/conf\/503include-only.conf/a \  include \/usr\/loc
 sed -i 's/include \/usr\/local\/nginx\/conf\/autoprotect/#include \/usr\/local\/nginx\/conf\/autoprotect/g' /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
 sed -i 's/ssl_dhparam/#ssl_dhparam/g' /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
 
+if ! grep -q block-all-mixed-content /usr/local/nginx/conf/conf.d/"$domain".ssl.conf >/dev/null 2>&1; then 
+  sed -i '/# before enabling HSTS/ a \  add_header Content-Security-Policy \"block-all-mixed-content;\";' /usr/local/nginx/conf/conf.d/"$domain".ssl.conf
+fi
+
 cd /home/nginx/domains/"$domain"/public || exit
 wp ${WPCLIFLAGS} plugin delete --all --path=/home/nginx/domains/"$domain"/public
 
