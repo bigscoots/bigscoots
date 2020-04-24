@@ -22,15 +22,15 @@ if ! imapsync --logfile "${LOGFILE}" --no-modules_version --timeout1 30 --timeou
 --user2 "${EMAIL}" \
 --password1 "\"${OLDEMAILPW}\"" \
 --password2 "\"${NEWEMAILPW}\"" \
---tls1 --tls2
+--tls1 --tls2 >/dev/null 2>&1
 
 then
 
-	echo
-	echo "-------------------------------"
-	echo "TLS failed, trying SSL."
-	echo "-------------------------------"
-	echo
+	# echo
+	# echo "-------------------------------"
+	# echo "TLS failed, trying SSL."
+	# echo "-------------------------------"
+	# echo
 
 	if ! imapsync --logfile "${LOGFILE}" --no-modules_version --timeout1 30 --timeout2 30 \
 	--host1 "${OLDEMAILHOST}" \
@@ -39,15 +39,15 @@ then
 	--user2 "${EMAIL}" \
 	--password1 "\"${OLDEMAILPW}\"" \
 	--password2 "\"${NEWEMAILPW}\"" \
-	--ssl1 --ssl2
+	--ssl1 --ssl2 >/dev/null 2>&1
 
 	then
 
-		echo
-		echo "-------------------------------"
-		echo "SSL failed, trying plain text."
-		echo "-------------------------------"
-		echo
+		# echo
+		# echo "-------------------------------"
+		# echo "SSL failed, trying plain text."
+		# echo "-------------------------------"
+		# echo
 
 		if ! imapsync --logfile "${LOGFILE}" --no-modules_version --timeout1 30 --timeout2 30 \
 		--host1 "${OLDEMAILHOST}" \
@@ -55,7 +55,8 @@ then
 		--user1 "${EMAIL}" \
 		--user2 "${EMAIL}" \
 		--password1 "\"${OLDEMAILPW}\"" \
-		--password2 "\"${NEWEMAILPW}\""
+		--password2 "\"${NEWEMAILPW}\"" \
+		>/dev/null 2>&1
 
 		then
 
@@ -83,28 +84,28 @@ then
 			fi 
 
 		else 
-			echo
-			echo "-------------------------------"
-			echo "Plain Txt Successful."
-			echo "-------------------------------"
-			echo
+			# echo
+			# echo "-------------------------------"
+			# echo "Plain Txt Successful."
+			# echo "-------------------------------"
+			# echo
 			exit 0
 		fi
 
 	else 
-		echo
-		echo "-------------------------------"
-		echo "SSL Successful."
-		echo "-------------------------------"
-		echo
+		# echo
+		# echo "-------------------------------"
+		# echo "SSL Successful."
+		# echo "-------------------------------"
+		# echo
 		exit 0
 	fi
 
 else
-	echo
-	echo "-------------------------------"
-	echo "TLS Successful."
-	echo "-------------------------------"
-	echo
+	# echo
+	# echo "-------------------------------"
+	# echo "TLS Successful."
+	# echo "-------------------------------"
+	# echo
 	exit 0
 fi
