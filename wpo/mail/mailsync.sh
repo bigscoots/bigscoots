@@ -63,43 +63,43 @@ then
 			if grep -q AUTHENTICATIONFAILED LOG_imapsync/"${LOGFILE}" >/dev/null 2>&1; then
 				
 				if grep -q "Host1 failure: Error login on" LOG_imapsync/"${LOGFILE}" >/dev/null 2>&1; then
-		 			echo "Incorrect Password for ${EMAIL} at ${OLDEMAILHOST}"
+		 			echo "{'status': 'error', 'msg': 'Incorrect Password for ${EMAIL} at ${OLDEMAILHOST}.'}"
 	 				exit 1
 				fi
 
 				if grep -q "Host2 failure: Error login on" LOG_imapsync/"${LOGFILE}" >/dev/null 2>&1; then
-					echo "Incorrect Password for ${EMAIL} at BigScoots."
+					echo "{'status': 'error', 'msg': 'Incorrect Password for ${EMAIL} at BigScoots.'}"
 					exit 1
 				fi
 			fi
 
 			if grep -q "Host1 failure: Error login on" LOG_imapsync/"${LOGFILE}" >/dev/null 2>&1; then
- 				echo "Connection issue for ${EMAIL} at ${OLDEMAILHOST}"
+				echo "{'status': 'error', 'msg': 'Connection issue for ${EMAIL} at ${OLDEMAILHOST}'}"
  				exit 1
 			fi
 
 			if grep -q "Host2 failure: Error login on" LOG_imapsync/"${LOGFILE}" >/dev/null 2>&1; then
-				echo "Connection issue for ${EMAIL} at BigScoots."
+				echo "{'status': 'error', 'msg': 'Connection issue for ${EMAIL} at BigScoots.'}"
 				exit 1
 			fi 
 
 			if grep -q "Host1 failure: can not open imap connection on host1" LOG_imapsync/"${LOGFILE}" >/dev/null 2>&1; then
- 				echo "Connection issue for ${EMAIL} at ${OLDEMAILHOST}"
+ 				echo "{'status': 'error', 'msg': 'Connection issue for ${EMAIL} at ${OLDEMAILHOST}'}"
  				exit 1
 			fi
 
 			if grep -q "Host2 failure: can not open imap connection on host2" LOG_imapsync/"${LOGFILE}" >/dev/null 2>&1; then
-				echo "Connection issue for ${EMAIL} at BigScoots."
+ 				echo "{'status': 'error', 'msg': 'Connection issue for ${EMAIL} at BigScoots.'}"
 				exit 1
 			fi
-
-			echo "General Failure, unable to determine cause, please contact support."
+ 			
+ 			echo "{'status': 'error', 'msg': 'General Failure, unable to determine cause, please contact support.'}"
 			exit 1
 
 		else 
 			# echo
 			# echo "-------------------------------"
-			echo "Plain Txt Successful."
+			# echo "Plain Txt Successful."
 			# echo "-------------------------------"
 			# echo
 			exit 0
@@ -108,7 +108,7 @@ then
 	else 
 		# echo
 		# echo "-------------------------------"
-		echo "SSL Successful."
+		# echo "SSL Successful."
 		# echo "-------------------------------"
 		# echo
 		exit 0
@@ -117,7 +117,7 @@ then
 else
 	# echo
 	# echo "-------------------------------"
-	echo "TLS Successful."
+	# echo "TLS Successful."
 	# echo "-------------------------------"
 	# echo
 	exit 0
