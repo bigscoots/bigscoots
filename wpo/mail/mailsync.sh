@@ -55,7 +55,8 @@ then
 		--user1 "${EMAIL}" \
 		--user2 "${EMAIL}" \
 		--password1 "\"${OLDEMAILPW}\"" \
-		--password2 "\"${NEWEMAILPW}\"" >/dev/null 2>&1
+		--password2 "\"${NEWEMAILPW}\"" \
+		>/dev/null 2>&1
 
 		then
 
@@ -90,19 +91,34 @@ then
 			if grep -q "Host2 failure: can not open imap connection on host2" LOG_imapsync/"${LOGFILE}" >/dev/null 2>&1; then
 				echo "Connection issue for ${EMAIL} at BigScoots."
 				exit 1
-			fi 
+			fi
 
-		else 
 			echo "General Failure, unable to determine cause, please contact support."
 			exit 1
+
+		else 
+			# echo
+			# echo "-------------------------------"
+			echo "Plain Txt Successful."
+			# echo "-------------------------------"
+			# echo
+			exit 0
 		fi
 
 	else 
-		echo "General Failure, unable to determine cause, please contact support."
-		exit 1
+		# echo
+		# echo "-------------------------------"
+		echo "SSL Successful."
+		# echo "-------------------------------"
+		# echo
+		exit 0
 	fi
 
 else
-	echo "General Failure, unable to determine cause, please contact support."
-	exit 1
+	# echo
+	# echo "-------------------------------"
+	echo "TLS Successful."
+	# echo "-------------------------------"
+	# echo
+	exit 0
 fi
