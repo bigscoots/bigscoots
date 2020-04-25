@@ -13,7 +13,7 @@ then
 	ps -ef | grep php-fpm |grep -v grep > /dev/null
 		if [ $? != 0 ]
 		then	
-       	echo "Sorry of this is annoying but seeing if this script is causing more harm than good so going to stop trying to automatically start php-fpm if its detected as down." | mail -s "php-fpm is down on $(curl ifconfig.me)" monitor@bigscoots.com
+       	/bin/fpmstart > /dev/null
     fi
 fi
 
