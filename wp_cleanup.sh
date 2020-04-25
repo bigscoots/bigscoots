@@ -81,7 +81,19 @@ mv -n .infected/plugins.replace/* wp-content/plugins/
 for i in $(wp user list --role=administrator --field=ID --allow-root --skip-plugins --skip-themes) ; do wp user reset-password $i --allow-root --skip-plugins --skip-themes ; done
 
 rm -rf wp-content/cache
+rm -rfv wp-content/upgrade
 
 mv .infected ".infected_$(date +%m%d%y-%H%M)"
 find . -type f -exec chmod 644 {} \; &
 find . -type d -exec chmod 755 {} \; &
+
+echo "Some possible scripts.."
+echo
+echo
+
+find wp-content/uploads/ -type f -name '*php*'
+find wp-content/uploads/ -type f -name '*.ico'
+
+echo
+echo
+echo "Make sure to check the theme and wp-content in general..."
