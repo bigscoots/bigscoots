@@ -84,6 +84,6 @@ if [ -f /proc/vz/veinfo ] && which journalctl >/dev/null 2>&1 && uname -r |grep 
 fi
 
 /bigscoots/includes/keymebatman.sh
-/bigscoots/wpo/extras/phplogging.sh
+# /bigscoots/wpo/extras/phplogging.sh
  
 exit
