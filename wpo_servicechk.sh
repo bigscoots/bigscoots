@@ -13,7 +13,7 @@ then
 	ps -ef | grep php-fpm |grep -v grep > /dev/null
 		if [ $? != 0 ]
 		then	
-       	/bin/fpmstart > /dev/null
+       	fpmstart > /dev/null
     fi
 fi
 
