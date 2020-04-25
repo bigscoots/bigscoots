@@ -20,8 +20,10 @@ for WPATH in $(find /home/nginx/domains/*/public -maxdepth 1 -type d -name publi
 
 	if grep -q "^error_log" "${WPATH}"/.user.ini >/dev/null 2>&1; then
 	 	sed -i "/^error_log/c\error_log = ${PHPLOGFILE}" "${WPATH}"/.user.ini
+	 	fpmreload
  	else
  		echo "error_log = ${PHPLOGFILE}" >> "${WPATH}"/.user.ini
+ 		fpmreload
  	fi
 
  	chown nginx: "${WPATH}"/.user.ini
