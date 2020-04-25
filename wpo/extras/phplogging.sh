@@ -24,4 +24,6 @@ for WPATH in $(find /home/nginx/domains/*/public -maxdepth 1 -type d -name publi
  		echo "error_log = ${PHPLOGFILE}" >> "${WPATH}"/.user.ini
  	fi
 
+ 	chown nginx: "${WPATH}"/.user.ini
+
 done
