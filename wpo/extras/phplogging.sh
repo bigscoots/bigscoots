@@ -13,7 +13,9 @@ for WPATH in $(find /home/nginx/domains/*/public -maxdepth 1 -type d -name publi
 	PHPLOGFILE=$(echo "$WPATH" | sed 's/\/public/\/log\/php_error.log/g')
 
 	if [ ! -f "${WPATH}"/.user.ini ]; then
-		touch "${WPATH}"/.user.ini
+		if ! touch "${WPATH}"/.user.ini; then
+			echo "" | mail -s "Failed to create ${WPATH}.user.ini on  $HOSTNAME - leave for justin" monitor@bigscoots.com
+		fi
 	fi
 
 	if grep -q "^error_log" "${WPATH}"/.user.ini >/dev/null 2>&1; then
