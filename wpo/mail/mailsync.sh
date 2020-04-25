@@ -92,6 +92,11 @@ then
  				echo "{'status': 'error', 'msg': 'Connection issue for ${EMAIL} at BigScoots.'}"
 				exit 1
 			fi
+
+			if [[ "$OLDEMAILHOST" == *gmail* ]] && grep -q "Host1 failure.*AUTHENTICATIONFAILED*" LOG_imapsync/"${LOGFILE}" >/dev/null 2>&1; then
+ 				echo "{'status': 'error', 'msg': 'Please make sure Gmail/Gsuite has IMAP enabled: https://mail.google.com/mail/u/0/#settings/fwdandpop and then try again.'}"
+				exit 1
+			fi
  			
  			echo "{'status': 'error', 'msg': 'General Failure, unable to determine cause, please contact support.'}"
 			exit 1
