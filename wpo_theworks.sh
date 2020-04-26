@@ -218,6 +218,10 @@ if [ -d "wp-content/plugins/wp-rocket" ]; then
 
   fi
 
+  if ! grep -q block-all-mixed-content /usr/local/nginx/conf/rocket-nginx/default.conf >/dev/null 2>&1; then 
+    sed -i '/# Debug header/ a add_header Content-Security-Policy \"block-all-mixed-content;\";' /usr/local/nginx/conf/rocket-nginx/default.conf
+  fi
+
   if ! grep -q "rocket-nginx/default.conf" "${sslconf}" ; then
 
     sed -i '/rediscache_/a\ \ include /usr/local/nginx/conf/rocket-nginx/default.conf\;' "${sslconf}"

@@ -13,8 +13,8 @@ then
 	ps -ef | grep php-fpm |grep -v grep > /dev/null
 		if [ $? != 0 ]
 		then	
-       	/bin/fpmrestart > /dev/null
-       fi
+       	fpmstart > /dev/null
+    fi
 fi
 
 ps -ef | grep mysql |grep -v grep > /dev/null
