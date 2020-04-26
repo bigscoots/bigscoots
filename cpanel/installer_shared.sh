@@ -26,7 +26,7 @@ sleep 3
 yum groupremove -y "Mono" "Mail Server"
 
 DOMAIN=$(hostname | awk -F. '{print $2"."$3}')
-EMAIL="admin@$DOMAIN"
+EMAIL="justin@securedserverspace.com"
 IP=$(ip addr |grep inet |grep -Ev '127.0.0.1|192.168.|::1' | awk '{print $2}' | sed 's/\/.*//g' | head -1)
 
 cd /etc/sysconfig/network-scripts/ || exit
@@ -71,7 +71,7 @@ echo "$EMAIL" > /root/.forward
 
 mkdir -p /root/cpanel_profile
 cp -rf /bigscoots/cpanel.config /root/cpanel_profile/cpanel.config
-cp -rf /bigscoots/bigscoots.json /etc/cpanel_initial_install_ea4_profile.json
+cp -rf /bigscoots/cpanel/bigscoots_shared_def_ea4.json /etc/cpanel_initial_install_ea4_profile.json
 
 echo
 echo "######################################################"
@@ -79,8 +79,6 @@ echo "Disable iptables, update the server and set the timezone(Chicago)"
 echo "######################################################"
 sleep 3
 
-chkconfig iptables off
-service iptables stop
 yum -y update
 rm -f /etc/localtime
 ln -s /usr/share/zoneinfo/America/Chicago /etc/localtime
@@ -282,9 +280,6 @@ echo "alias wp='/opt/cpanel/ea-php70/root/usr/bin/php /usr/local/sbin/wp --allow
 crontab -l | { cat; echo "*/15 * * * * /bigscoots/mon_disk.sh"; } | crontab -
 sed -i 's/export PATH/export PATH\nexport EDITOR=nano/g' /root/.bash_profile
 
-curl -s https://repo.cloudlinux.com/kernelcare/kernelcare_install.sh | bash
-kcarectl --set-patch-type free --update
-
 {
   echo fs.enforce_symlinksifowner = 1
   echo fs.symlinkown_gid = 99
@@ -292,8 +287,6 @@ kcarectl --set-patch-type free --update
 
 sysctl -w fs.enforce_symlinksifowner=1
 sysctl -w fs.symlinkown_gid=99
-
-/usr/local/cpanel/bin/update-roundcube-sqlite-db --force
 
 echo
 echo "######################################################"
