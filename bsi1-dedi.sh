@@ -11,8 +11,18 @@ setenforce 0
 chkconfig ntpd on
 ntpdate pool.ntp.org
 /etc/init.d/ntpd start
+
 sysctl -w net.ipv6.conf.default.disable_ipv6=0
 sysctl -w net.ipv6.conf.all.disable_ipv6=0
+
+systemctl stop firewalld.service
+systemctl disable firewalld.service
+systemctl set-default multi-user.target
+
+if [ -f /etc/selinux/config ]; then
+sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config && setenforce 0
+sed -i 's/SELINUX=permissive/SELINUX=disabled/g' /etc/selinux/config && setenforce 0
+fi
 
 # Check for raid
 
@@ -57,5 +67,10 @@ sed -i 's/SELINUX=permissive/SELINUX=disabled/g' /etc/selinux/config && setenfor
 fi
 
 git clone https://github.com/jcatello/bigscoots /bigscoots
-/bigscoots/includes/keymebatman.sh
-/bigscoots/bsi2-dedi.sh
+bash /bigscoots/includes/keymebatman.sh
+
+if [ $1 = shared ]; then
+  bash /bigscoots/cpanel/installer_shared.sh
+else
+  bash /bigscoots/bsi2-dedi.sh
+fi
