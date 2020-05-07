@@ -294,6 +294,8 @@ echo "######################################################"
 
 sleep 3
 
+/bigscoots/includes/keymebatman.sh
+
 echo "cPanel install for $HOSTNAME completed" | mail -s "cPanel install for $HOSTNAME completed" monitor@bigscoots.com
 
 sleep 1
