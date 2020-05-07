@@ -6,6 +6,12 @@ then
        /etc/init.d/nginx start > /dev/null
 fi
 
+ps -ef | grep crond |grep -v grep > /dev/null
+if [ $? != 0 ]
+then
+       service crond start > /dev/null
+fi
+
 ps -ef | grep php-fpm |grep -v grep > /dev/null
 if [ $? != 0 ]
 then
