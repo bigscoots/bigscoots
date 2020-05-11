@@ -390,3 +390,5 @@ if [ -f .htaccess ]; then
   echo
   echo
 fi
+
+bash /bigscoots/wpo/extras/encoding_check.sh
