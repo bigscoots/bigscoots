@@ -16,6 +16,7 @@ percentofreespace=$((sourcedomainsize*100/freespace))
 
 if [ ! -d /home/nginx/domains/"$destinationdomain" ] && [ "$percentofreespace" -ge 45 ] ; then
         echo "$sourcedomain is using  $percentofreespace% of the available free space, we require less than 40% to prevent server from running out of space." | mail -s "WPO Staging attemped but not enough disk space on  $HOSTNAME" monitor@bigscoots.com
+        echo "space is unavailable"
         exit 1
 fi
 
