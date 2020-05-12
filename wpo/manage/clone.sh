@@ -141,7 +141,7 @@ if wp ${WPCLIFLAGS} plugin is-installed elementor --path="${destinationsitedocro
     wp ${WPCLIFLAGS} elementor flush_css --skip-plugins=$(wp ${WPCLIFLAGS} plugin list --format=csv --field=name --path="${destinationsitedocroot}" | paste -s -d, - | sed -r 's/,?elementor//g') --path="${destinationsitedocroot}"
 fi
 
-chown -R nginx: /home/nginx/domains/$destinationsite &
+chown -R nginx: /home/nginx/domains/$destinationsite >/dev/null 2>&1 &
 
 # Clear All Cache
 
