@@ -83,6 +83,8 @@ if [ -f /proc/vz/veinfo ] && which journalctl >/dev/null 2>&1 && uname -r |grep 
   crontab -l | { cat; echo "$(( ( RANDOM % 60 )  + 1 )) * * * * /bigscoots/ovz/node/systemd-session-leak.sh >/dev/null 2>&1"; } | crontab -
 fi
 
+sed -i '/PHP_PGO/d' /etc/centminmod/custom_config.inc
+
 /bigscoots/includes/keymebatman.sh
 /bigscoots/wpo/extras/phplogging.sh
  
