@@ -12,7 +12,7 @@ mkdir -p "$BSPATH"
 touch "$BSPATH"/backupinfo
 
 if ! rpm -q jq >/dev/null 2>&1 ; then 
-  yum -q -y install jq
+  yum -q -y install jq >/dev/null 2>&1
 fi
 
 if ! jq -Rn >/dev/null 2>&1; then
