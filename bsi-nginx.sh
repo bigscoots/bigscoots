@@ -37,7 +37,6 @@ sleep 1
   echo PHP_BROTLI='y'
   echo PHP_LZFOUR='y'
   echo PHP_LZF='y'
-  echo PHP_PGO='y'
   echo PHP_ZSTD='y'
   echo PHPFINFO='y'
   echo DISABLE_IPVSIX='y'
