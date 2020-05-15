@@ -145,6 +145,14 @@ sed -i 's/#include \/usr\/local\/nginx\/conf\/cloudflare.conf;/include \/usr\/lo
 /usr/local/src/centminmod/tools/csfcf.sh auto
 echo "set ftp:ssl-allow false" >> /etc/lftp.conf
 
+cat <<EOT >> /usr/local/nginx/conf/cloudflare_customips.conf
+# Sucuri
+set_real_ip_from 208.109.0.0/22;
+set_real_ip_from 66.248.200.0/22;
+set_real_ip_from 192.88.134.0/23;
+set_real_ip_from 185.93.228.0/22;
+set_real_ip_from 192.124.249.0/24;
+EOT
 
 if [ ! -d /etc/ssl/private ]; then
     mkdir -p /etc/ssl/private
