@@ -18,6 +18,7 @@ for WPATH in $(find /home/nginx/domains/*/public -maxdepth 1 -type d -name publi
         # Set the full path including filename of the PHP error_log.
 
         PHPLOGFILE=$(echo "$WPATH" | sed 's/\/public/\/log\/php_error.log/g')
+        MAILLOGFILE=$(echo "$WPATH" | sed 's/\/public/\/log\/php_mail.log/g')
 
         # if the .user.ini doesn't exist it will create it, if it fails to create, it will send you an email.
 
@@ -37,6 +38,17 @@ for WPATH in $(find /home/nginx/domains/*/public -maxdepth 1 -type d -name publi
 
         elif ! grep -q "error_log = ${PHPLOGFILE}" "${WPATH}"/.user.ini; then
                 echo "error_log = ${PHPLOGFILE}" >> "${WPATH}"/.user.ini
+                RELOADFPM=1
+        fi
+
+        if grep -q "^mail.log" "${WPATH}"/.user.ini && ! grep -q "mail.log = ${MAILLOGFILE}" "${WPATH}"/.user.ini >/dev/null 2>&1; then
+                sed -i "/^mail.log/c\mail.log = ${MAILLOGFILE}" "${WPATH}"/.user.ini
+                RELOADFPM=1
+
+        # adds the error_log option if it doesn't exist and reloads php-fpm
+
+        elif ! grep -q "mail.log = ${MAILLOGFILE}" "${WPATH}"/.user.ini; then
+                echo "mail.log = ${MAILLOGFILE}" >> "${WPATH}"/.user.ini
                 RELOADFPM=1
         fi
 
