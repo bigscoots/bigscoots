@@ -8,10 +8,10 @@ if grep "^cd /usr/local/nginx/html/" /root/tools/phpmyadmin_update.sh >/dev/null
 	$(grep "^cd /usr/local/nginx/html/" /root/tools/phpmyadmin_update.sh)
 	if echo $(pwd) |grep -q /usr/local/nginx/html/*_mysqladmin*; then
 		rm -rf !("config.inc.php") 
-		wget -q https://github.com/phpmyadmin/phpmyadmin/archive/STABLE.zip
-		unzip STABLE.zip 
-		mv phpmyadmin-STABLE/* . 
-		rm -rf phpmyadmin-STABLE* 
+		wget -q https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.zip
+		unzip phpMyAdmin-latest-all-languages.zip
+		mv phpMyAdmin-*/* . 
+		rm -rf phpMyAdmin-* 
 		chown -R nginx: . >/dev/null 2>&1
 		
 		nginx -t > /dev/null 2>&1
