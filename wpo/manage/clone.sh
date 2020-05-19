@@ -107,7 +107,7 @@ fi
 
 siteurl=$(wp ${WPCLIFLAGS} option get siteurl --path="${sourcesitedocroot}" --quiet | sed -r 's/https?:\/\///g')
 
-wp ${WPCLIFLAGS} search-replace "$siteurl" "$destinationsitereplace" --recurse-objects --skip-columns=guid --skip-tables="${wdpprefix}"users --path="${destinationsitedocroot}" --quiet
+wp ${WPCLIFLAGS} search-replace "$siteurl" "$destinationsitereplace" --recurse-objects --skip-columns=guid --skip-tables="${wdpprefix}"users --all-tables-with-prefix="${wdpprefix}" --path="${destinationsitedocroot}" --quiet
 
 if [ -n "$3" ] && [ -n "$4" ]; then
 
@@ -128,8 +128,8 @@ if [ -d "$destinationsitedocroot/wp-content/plugins/wp-rocket" ]; then
 
     if wp ${WPCLIFLAGS} plugin is-active wp-rocket --path="${destinationsitedocroot}"; then 
         rm -f "$destinationsitedocroot"/wp-content/advanced-cache.php
-        wp plugin ${WPCLIFLAGS} deactivate wp-rocket --path="${destinationsitedocroot}"
-        wp plugin ${WPCLIFLAGS} activate wp-rocket --path="${destinationsitedocroot}"
+        wp plugin ${WPCLIFLAGS} deactivate wp-rocket --path="${destinationsitedocroot}" >/dev/null 2>&1
+        wp plugin ${WPCLIFLAGS} activate wp-rocket --path="${destinationsitedocroot}" >/dev/null 2>&1
     fi
 fi
 
