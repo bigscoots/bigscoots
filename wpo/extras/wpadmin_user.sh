@@ -11,7 +11,8 @@ PASSWORD=$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c 20)
 WPCLIFLAGS="--allow-root --skip-plugins --skip-themes"
 
 # Ensure WP Exists
-if [[ ! -f 'wp-config.php' ]]; then
+# if [[ ! -f 'wp-config.php' ]]; then
+ if ! wp ${WPCLIFLAGS} core is-installed >/dev/null 2>&1; then
     echo "FAILURE! Unable to locate WordPress in current directory."
     exit 1
 fi
