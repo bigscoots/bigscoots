@@ -56,8 +56,13 @@ if wp ${WPCLIFLAGS} plugin is-installed wp-rocket --path="${wpinstall}"; then
     fi
   done
 
-  sed -i 's/#\?try_files /#try_files /g ; s/#try_files \$uri \$uri\/ \/index.php?\$/try_files \$uri \$uri\/ \/index.php?\$/g' "${sslconf}"
+  if grep -q 'add_header Cache-Control "no-cache, no-store, must-revalidate";' /usr/local/nginx/conf/rocket-nginx/default.conf ;then
+    sed -i 's/add_header Cache-Control "no-cache, no-store, must-revalidate";/add_header Cache-Control "public";/g' /usr/local/nginx/conf/rocket-nginx/default.conf
+    reloadconfig=1
+  fi
 
+  sed -i 's/#\?try_files /#try_files /g ; s/#try_files \$uri \$uri\/ \/index.php?\$/try_files \$uri \$uri\/ \/index.php?\$/g' "${sslconf}"
+  
   if [ "${reloadconfig}" == 1 ]; then
   nginx -t > /dev/null 2>&1
     if [ $? -eq 0 ]; then
