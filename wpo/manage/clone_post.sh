@@ -31,8 +31,8 @@ echo $targetpath
 
 mkdir -p ${targetpath}/tmp
 
-postidsource=$(wp ${WPCLIFLAGS} post list --field=ID --post_type=post --post_status=draft,publish,pending --name=${postname} --path=${sourcepath})
-postidtarget=$(wp ${WPCLIFLAGS} post list --field=ID --post_type=post --post_status=draft,publish,pending --name=${postname} --path=${targetpath})
+postidsource=$(wp ${WPCLIFLAGS} post list --field=ID --post_type=post --post_status=draft,publish,pending,future --name=${postname} --path=${sourcepath})
+postidtarget=$(wp ${WPCLIFLAGS} post list --field=ID --post_type=post --post_status=draft,publish,pending,future --name=${postname} --path=${targetpath})
 
 echo ${postidsource}
 echo ${postidtarget}
