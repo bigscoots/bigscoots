@@ -23,7 +23,7 @@ fi
 DOMAIN="$1"
 REMOTEHOST="$2"
 ####
-DOCROOT=/home/nginx/domains/${DOMAIN}/public
+DOCROOT="/home/nginx/domains/${DOMAIN}/public"
 REMOTEPORT=2222
 
 echo
@@ -47,7 +47,7 @@ echo
 echo "Checking SSH connection(requires SSH key)."
 echo
 
-if ssh -p ${REMOTEPORT} -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "exit" >/dev/null 2>&1; then
+if ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "exit" >/dev/null 2>&1; then
 	echo
 	echo "Connection Successful."
 	echo
@@ -64,11 +64,11 @@ echo "Checking to see if ${DOMAIN} already exists at ${REMOTEHOST}"
 echo
 
 
-if ssh -p ${REMOTEPORT} -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "[ -d /home/nginx/domains/${DOMAIN} ]"; then
+if ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "[ -d /home/nginx/domains/${DOMAIN} ]"; then
 	echo
 	echo "${DOMAIN} Exists, checking to see if it has a valid WordPress install."
 	echo
-	if ssh -p ${REMOTEPORT} -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "wp ${WPCLIFLAGS} core is-installed --path=${DOCROOT}" >/dev/null 2>&1;then
+	if ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "wp ${WPCLIFLAGS} core is-installed --path=${DOCROOT}" >/dev/null 2>&1;then
 		echo
 		echo "WordPress is ready to go!"
 		echo
@@ -84,7 +84,7 @@ else
 	echo "${DOMAIN} does not exist, creating ${DOMAIN} and wordpress install now."
 	echo
 
-	ssh -p ${REMOTEPORT} -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "/bigscoots/wpo/manage/createdomain.sh ${DOMAIN}"
+	ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "/bigscoots/wpo/manage/createdomain.sh ${DOMAIN}"
 
 	echo
 	echo
@@ -98,7 +98,7 @@ echo
 echo "Ensuring ${DOMAIN} exists on the destination server."
 echo
 
-if ssh -p ${REMOTEPORT} -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "[ ! -d /home/nginx/domains/${DOMAIN} ]"; then
+if ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "[ ! -d /home/nginx/domains/${DOMAIN} ]"; then
 	echo
 	echo "${DOMAIN} still doesnt exist on destiantion server, exiting."
 	echo
@@ -109,25 +109,6 @@ else
 	echo 
 fi
 
-
-echo
-echo "Pulling the destination DB Details from WodPress:"
-echo
-
-NEW_DB_NAME=$(ssh -p ${REMOTEPORT} -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "wp ${WPCLIFLAGS} config get DB_NAME --path=${DOCROOT}")
-echo "DB: ${NEW_DB_NAME}"
-
-NEW_DB_USER=$(ssh -p ${REMOTEPORT} -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "wp ${WPCLIFLAGS} config get DB_USER --path=${DOCROOT}")
-echo "DB User: ${NEW_DB_USER}"
-
-NEW_DB_PASSWORD=$(ssh -p ${REMOTEPORT} -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "wp ${WPCLIFLAGS} config get DB_PASSWORD --path=${DOCROOT}")
-echo "DB User Pass: ${NEW_DB_PASSWORD}"
-
-echo
-echo "Resetting the destination database."
-echo
-
-ssh -p ${REMOTEPORT} -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "wp ${WPCLIFLAGS} db reset --yes --path=${DOCROOT}"
 
 # source: 
 
@@ -158,6 +139,43 @@ echo
 rsync -ahv -e "ssh -p ${REMOTEPORT}" /usr/local/nginx/conf/ssl/"${DOMAIN}" "${REMOTEHOST}":/usr/local/nginx/conf/ssl/
 
 echo
+echo "Pulling the destination DB Details from WodPress:"
+echo
+
+NEW_DB_NAME=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${DOCROOT})
+echo "DB: ${NEW_DB_NAME}"
+
+NEW_DB_USER=$(wp ${WPCLIFLAGS} config get DB_USER --path=${DOCROOT})
+echo "DB User: ${NEW_DB_USER}"
+
+NEW_DB_PASSWORD=$(wp ${WPCLIFLAGS} config get DB_PASSWORD --path=${DOCROOT})
+echo "DB User Pass: ${NEW_DB_PASSWORD}"
+
+echo
+echo "Checking to see if database exists.."
+echo
+
+if ssh -p "${REMOTEPORT}" "${REMOTEHOST}" "mysql ${NEW_DB_NAME} -e \"show tables;\"" >/dev/null 2>&1; then
+	echo "Datbase exists.."
+else
+	echo "Database does not exist, creating it."
+	ssh -p "${REMOTEPORT}" "${REMOTEHOST}" "mysql -e \"CREATE DATABASE ${NEW_DB_NAME};\""
+fi
+
+echo
+echo "Creating db user"
+echo 
+
+mysql -e "grant all privileges on ${NEW_DB_NAME}.* to '${NEW_DB_USER}'@'localhost' identified by '${NEW_DB_PASSWORD}';"
+
+
+echo
+echo "Resetting the destination database."
+echo
+
+ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "wp ${WPCLIFLAGS} db reset --yes --path=${DOCROOT}"
+
+echo
 echo "Exporting and importing the database."
 echo
 
@@ -173,7 +191,7 @@ echo
 echo "Lets do one final sync of the files..."
 echo
 
-rsync -ahv -e "ssh -p ${REMOTEPORT}" --delete "${DOCROOT}"/ "${REMOTEHOST}":"${DOCROOT}"/
+# rsync -ahv -e "ssh -p ${REMOTEPORT}" --delete "${DOCROOT}"/ "${REMOTEHOST}":"${DOCROOT}"/
 
 echo
 echo
@@ -181,7 +199,7 @@ echo
 echo "Running wpo_theworks"
 echo
 
-ssh -p ${REMOTEPORT} -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "cd ${DOCROOT}/ ; bash /bigscoots/wpo_theworks.sh"
+ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "cd ${DOCROOT}/ ; bash /bigscoots/wpo_theworks.sh"
 
 echo
 echo
