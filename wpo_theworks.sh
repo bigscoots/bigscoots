@@ -181,6 +181,7 @@ rm -rfv wp-content/mu-plugins/SupportCenterMUAutoloader.php \
  wp-content/mu-plugins/site-management \
  wp-content/mu-plugins/sysmsg \
  wp-content/mu-plugins/wpe* \
+ wp-content/mu-plugins/nexcess-mapps* \
  wp-content/object-cache.php \
  wp-content/cache \
  wp-content/object-cache.php \
