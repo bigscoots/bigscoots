@@ -166,7 +166,7 @@ echo
 echo "Creating db user"
 echo 
 
-mysql -e "grant all privileges on ${NEW_DB_NAME}.* to '${NEW_DB_USER}'@'localhost' identified by '${NEW_DB_PASSWORD}';"
+ssh -p "${REMOTEPORT}" "${REMOTEHOST}" "mysql -e \"grant all privileges on ${NEW_DB_NAME}.* to '${NEW_DB_USER}'@'localhost' identified by '${NEW_DB_PASSWORD}';\""
 
 
 echo
