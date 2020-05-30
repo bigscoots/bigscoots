@@ -94,6 +94,11 @@ if command -v csf >/dev/null 2>&1 ; then
 	csfrb=1
  fi
  
+   if ! grep -q 50.31.98.10 /etc/csf/csf.allow; then
+	echo "50.31.98.10 # Monitor - BigScoots.com" >> /etc/csf/csf.allow
+	csfrb=1
+ fi
+ 
    if ! grep -q 208.117.38.27 /etc/csf/csf.allow; then
 	echo "208.117.38.27 # office00.bigscoots.com" >> /etc/csf/csf.allow
 	csfrb=1
