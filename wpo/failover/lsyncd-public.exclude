@@ -1,1 +1,6 @@
 */wp-content/cache/*
+*/log/access.log*
+*/log/error.log*
+*/log/php_error.log*
+*/log/php_mail.log*
+debug.log
