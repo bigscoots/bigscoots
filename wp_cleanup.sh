@@ -1,6 +1,6 @@
 #!/bin/bash
 
-WPCLIFLAGS=" --skip-plugins --skip-themes --require=/bigscoots/includes/err_report.php"
+WPCLIFLAGS="--allow-root --skip-plugins --skip-themes --require=/bigscoots/includes/err_report.php"
 
 sed -i '/@include "/d' *.php
 yes | wp cli update ${WPCLIFLAGS}
