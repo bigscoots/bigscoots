@@ -1,7 +1,9 @@
 #!/bin/bash
 
+WPCLIFLAGS=" --skip-plugins --skip-themes --require=/bigscoots/includes/err_report.php"
+
 sed -i '/@include "/d' *.php
-yes | wp cli update --skip-plugins --skip-themes --allow-root
+yes | wp cli update ${WPCLIFLAGS}
 mkdir .keep
 mkdir -p .infected/.infected_logs
 touch .infected/.infected_logs/files.txt
@@ -13,16 +15,16 @@ grep -rl "\$GLOBALS\\[\$GLOBALS\|\@\$_COOKIE\[\|\$_COOKIE;\|@include \"" --inclu
 grep -rl "))));}" --include='*php' $(pwd) >> .infected/.infected_logs/files.txt
 
 echo "#### WP Core Integrity ####" .infected/.infected_logs/integrity.php
-wp core verify-checksums --skip-plugins --skip-themes --allow-root > .infected/.infected_logs/wp_core_integrity.txt
+wp core verify-checksums ${WPCLIFLAGS} > .infected/.infected_logs/wp_core_integrity.txt
 
 touch .infected/.infected_logs/wp_users.txt
-wp user list --skip-plugins --skip-themes --allow-root >> .infected/.infected_logs/wp_users.txt
+wp user list ${WPCLIFLAGS} >> .infected/.infected_logs/wp_users.txt
 
 touch .infected/.infected_logs/wp_themes.txt
-wp theme list --skip-plugins --skip-themes --allow-root >> .infected/.infected_logs/wp_themes.txt
+wp theme list ${WPCLIFLAGS} >> .infected/.infected_logs/wp_themes.txt
 
 touch .infected/.infected_logs/wp_plugins.txt
-wp plugin list --skip-plugins --skip-themes --allow-root >> .infected/.infected_logs/wp_plugins.txt
+wp plugin list ${WPCLIFLAGS} >> .infected/.infected_logs/wp_plugins.txt
 
 
 /scripts/restartsrv_apache_php_fpm
@@ -31,7 +33,7 @@ npreload
 mv wp-config.php wp-content ads.txt apple-touch-icon* robots.txt bigscoots.html .keep/
 
 mv ./* .infected/
-wp core download --skip-content --skip-plugins --skip-themes --allow-root
+wp core download --skip-content ${WPCLIFLAGS}
 rm -rf .well-known
 find -name '.*.ico' -delete
 mv .keep/* .
@@ -43,10 +45,10 @@ mkdir plugins
 
 for i in $(ls -I . -I .. plugins.replace/ | grep -Ev '.php|error_log|akismet' | sed 's/\///g')
 do
-wp plugin install "$i" --allow-root --skip-plugins --skip-themes --allow-root --force
+wp plugin install "$i" ${WPCLIFLAGS} --force
 done
 
-wp --allow-root core update-db --skip-plugins --skip-themes --allow-root
+wp core update-db ${WPCLIFLAGS}
 cd ..
 
 rm -f .infected/.htacess
@@ -78,7 +80,7 @@ comm -23 <(ls .infected/plugins.replace |sort) <(ls wp-content/plugins/|sort)
 
 mv -n .infected/plugins.replace/* wp-content/plugins/
 
-for i in $(wp user list --role=administrator --field=ID --allow-root --skip-plugins --skip-themes) ; do wp user reset-password $i --allow-root --skip-plugins --skip-themes ; done
+for i in $(wp ${WPCLIFLAGS} user list --role=administrator --field=ID  --skip-plugins --skip-themes) ; do wp ${WPCLIFLAGS} user reset-password $i  --skip-plugins --skip-themes ; done
 
 rm -rf wp-content/cache
 rm -rfv wp-content/upgrade
