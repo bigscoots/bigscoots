@@ -91,9 +91,9 @@ WDPPREFIX=$(wp ${WPCLIFLAGS} config get table_prefix --path="${SOURCESITEDOCROOT
 wp ${WPCLIFLAGS} db reset --yes --path="${DESTINATIONSITEDOCROOT}" --quiet
 
 if wp ${WPCLIFLAGS} db tables "${WDPPREFIX}swp_*" --format=csv --all-tables --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" >/dev/null 2>&1; then
-    wp ${WPCLIFLAGS} db export - --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" --exclude_tables=$(wp ${WPCLIFLAGS} db tables "${WDPPREFIX}swp_*" --format=csv --all-tables --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}") --quiet --single-transaction --quick --lock-tables=false --max_allowed_packet=1G | sed "s/DEFINER=\`${SOURCESITEDBUSER}\`/DEFINER=\`${DESTINATIONSITEDBUSER}\`/g" | wp ${WPCLIFLAGS} --quiet db import - --path="${DESTINATIONSITEDOCROOT}" --quiet --force --max_allowed_packet=1G
+    wp ${WPCLIFLAGS} db export - --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" --exclude_tables=$(wp ${WPCLIFLAGS} db tables "${WDPPREFIX}swp_*" --format=csv --all-tables --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}") --quiet --single-transaction --quick --lock-tables=false --max_allowed_packet=1G --default-character-set=utf8mb4 | sed "s/DEFINER=\`${SOURCESITEDBUSER}\`/DEFINER=\`${DESTINATIONSITEDBUSER}\`/g" | wp ${WPCLIFLAGS} --quiet db import - --path="${DESTINATIONSITEDOCROOT}" --quiet --force --max_allowed_packet=1G
 else
-    wp ${WPCLIFLAGS} db export - --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" --quiet --single-transaction --quick --lock-tables=false --max_allowed_packet=1G | sed "s/DEFINER=\`${SOURCESITEDBUSER}\`/DEFINER=\`${DESTINATIONSITEDBUSER}\`/g" | wp ${WPCLIFLAGS} --quiet db import - --path="${DESTINATIONSITEDOCROOT}" --quiet --force --max_allowed_packet=1G    
+    wp ${WPCLIFLAGS} db export - --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" --quiet --single-transaction --quick --lock-tables=false --max_allowed_packet=1G --default-character-set=utf8mb4 | sed "s/DEFINER=\`${SOURCESITEDBUSER}\`/DEFINER=\`${DESTINATIONSITEDBUSER}\`/g" | wp ${WPCLIFLAGS} --quiet db import - --path="${DESTINATIONSITEDOCROOT}" --quiet --force --max_allowed_packet=1G    
 fi
 
 wp ${WPCLIFLAGS} config set table_prefix ${WDPPREFIX} --path="${DESTINATIONSITEDOCROOT}" --quiet

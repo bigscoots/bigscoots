@@ -182,9 +182,9 @@ echo
 WDPPREFIX=$(wp ${WPCLIFLAGS} config get table_prefix --path="${DOCROOT}")
 
 if wp ${WPCLIFLAGS} db tables "${WDPPREFIX}swp_*" --format=csv --all-tables --path="${DOCROOT}" >/dev/null 2>&1; then
-    wp ${WPCLIFLAGS} db export - --path="${DOCROOT}" --exclude_tables=$(wp ${WPCLIFLAGS} db tables "${WDPPREFIX}swp_*" --format=csv --all-tables --path="${DOCROOT}") --quiet --single-transaction --quick --lock-tables=false --max_allowed_packet=1G | wp ${WPCLIFLAGS} --quiet db import - --path="${DOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" --quiet --force --max_allowed_packet=1G
+    wp ${WPCLIFLAGS} db export - --path="${DOCROOT}" --exclude_tables=$(wp ${WPCLIFLAGS} db tables "${WDPPREFIX}swp_*" --format=csv --all-tables --path="${DOCROOT}") --quiet --single-transaction --quick --lock-tables=false --max_allowed_packet=1G --default-character-set=utf8mb4 | wp ${WPCLIFLAGS} --quiet db import - --path="${DOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" --quiet --force --max_allowed_packet=1G
 else
-    wp ${WPCLIFLAGS} db export - --path="${DOCROOT}" --quiet --single-transaction --quick --lock-tables=false --max_allowed_packet=1G | wp ${WPCLIFLAGS} --quiet db import - --path="${DOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" --quiet --force --max_allowed_packet=1G    
+    wp ${WPCLIFLAGS} db export - --path="${DOCROOT}" --quiet --single-transaction --quick --lock-tables=false --max_allowed_packet=1G --default-character-set=utf8mb4 | wp ${WPCLIFLAGS} --quiet db import - --path="${DOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" --quiet --force --max_allowed_packet=1G    
 fi
 
 echo
