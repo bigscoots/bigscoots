@@ -148,7 +148,7 @@ echo "DB: ${NEW_DB_NAME}"
 NEW_DB_USER=$(wp ${WPCLIFLAGS} config get DB_USER --path=${DOCROOT})
 echo "DB User: ${NEW_DB_USER}"
 
-NEW_DB_PASSWORD=$(wp ${WPCLIFLAGS} config get DB_PASSWORD --path=${DOCROOT})
+NEW_DB_PASSWORD=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32 ; echo '')
 echo "DB User Pass: ${NEW_DB_PASSWORD}"
 
 echo
@@ -168,6 +168,11 @@ echo
 
 ssh -p "${REMOTEPORT}" "${REMOTEHOST}" "mysql -e \"grant all privileges on ${NEW_DB_NAME}.* to '${NEW_DB_USER}'@'localhost' identified by '${NEW_DB_PASSWORD}';\""
 
+echo
+echo "Updating password in remote wp-config.php"
+echo 
+
+wp ${WPCLIFLAGS} config set DB_PASSWORD "${NEW_DB_PASSWORD}" --path="${DOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}"
 
 echo
 echo "Resetting the destination database."
