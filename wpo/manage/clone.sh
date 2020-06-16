@@ -138,7 +138,7 @@ if [ -f "$destinationsitedocroot"/.user.ini ]; then
 fi
 
 if wp ${WPCLIFLAGS} plugin is-installed elementor --path="${destinationsitedocroot}" >/dev/null 2>&1; then
-    wp ${WPCLIFLAGS} elementor flush_css --skip-plugins=$(wp ${WPCLIFLAGS} plugin list --format=csv --field=name --path="${destinationsitedocroot}" | paste -s -d, - | sed -r 's/,?elementor//g') --path="${destinationsitedocroot}"
+    wp ${WPCLIFLAGS} elementor flush_css --skip-plugins=$(wp ${WPCLIFLAGS} plugin list --format=csv --field=name --path="${destinationsitedocroot}" | paste -s -d, - | sed -r 's/,?elementor//g') --path="${destinationsitedocroot}" >/dev/null 2>&1
 fi
 
 chown -R nginx: /home/nginx/domains/$destinationsite >/dev/null 2>&1 &
