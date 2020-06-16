@@ -251,6 +251,13 @@ else
   
 fi
 
+if grep -q multisite=1 /root/.bigscoots/wp/options >/dev/null 2>&1; then
+  if [ ! -f /usr/local/nginx/conf/multisite.conf ]; then 
+    cp -rf /bigscoots/wpo/nginx/multisite.conf /usr/local/nginx/conf/
+  fi
+  sed -i '/location \/ {/i\ \ include /usr/local/nginx/conf/multisite.conf\;' "${sslconf}"
+fi
+
 sed -i 's=#include /usr/local/nginx/conf/cloudflare.conf;=include /usr/local/nginx/conf/cloudflare.conf;=g' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
 
 # CACHING
