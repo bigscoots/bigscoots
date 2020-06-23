@@ -219,10 +219,6 @@ if [ -d "wp-content/plugins/wp-rocket" ]; then
 
   fi
 
-  if ! grep -q block-all-mixed-content /usr/local/nginx/conf/rocket-nginx/default.conf >/dev/null 2>&1; then 
-    sed -i '/# Debug header/ a add_header Content-Security-Policy \"block-all-mixed-content;\";' /usr/local/nginx/conf/rocket-nginx/default.conf
-  fi
-
   if ! grep -q "rocket-nginx/default.conf" "${sslconf}" ; then
 
     sed -i '/rediscache_/a\ \ include /usr/local/nginx/conf/rocket-nginx/default.conf\;' "${sslconf}"
@@ -258,7 +254,11 @@ if grep -q multisite=1 /root/.bigscoots/wp/options >/dev/null 2>&1; then
   sed -i '/location \/ {/i\ \ include /usr/local/nginx/conf/multisite.conf\;' "${sslconf}"
 fi
 
-sed -i 's=#include /usr/local/nginx/conf/cloudflare.conf;=include /usr/local/nginx/conf/cloudflare.conf;=g' /usr/local/nginx/conf/conf.d/"$(pwd | sed 's/\// /g' | awk '{print $4}')".ssl.conf
+if ! grep -q block-all-mixed-content "${sslconf}" >/dev/null 2>&1; then 
+  sed -i '/add_header Alternate-Protocol/ a \  add_header Content-Security-Policy \"block-all-mixed-content;\";' "${sslconf}"
+fi
+
+sed -i 's=#include /usr/local/nginx/conf/cloudflare.conf;=include /usr/local/nginx/conf/cloudflare.conf;=g' "${sslconf}"
 
 # CACHING
 
