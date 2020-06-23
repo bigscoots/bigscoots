@@ -27,7 +27,7 @@ if wp ${WPCLIFLAGS} plugin is-installed wp-rocket --path="${wpinstall}"; then
   if [ ! -d "/usr/local/nginx/conf/rocket-nginx" ]; then
     bringmeback=$(pwd)
     cd /usr/local/nginx/conf/ || exit
-    git clone https://github.com/maximejobin/rocket-nginx.git
+    git clone https://github.com/jcatello/rocket-nginx
     cd rocket-nginx || exit
     cp rocket-nginx.ini.disabled rocket-nginx.ini
     php rocket-parser.php

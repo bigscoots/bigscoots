@@ -137,7 +137,7 @@ echo -e "\n" | ssh-keygen -t rsa -N "" -b 4096
 wget -O /usr/local/src/centminmod/inc/wpsetup.inc https://raw.githubusercontent.com/jcatello/centminmod/master/inc/wpsetup.inc
 
 cd /usr/local/nginx/conf/
-git clone https://github.com/maximejobin/rocket-nginx.git
+git clone https://github.com/jcatello/rocket-nginx
 cd rocket-nginx
 cp rocket-nginx.ini.disabled rocket-nginx.ini
 /usr/local/bin/php rocket-parser.php
