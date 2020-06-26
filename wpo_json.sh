@@ -42,6 +42,16 @@ if [ ! -d /usr/local/nginx/html/*mysqladmin* ]; then
   sed -i 's/#include \/usr\/local\/nginx\/conf\/php.conf/include \/usr\/local\/nginx\/conf\/php.conf/g' /usr/local/nginx/conf/conf.d/phpmyadmin_ssl.conf
 fi < /dev/null > /dev/null 2>&1
 
+if grep -q wpo-template.bigscoots-wpo.com /usr/local/nginx/conf/conf.d/virtual.conf ; then
+  sed -i "s/wpo-template.bigscoots-wpo.com/${HOSTNAME}/g" /usr/local/nginx/conf/conf.d/virtual.conf
+  nginx -t > /dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    npreload > /dev/null 2>&1
+  else
+    nginx -t 2>&1 | mail -s "WPO URGENT - Nginx conf fail during updating /usr/local/nginx/conf/conf.d/virtual.conf to replace hostname -  $HOSTNAME" monitor@bigscoots.com
+  fi
+fi < /dev/null > /dev/null 2>&1
+
 pmadirectory=$(echo /usr/local/nginx/html/*mysqladmin* | sed 's/\/usr\/local\/nginx\/html\///g' | head -1)
 
 if [ -z "$1" ]
