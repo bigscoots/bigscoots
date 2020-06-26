@@ -21,21 +21,26 @@ if [ ! -f "/root/.wpocf" ] || [ ! -s "/root/.wpocf" ]
     :
  fi
 
+
 if [ ! -d /usr/local/nginx/html/*mysqladmin* ]; then
-  cd /usr/local/src/centminmod/addons
+  cd /usr/local/src/centminmod/addons 
   wget --no-check-certificate https://github.com/centminmod/phpmyadmin/raw/master/phpmyadmin.sh -O phpmyadmin.sh
   chmod 0700 /usr/local/src/centminmod/addons/phpmyadmin.sh
   bash phpmyadmin.sh install
+  if [ ! -d /usr/local/nginx/html/*mysqladmin* ]; then
+    rm -f /usr/local/nginx/conf/phpmyadmin_check
+    rm -f /usr/local/nginx/conf/conf.d/phpmyadmin_ssl.conf
+    bash /usr/local/src/centminmod/addons/phpmyadmin.sh install
     if [ ! -d /usr/local/nginx/html/*mysqladmin* ]; then
-      rm -f /usr/local/nginx/conf/phpmyadmin_check
-      rm -f /usr/local/nginx/conf/conf.d/phpmyadmin_ssl.conf
-      bash /usr/local/src/centminmod/addons/phpmyadmin.sh install
-        if [ ! -d /usr/local/nginx/html/*mysqladmin* ]; then
-          echo "" | mail -s "WPO /bigscoots/wpo_json.sh failed because of phpmyadmin -  $HOSTNAME" monitor@bigscoots.com
-          exit 
-        fi
+        echo "" | mail -s "WPO /bigscoots/wpo_json.sh failed because of phpmyadmin -  $HOSTNAME" monitor@bigscoots.com
+        exit
     fi
-fi
+  fi
+  sed -i 's/listen 443 ssl spdy/listen 443 ssl http2/g' /usr/local/nginx/conf/conf.d/phpmyadmin_ssl.conf
+  sed -i 's/spdy_headers_comp/#spdy_headers_comp/g' /usr/local/nginx/conf/conf.d/phpmyadmin_ssl.conf
+  sed -i 's/return 302/#return 302/g' /usr/local/nginx/conf/conf.d/phpmyadmin_ssl.conf
+  sed -i 's/#include \/usr\/local\/nginx\/conf\/php.conf/include \/usr\/local\/nginx\/conf\/php.conf/g' /usr/local/nginx/conf/conf.d/phpmyadmin_ssl.conf
+fi < /dev/null > /dev/null 2>&1
 
 pmadirectory=$(echo /usr/local/nginx/html/*mysqladmin* | sed 's/\/usr\/local\/nginx\/html\///g' | head -1)
 
