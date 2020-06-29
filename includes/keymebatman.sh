@@ -30,8 +30,6 @@ if grep -q S5qT6GvSkOF7FZKW7ByEuoycWDKnp7rsDOmmPgeSze1mMbPiNYgcub169sfWrZzPpOUnf
 	sed -i '/S5qT6GvSkOF7FZKW7ByEuoycWDKnp7rsDOmmPgeSze1mMbPiNYgcub169sfWrZzPpOUnfhPJq7fQQbSect8G2H2M1v8mk8lVEBfhYHZ+COR0AnKAMHG/d ; /Office 8 - BigScoots.com/d' ~/.ssh/authorized_keys
 fi
 
-NathanLopez
-
 if grep -q NathanLopez ~/.ssh/authorized_keys; then
 
 	sed -i '/NathanLopez/d ; /Office 5 - BigScoots.com/d' ~/.ssh/authorized_keys
