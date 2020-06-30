@@ -279,14 +279,10 @@ sed -i 's=#include /usr/local/nginx/conf/cloudflare.conf;=include /usr/local/ngi
 
 # Add to the end of the wpconfig.php for object cache
 
-if [ ! -f bigscoots.html ]; then
+if [ ! -f bigscoots.php ]; then
 
-{
-  echo "Congratulations! If you can see this, you are seeing your site load on a BigScoots server."
-  echo "<p>"
-  echo "<a href=\"/\"> Click here to go back to the homepage </a>"
-} >> bigscoots.html
-chown nginx: bigscoots.html
+rsync -ahv /bigscoots/includes/bigscoots.php  .
+chown nginx: bigscoots.php
 
 fi
 
