@@ -1,6 +1,6 @@
 <?php
 // Let's get the server IP
-$serverIP = gethostbyname( gethostname() );
+$serverIP = $_SERVER['SERVER_ADDR'];
 
 // Pass the server IP to the API to check if it is a BigScoots IP
 $ch = curl_init("https://www.bigscoots.com/hosting-server-check/server-check.php?ip={$serverIP}");
