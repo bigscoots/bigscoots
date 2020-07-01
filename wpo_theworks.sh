@@ -12,6 +12,14 @@ exit_on_error() {
 date=$(date "+%Y-%m-%dT%H_%M_%S")
 WPCLIFLAGS="--allow-root --skip-plugins --skip-themes --require=/bigscoots/includes/err_report.php"
 
+if [ -f /etc/csf/csf.allow ] && ! grep -q 67.202.70.92 /etc/csf/csf.allow; then
+    csf -a 67.202.70.92
+fi
+
+if [ -f /etc/csf/csf.allow ] && ! grep -q 69.162.173.37 /etc/csf/csf.allow; then 
+    csf -a 69.162.173.37
+fi
+
 # Pre-checks
 # remove add_filter should be used in a mu-plugin, otherwise breaks wp-cli
 
