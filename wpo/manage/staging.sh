@@ -8,7 +8,7 @@ sourcedomain="$1"
 destinationdomain="$2"
 skip=0
 
-if [ $3 == skip ]; then 
+if [ "$3" == skip ]; then 
     skip=1
 fi
 
