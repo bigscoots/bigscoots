@@ -6,18 +6,27 @@
 BSPATH=/root/.bigscoots
 sourcedomain="$1"
 destinationdomain="$2"
+skip=0
+
+if [ $3 == skip ]; then 
+    skip=1
+fi
 
 mkdir -p "${BSPATH}"/rsync/"${destinationdomain}"
 touch "${BSPATH}"/rsync/"${destinationdomain}"/exclude "${BSPATH}"/rsync/exclude
 
-sourcedomainsize="$(du --exclude-from="${BSPATH}"/rsync/exclude --exclude-from="${BSPATH}"/rsync/"${destinationdomain}"/exclude --exclude updraft --exclude ai1wm-backups --exclude cache -s /home/nginx/domains/"$sourcedomain" | awk '{print $1}')"
-freespace="$(df -k / | tr -s ' ' | cut -d" " -f 4 | grep -v Available)"
-percentofreespace=$((sourcedomainsize*100/freespace))
+if [ "$skip" = 0 ]; then
 
-if [ ! -d /home/nginx/domains/"$destinationdomain" ] && [ "$percentofreespace" -ge 45 ] ; then
+    sourcedomainsize="$(du --exclude-from="${BSPATH}"/rsync/exclude --exclude-from="${BSPATH}"/rsync/"${destinationdomain}"/exclude --exclude updraft --exclude ai1wm-backups --exclude cache -s /home/nginx/domains/"$sourcedomain" | awk '{print $1}')"
+    freespace="$(df -k / | tr -s ' ' | cut -d" " -f 4 | grep -v Available)"
+    percentofreespace=$((sourcedomainsize*100/freespace))
+
+    if [ ! -d /home/nginx/domains/"$destinationdomain" ] && [ "$percentofreespace" -ge 45 ] ; then
         echo "$sourcedomain is using  $percentofreespace% of the available free space, we require less than 40% to prevent server from running out of space." | mail -s "WPO Staging attemped but not enough disk space on  $HOSTNAME" monitor@bigscoots.com
         echo "space is unavailable"
         exit 1
+    fi
+
 fi
 
 if [ ! -d /home/nginx/domains/"$destinationdomain" ] ; then
