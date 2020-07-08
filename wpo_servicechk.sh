@@ -28,6 +28,7 @@ if [ $? != 0 ]
 then
        /etc/init.d/mysql start > /dev/null 
 fi
+
 ps -ef | grep redis |grep -v grep > /dev/null
 if [ $? != 0 ]
 then
@@ -35,5 +36,15 @@ then
    /etc/init.d/redis start > /dev/null
      else
       systemctl start redis > /dev/null
+   fi
+fi
+
+ps -ef | grep postfix |grep -v grep > /dev/null
+if [ $? != 0 ]
+then
+   if [ -f /etc/init.d/postfix ]; then
+   /etc/init.d/posfix start > /dev/null
+     else
+      systemctl start postfix > /dev/null
    fi
 fi
