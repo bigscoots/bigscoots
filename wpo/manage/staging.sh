@@ -17,7 +17,21 @@ touch "${BSPATH}"/rsync/"${destinationdomain}"/exclude "${BSPATH}"/rsync/exclude
 
 if [ "$skip" == 0 ]; then
 
-    sourcedomainsize="$(du --exclude-from="${BSPATH}"/rsync/exclude --exclude-from="${BSPATH}"/rsync/"${destinationdomain}"/exclude --exclude updraft --exclude ai1wm-backups --exclude cache -s /home/nginx/domains/"$sourcedomain" | awk '{print $1}')"
+    sourcedomainsize="$(du \
+    --exclude-from="${BSPATH}"/rsync/exclude \
+    --exclude-from="${BSPATH}"/rsync/"${destinationdomain}"/exclude \
+    --exclude 'wp-content/uploads/backupbuddy*' \
+    --exclude 'wp-content/backup*' \
+    --exclude wp-content/uploads/backup \
+    --exclude wp-content/uploads/backup-guard \
+    --exclude wp-snapshots \
+    --exclude wp-content/ai1wm-backups \
+    --exclude wp-content/uploads/ShortpixelBackups \
+    --exclude wp-content/backup-db \
+    --exclude wp-content/updraft \
+    --exclude wp-content/cache \
+    --exclude wp-content/wpbackitup_backups \
+    -s /home/nginx/domains/"$sourcedomain" | awk '{print $1}')"
     freespace="$(df -k / | tr -s ' ' | cut -d" " -f 4 | grep -v Available)"
     percentofreespace=$((sourcedomainsize*100/freespace))
 
