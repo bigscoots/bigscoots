@@ -29,7 +29,7 @@ change_password)
 id="$3"
 password="$4"
 
-wp ${WPCLIFLAGS} user update "$id" --user_pass="$password" --path=/home/nginx/domains/"$domain"/public
+wp ${WPCLIFLAGS} user update "$id" --user_pass="$password" --path=/home/nginx/domains/"$domain"/public --skip-email
 
 ;;
 add_admin)
