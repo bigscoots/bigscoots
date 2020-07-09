@@ -9,7 +9,7 @@ list_plugins)
 
 # /bigscoots/wpo/manage/plugins.sh list_plugins ${DOMAIN}
 
-wp ${WPCLIFLAGS} plugin list --fields=name,title,status,update,version,update_version --format=json --path=/home/nginx/domains/"$domain"/public
+wp --allow-root --skip-themes plugin list --fields=name,title,status,update,version,update_version --format=json --path=/home/nginx/domains/"$domain"/public
 
 ;;
 update_plugin)
@@ -18,7 +18,7 @@ update_plugin)
 
 plugin="$3"
 
-wp ${WPCLIFLAGS} plugin update "$plugin" --path=/home/nginx/domains/"$domain"/public
+wp --allow-root --skip-themes plugin update "$plugin" --path=/home/nginx/domains/"$domain"/public
 
 ;;
 toggle_plugin)
