@@ -29,7 +29,7 @@ if ! sourcesitedb=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${sourcesitedocro
         fi
     fi
     # exit 1
-fi
+fi < /dev/null 2> /dev/null
 
 if ! destinationsitedb=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${destinationsitedocroot} 2>&1); then
     if [ $? -eq 255 ]; then
@@ -40,9 +40,9 @@ if ! destinationsitedb=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${destinatio
         fi
     fi
     exit 1
-fi
+fi < /dev/null 2> /dev/null
 
-if [[ $sourcesitedb == $destinationsitedb ]]; then
+if [[ $sourcesitedb == "$destinationsitedb" ]]; then
     if ! wp ${WPCLIFLAGS} config set DB_NAME "$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16)" --path=${destinationsitedocroot} 2>&1; then
         exit
     fi
@@ -55,7 +55,7 @@ if [[ $sourcesitedb == $destinationsitedb ]]; then
     if ! wp ${WPCLIFLAGS} db create 2>&1; then
         exit
     fi
-fi
+fi < /dev/null 2> /dev/null
 
 mkdir -p "${BSPATH}"/rsync/"${destinationsite}"
 touch "${BSPATH}"/rsync/"${destinationsite}"/exclude "${BSPATH}"/rsync/exclude
@@ -77,22 +77,22 @@ rsync -aqhv --delete \
 --exclude-from="${BSPATH}"/rsync/"${destinationsite}"/exclude \
 "$sourcesitedocroot/" "$destinationsitedocroot/"
 
-destinationsitereplace=$(wp ${WPCLIFLAGS} option get siteurl --path="${destinationsitedocroot}" --quiet | sed -r 's/https?:\/\///g')
+destinationsitereplace=$(wp ${WPCLIFLAGS} option get siteurl --path="${destinationsitedocroot}" --quiet 2> /dev/null | sed -r 's/https?:\/\///g')
 
 
 sourcesitedbuser=$(wp ${WPCLIFLAGS} config get DB_USER --path="${sourcesitedocroot}")
 destinationsitedbuser=$(wp ${WPCLIFLAGS} config get DB_USER --path="${destinationsitedocroot}")
 wdpprefix=$(wp ${WPCLIFLAGS} config get table_prefix --path="${sourcesitedocroot}")
 
-wp ${WPCLIFLAGS} db reset --yes --path="${destinationsitedocroot}" --quiet
+wp ${WPCLIFLAGS} db reset --yes --path="${destinationsitedocroot}" --quiet 2> /dev/null
 
 if wp ${WPCLIFLAGS} db tables "${wdpprefix}swp_*" --format=csv --all-tables --path="${sourcesitedocroot}" >/dev/null 2>&1; then
     wp ${WPCLIFLAGS} db export - --path="${sourcesitedocroot}" --exclude_tables=$(wp ${WPCLIFLAGS} db tables "${wdpprefix}swp_*" --format=csv --all-tables --path="${sourcesitedocroot}") --quiet --single-transaction --quick --lock-tables=false --max_allowed_packet=1G --default-character-set=utf8mb4 | sed "s/DEFINER=\`${sourcesitedbuser}\`/DEFINER=\`${destinationsitedbuser}\`/g" | wp ${WPCLIFLAGS} --quiet db import - --path="${destinationsitedocroot}" --quiet --force --max_allowed_packet=1G
 else
     wp ${WPCLIFLAGS} db export - --path="${sourcesitedocroot}" --quiet --single-transaction --quick --lock-tables=false --max_allowed_packet=1G --default-character-set=utf8mb4 | sed "s/DEFINER=\`${sourcesitedbuser}\`/DEFINER=\`${destinationsitedbuser}\`/g" | wp ${WPCLIFLAGS} --quiet db import - --path="${destinationsitedocroot}" --quiet --force --max_allowed_packet=1G    
-fi
+fi < /dev/null 2> /dev/null
 
-wp ${WPCLIFLAGS} config set table_prefix ${wdpprefix} --path="${destinationsitedocroot}" --quiet
+wp ${WPCLIFLAGS} config set table_prefix ${wdpprefix} --path="${destinationsitedocroot}" --quiet 2> /dev/null
 
 if wp ${WPCLIFLAGS} config get WP_SITEURL --path="${sourcesitedocroot}" >/dev/null 2>&1; then
 
@@ -103,11 +103,11 @@ if wp ${WPCLIFLAGS} config get WP_SITEURL --path="${sourcesitedocroot}" >/dev/nu
       wp ${WPCLIFLAGS} search-replace "$wpdbwpsiteurl" "$destinationsitereplace" --recurse-objects --skip-tables="${wdpprefix}"users --path="${destinationsitedocroot}" --quiet
     fi
 
-fi
+fi < /dev/null 2> /dev/null
 
-siteurl=$(wp ${WPCLIFLAGS} option get siteurl --path="${sourcesitedocroot}" --quiet | sed -r 's/https?:\/\///g')
+siteurl=$(wp ${WPCLIFLAGS} option get siteurl --path="${sourcesitedocroot}" --quiet 2> /dev/null | sed -r 's/https?:\/\///g')
 
-wp ${WPCLIFLAGS} search-replace "$siteurl" "$destinationsitereplace" --recurse-objects --skip-tables="${wdpprefix}"users --all-tables-with-prefix="${wdpprefix}" --path="${destinationsitedocroot}" --quiet
+wp ${WPCLIFLAGS} search-replace "$siteurl" "$destinationsitereplace" --recurse-objects --skip-tables="${wdpprefix}"users --all-tables-with-prefix="${wdpprefix}" --path="${destinationsitedocroot}" --quiet 2> /dev/null
 
 if [ -n "$3" ] && [ -n "$4" ]; then
 
@@ -131,7 +131,7 @@ if [ -d "$destinationsitedocroot/wp-content/plugins/wp-rocket" ]; then
         wp plugin ${WPCLIFLAGS} deactivate wp-rocket --path="${destinationsitedocroot}" >/dev/null 2>&1
         wp plugin ${WPCLIFLAGS} activate wp-rocket --path="${destinationsitedocroot}" >/dev/null 2>&1
     fi
-fi
+fi < /dev/null 2> /dev/null
 
 if [ -f "$destinationsitedocroot"/.user.ini ]; then
     sed -i "s/$sourcesite/$destinationsite/g" "$destinationsitedocroot"/.user.ini
@@ -139,7 +139,7 @@ fi
 
 if wp ${WPCLIFLAGS} plugin is-installed elementor --path="${destinationsitedocroot}" >/dev/null 2>&1; then
     wp ${WPCLIFLAGS} elementor flush_css --skip-plugins=$(wp ${WPCLIFLAGS} plugin list --format=csv --field=name --path="${destinationsitedocroot}" | paste -s -d, - | sed -r 's/,?elementor//g') --path="${destinationsitedocroot}" >/dev/null 2>&1
-fi
+fi < /dev/null 2> /dev/null
 
 chown -R nginx: /home/nginx/domains/$destinationsite >/dev/null 2>&1 &
 
