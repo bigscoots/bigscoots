@@ -41,6 +41,7 @@ fupdate() {
 
 ######################################################
 fupdate
+unset reload
 
 if [ -f /usr/local/src/centminmod/centmin.sh ] ; then 
 
@@ -69,23 +70,36 @@ if [ -f /usr/local/src/centminmod/centmin.sh ] ; then
 
   if ! grep ^opcache.revalidate_freq=0 /etc/centminmod/php.d/zendopcache.ini  >/dev/null 2>&1; then 
   sed -i '/^opcache.revalidate_freq/c\opcache.revalidate_freq=0' /etc/centminmod/php.d/zendopcache.ini
-  npreload
+  reload=1
   fi
 
   if grep \;request_slowlog_timeout /usr/local/etc/php-fpm.conf >/dev/null 2>&1 ; then 
   sed -i '/;request_slowlog_timeout/c\request_slowlog_timeout = 20' /usr/local/etc/php-fpm.conf
-  fpmreload
+  reload=1
   fi
  
 fi
+
+# hack to stop systemd sessions from stacking and causing slowness
  
 if [ -f /proc/vz/veinfo ] && which journalctl >/dev/null 2>&1 && uname -r |grep -q ^3 &&  ! crontab -l | grep /bigscoots/ovz/node/systemd-session-leak.sh >/dev/null 2>&1; then
   crontab -l | { cat; echo "$(( ( RANDOM % 60 )  + 1 )) * * * * /bigscoots/ovz/node/systemd-session-leak.sh >/dev/null 2>&1"; } | crontab -
+fi
+
+# Disable serving webp due to Cloudflare
+
+if [ -f /usr/local/src/centminmod/config/nginx/webp.conf ] && grep -q '".webp";' /usr/local/src/centminmod/config/nginx/webp.conf; then 
+        sed -i 's/".webp";/"";/g' /usr/local/src/centminmod/config/nginx/webp.conf
+	reload=1
 fi
 
 sed -i '/PHP_PGO/d' /etc/centminmod/custom_config.inc
 
 /bigscoots/includes/keymebatman.sh
 /bigscoots/wpo/extras/phplogging.sh
+
+if [ "${reload}" == 1 ]; then
+	npreload
+fi
  
 exit
