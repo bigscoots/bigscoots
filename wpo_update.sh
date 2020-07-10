@@ -88,8 +88,8 @@ fi
 
 # Disable serving webp due to Cloudflare
 
-if [ -f /usr/local/src/centminmod/config/nginx/webp.conf ] && grep -q '".webp";' /usr/local/src/centminmod/config/nginx/webp.conf; then 
-        sed -i 's/".webp";/"";/g' /usr/local/src/centminmod/config/nginx/webp.conf
+if [ -f /usr/local/nginx/conf/webp.conf ] && grep -q '".webp";' /usr/local/nginx/conf/webp.conf; then 
+        sed -i 's/".webp";/"";/g' /usr/local/nginx/conf/webp.conf
 	reload=1
 fi
 
