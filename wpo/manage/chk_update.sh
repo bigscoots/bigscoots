@@ -22,7 +22,11 @@ if [ -f /etc/centminmod-release ]; then
 	mkdir -p /bigscoots
 	cd /bigscoots
 	git stash
-	git pull
+	if ! git pull ; then
+		cd /
+		rm -rf /bigscoots
+		git clone https://github.com/jcatello/bigscoots
+	fi
 	expect /bigscoots/wpo/manage/expect/imagick
 	yum clean all
 	yum update -y --disableplugin=priorities --setopt=deltarpm=0 --enablerepo=remi
