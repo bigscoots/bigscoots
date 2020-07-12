@@ -14,7 +14,6 @@ if [ -f /etc/centminmod-release ]; then
 		crontab -l | { cat; echo "* * * * * /bigscoots/wpo_servicechk.sh >/dev/null 2>&1"; } | crontab -
 	fi
 
-
 	if rpm -qa |grep -q libwebp-devel; then 
 		yum -y remove libwebp-devel
 	fi
@@ -27,6 +26,8 @@ if [ -f /etc/centminmod-release ]; then
 		rm -rf /bigscoots
 		git clone https://github.com/jcatello/bigscoots
 	fi
+
+	yum remove ImageMagick* -y
 	expect /bigscoots/wpo/manage/expect/imagick
 	yum clean all
 	yum update -y --disableplugin=priorities --setopt=deltarpm=0 --enablerepo=remi
