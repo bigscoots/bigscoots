@@ -27,6 +27,15 @@ if [ -f /etc/centminmod-release ]; then
 		git clone https://github.com/jcatello/bigscoots
 	fi
 
+	if ! /usr/bin/cmupdate; then
+		expect /bigscoots/wpo/manage/expect/cmmupdate
+		cd /usr/local/src/centminmod
+		expect /bigscoots/wpo/manage/expect/cmmupdate
+	else
+		cd /usr/local/src/centminmod
+		expect /bigscoots/wpo/manage/expect/cmmupdate
+	fi 
+
 	yum remove ImageMagick* -y
 	expect /bigscoots/wpo/manage/expect/imagick
 	yum clean all
