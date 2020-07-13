@@ -30,6 +30,7 @@ if [ ! -f "$BSPATH"/rsync/exclude ]; then
   echo "log/error.log*"
   echo "*/core.[0-9]*"
   echo "*/error_log"
+  echo "debug.log"
   echo "*/wp-content/updraft"
   echo "*/wp-content/cache"
   echo "*/wp-content/wpbackitup_backups"

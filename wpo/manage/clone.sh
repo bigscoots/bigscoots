@@ -68,6 +68,7 @@ rsync -aqhv --delete \
 --exclude wp-snapshots \
 --exclude wp-content/ai1wm-backups \
 --exclude wp-config.php \
+--exclude debug.log \
 --exclude wp-content/uploads/ShortpixelBackups \
 --exclude wp-content/backup-db \
 --exclude wp-content/updraft \
