@@ -1,0 +1,29 @@
+#!/usr/bin/expect -f
+
+
+set force_conservative 1  ;# set to 1 to force conservative mode even if
+                          ;# script wasn't run conservatively originally
+if {$force_conservative} {
+        set send_slow {1 .1}
+        proc send {ignore arg} {
+                sleep 1
+                exp_send -s -- $arg
+        }
+}
+
+set timeout -1
+spawn centmin
+expect "Enter option"
+send -- "4\r"
+expect "[y/n]"
+send -- "n\r"
+expect "Nginx Upgrade - Would you like to continue"
+send -- "y\r"
+expect "Install which version of Nginx"
+send -- "\r"
+expect "Do you still want to continue"
+send -- "y\r"
+expect "Enter option"
+send -- "23\r"
+expect "Enter option"
+send -- "2\r"
