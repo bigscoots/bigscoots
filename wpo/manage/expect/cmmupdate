@@ -18,13 +18,13 @@
 # character to toggle this mode off and on.
 
 set force_conservative 0  ;# set to 1 to force conservative mode even if
-			  ;# script wasn't run conservatively originally
+                          ;# script wasn't run conservatively originally
 if {$force_conservative} {
-	set send_slow {1 .1}
-	proc send {ignore arg} {
-		sleep .1
-		exp_send -s -- $arg
-	}
+        set send_slow {1 .1}
+        proc send {ignore arg} {
+                sleep .1
+                exp_send -s -- $arg
+        }
 }
 
 #
@@ -45,49 +45,8 @@ if {$force_conservative} {
 set timeout -1
 spawn centmin
 match_max 100000
-expect "/usr/local/src/centminmod /\r
-\r
-\[1;33;40m--------------------------------------------------------\r
-(B\[m\[1;32;40m     Centmin Mod Menu 123.09beta01 centminmod.com     \r
-(B\[m\[1;33;40m--------------------------------------------------------\r
-(B\[m\[1;32;40m1).  Centmin Install\r
-(B\[m\[1;32;40m2).  Add Nginx vhost domain\r
-(B\[m\[1;32;40m3).  NSD setup domain name DNS\r
-(B\[m\[1;32;40m4).  Nginx Upgrade / Downgrade\r
-(B\[m\[1;32;40m5).  PHP Upgrade / Downgrade\r
-(B\[m\[1;32;40m6).  XCache Re-install\r
-(B\[m\[1;32;40m7).  APC Cache Re-install\r
-(B\[m\[1;32;40m8).  XCache Install\r
-(B\[m\[1;32;40m9).  APC Cache Install\r
-(B\[m\[1;32;40m10). Memcached Server Re-install\r
-(B\[m\[1;32;40m11). MariaDB MySQL Upgrade & Management\r
-(B\[m\[1;32;40m12). Zend OpCache Install/Re-install\r
-(B\[m\[1;32;40m13). Install/Reinstall Redis PHP Extension\r
-(B\[m\[1;32;40m14). SELinux disable\r
-(B\[m\[1;32;40m15). Install/Reinstall ImagicK PHP Extension\r
-(B\[m\[1;32;40m16). Change SSHD Port Number\r
-(B\[m\[1;32;40m17). Multi-thread compression: zstd,pigz,pbzip2,lbzip2\r
-(B\[m\[1;32;40m18). Suhosin PHP Extension install\r
-(B\[m\[1;32;40m19). Install FFMPEG and FFMPEG PHP Extension\r
-(B\[m\[1;32;40m20). NSD Install/Re-Install\r
-(B\[m\[1;32;40m21). Data Transfer (TBA)\r
-(B\[m\[1;32;40m22). Add Wordpress Nginx vhost + Cache Plugin\r
-(B\[m\[1;32;40m23). Update Centmin Mod Code Base\r
-(B\[m\[1;32;40m24). Exit\r
-(B\[m\[1;33;40m--------------------------------------------------------\r
-(B\[m\[?1034hEnter option \[ 1 - 24 \] "
+expect "Enter option"
 send -- "23\r"
-expect "23\r
-\[1;33;40m--------------------------------------------------------\r
-(B\[m\r
-\[1;33;40m--------------------------------------------------------\r
-(B\[m\[1;32;40m        Centmin Mod Updater Sub-Menu              \r
-(B\[m\[1;33;40m--------------------------------------------------------\r
-(B\[m\[1;32;40m1). Setup Centmin Mod Github Environment\r
-(B\[m\[1;32;40m2). Update Centmin Mod Current Branch\r
-(B\[m\[1;32;40m3). Update Centmin Mod Newer Branch\r
-(B\[m\[1;32;40m4). Exit\r
-(B\[m\[1;33;40m--------------------------------------------------------\r
-(B\[mEnter option \[ 1 - 4 \] "
+expect "Enter option"
 send -- "2\r"
 expect eof
