@@ -40,5 +40,6 @@ if [ -f /etc/centminmod-release ]; then
 	expect /bigscoots/wpo/manage/expect/imagick
 	yum clean all
 	yum update -y --disableplugin=priorities --setopt=deltarpm=0 --enablerepo=remi
+	csf -ra
 
 fi
