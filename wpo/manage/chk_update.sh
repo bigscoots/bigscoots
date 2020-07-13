@@ -44,7 +44,8 @@ if [ -f /etc/centminmod-release ]; then
 	yum remove ImageMagick* -y
 	expect /bigscoots/wpo/manage/expect/imagick
 	yum clean all
-	yum update -y --disableplugin=priorities --setopt=deltarpm=0 --enablerepo=remi
+	yum update -y --disableplugin=priorities --setopt=deltarpm=0 --enablerepo=remi4
+	rm -f /etc/csf/csf.error
 	csf -ra
 
 fi
