@@ -45,7 +45,7 @@ if {$force_conservative} {
 set timeout -1
 spawn centmin
 match_max 100000
-expect -exact "/usr/local/src/centminmod /\r
+expect "/usr/local/src/centminmod /\r
 \r
 \[1;33;40m--------------------------------------------------------\r
 (B\[m\[1;32;40m     Centmin Mod Menu 123.09beta01 centminmod.com     \r
@@ -77,7 +77,7 @@ expect -exact "/usr/local/src/centminmod /\r
 (B\[m\[1;33;40m--------------------------------------------------------\r
 (B\[m\[?1034hEnter option \[ 1 - 24 \] "
 send -- "23\r"
-expect -exact "23\r
+expect "23\r
 \[1;33;40m--------------------------------------------------------\r
 (B\[m\r
 \[1;33;40m--------------------------------------------------------\r
