@@ -17,6 +17,11 @@ if [ -f /etc/centminmod-release ]; then
 	if rpm -qa |grep -q libwebp-devel; then 
 		yum -y remove libwebp-devel
 	fi
+
+	if [ ! -d /usr/local/src/centminmod ]; then
+		cd /usr/local/src/
+		git clone -b 123.09beta01 https://github.com/centminmod/centminmod
+	fi
 	
 	mkdir -p /bigscoots
 	cd /bigscoots
