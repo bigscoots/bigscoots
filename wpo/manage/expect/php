@@ -1,0 +1,32 @@
+#!/usr/bin/expect -f
+
+
+set force_conservative 1  ;# set to 1 to force conservative mode even if
+                          ;# script wasn't run conservatively originally
+if {$force_conservative} {
+        set send_slow {1 .1}
+        proc send {ignore arg} {
+                sleep 1
+                exp_send -s -- $arg
+        }
+}
+
+set phpver [lindex $argv 0]
+
+set timeout -1
+spawn centmin
+expect "Enter option"
+send -- "5\r"
+expect "Do you want to run YUM install checks"
+send -- "n\r"
+expect "PHP Upgrade/Downgrade - Would you like to continue"
+send -- "y\r"
+expect "Enter PHP Version number"
+send -- "$phpver\r"
+expect "Do you still want to continue"
+send -- "y\r"
+expect "Do you want to use Zend OPcache"
+send -- "\r"
+expect "Re-add legacy mysql"
+send -- "n\r"
+expect "Enter option"
