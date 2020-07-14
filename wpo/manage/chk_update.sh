@@ -41,6 +41,8 @@ if [ -f /etc/centminmod-release ]; then
 		expect /bigscoots/wpo/manage/expect/cmmupdate
 	fi 
 
+	sed -i "s/PHPFINFO='n'/PHPFINFO='y'/g" /usr/local/src/centminmod/centmin.sh
+
 	yum remove ImageMagick* -y
 	expect /bigscoots/wpo/manage/expect/imagick
 	yum clean all

@@ -15,7 +15,7 @@ set timeout -1
 spawn centmin
 expect "Enter option"
 send -- "4\r"
-expect "[y/n]"
+expect "Do you want to run YUM install checks"
 send -- "n\r"
 expect "Nginx Upgrade - Would you like to continue"
 send -- "y\r"
