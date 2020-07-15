@@ -16,4 +16,6 @@ spawn centmin
 expect "Enter option"
 send -- "13\r"
 expect "Enter option"
+send -- "13\r"
+expect "Enter option"
 exp_send "\x03"
