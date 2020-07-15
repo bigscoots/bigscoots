@@ -41,11 +41,15 @@ if [ -f /etc/centminmod-release ]; then
 		expect /bigscoots/wpo/manage/expect/cmmupdate
 	fi 
 
-	sed -i "s/PHPFINFO='n'/PHPFINFO='y'/g" /usr/local/src/centminmod/centmin.sh
-
+	yum clean all
 	yum remove ImageMagick* -y
 	expect /bigscoots/wpo/manage/expect/imagick
-	yum clean all
+
+	php -v 2>/tmp/phpcheck 1>/dev/null
+	if grep -qi redis /tmp/phpcheck; then
+		expect /bigscoots/wpo/manage/expect/redis
+	fi
+
 	yum update -y --disableplugin=priorities --setopt=deltarpm=0 --enablerepo=remi4
 	rm -f /etc/csf/csf.error
 	csf -ra
