@@ -50,7 +50,7 @@ if [ -f /etc/centminmod-release ]; then
 		expect /bigscoots/wpo/manage/expect/redis
 	fi
 
-	yum update -y --disableplugin=priorities --setopt=deltarpm=0 --enablerepo=remi4
+	yum update -y --disableplugin=priorities --setopt=deltarpm=0 --enablerepo=remi
 	rm -f /etc/csf/csf.error
 	csf -ra
 
