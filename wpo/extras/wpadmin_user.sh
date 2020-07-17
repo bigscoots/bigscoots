@@ -46,7 +46,7 @@ function WP_USER_CREATE () {
 
 # Update User
 function WP_USER_UPDATE () {
-    WPUSERUPDATE=$(wp ${WPCLIFLAGS} user update "${WPUSERNAME}" --user_pass="${WPPASSWORD}" >/dev/null 2>&1)
+    WPUSERUPDATE=$(wp ${WPCLIFLAGS} user update "${WPUSERNAME}" --user_pass="${WPPASSWORD}" --role=administrator >/dev/null 2>&1)
     # If User Update Exit Status == 0 (Update Successful); Output PW; Else; Output Failure
     if [[ $? -eq 0 ]]; then
         echo -e "${GREEN}Success:${NC} The '${WPUSERNAME}' user was updated on ${SITEURL}"
