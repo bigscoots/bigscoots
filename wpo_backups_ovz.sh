@@ -288,7 +288,12 @@ initial_server)
 BKUSER="$2"
 SSHPUBKEY="$3"
 
-adduser -b /home/wpo_users "$BKUSER" >/dev/null 2>&1
+if ! adduser -b /home/wpo_users "$BKUSER" >/dev/null 2>&1; then
+  if [ ! -d /home/wpo_users/"$BKUSER" ]; then
+    userdel -r "$BKUSER" >/dev/null 2>&1
+  fi
+fi
+
 runuser -l "$BKUSER" -c 'ssh-keygen -b 4096 -t rsa -f ~/.ssh/id_rsa -q -N "" <<< y >/dev/null 2>&1 ; touch ~/.ssh/authorized_keys ; chmod 600 ~/.ssh/authorized_keys'
 echo "ssh-rsa $SSHPUBKEY" >> /home/wpo_users/"$BKUSER"/.ssh/authorized_keys
 
