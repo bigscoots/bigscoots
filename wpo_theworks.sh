@@ -133,6 +133,37 @@ else
   exit 1
   fi
 
+  # remove unnecessary files
+
+ rm -rfv wp-content/mu-plugins/SupportCenterMUAutoloader.php \
+ wp-content/mu-plugins/et-safe-mode \
+ wp-content/mu-plugins/wp-stack-cache.php \
+ wp-content/plugins/mojo-marketplace-wp-plugin \
+ wp-content/mu-plugins/force-strong-passwords \
+ wp-content/mu-plugins/mu-plugin.php \
+ wp-content/mu-plugins/slt-force-strong-passwords.php \
+ wp-content/mu-plugins/stop-long-comments.php \
+ wp-content/mu-plugins/wpengine-common \
+ wp-content/mu-plugins/endurance-* \
+ wp-content/mu-plugins/liquidweb_mwp.php \
+ wp-content/mu-plugins/lw-varnish-cache-purger.php \
+ wp-content/mu-plugins/lw_disable_nags.php \
+ wp-content/mu-plugins/kinsta-mu-plugins* \
+ wp-content/mu-plugins/synth* \
+ wp-content/mu-plugins/includes \
+ wp-content/mu-plugins/scribe \
+ wp-content/mu-plugins/mu-includes.php \
+ wp-content/mu-plugins/site-management \
+ wp-content/mu-plugins/sysmsg \
+ wp-content/mu-plugins/wpe* \
+ wp-content/mu-plugins/nexcess-mapps* \
+ wp-content/object-cache.php \
+ wp-content/cache \
+ wp-content/object-cache.php \
+ wp-content/db.php \
+ .user.ini \
+ wordfence-waf.php
+
   sed -i '/gd-config.php/d' wp-config.php
   sed -i '/SiteGround/d' wp-config.php
 
@@ -165,37 +196,6 @@ fi
 if ! wp ${WPCLIFLAGS} config get DB_COLLATE > /dev/null 2>&1; then
   wp ${WPCLIFLAGS} config set DB_COLLATE ''
 fi
-
-# remove unnecessary files
-
-rm -rfv wp-content/mu-plugins/SupportCenterMUAutoloader.php \
- wp-content/mu-plugins/et-safe-mode \
- wp-content/mu-plugins/wp-stack-cache.php \
- wp-content/plugins/mojo-marketplace-wp-plugin \
- wp-content/mu-plugins/force-strong-passwords \
- wp-content/mu-plugins/mu-plugin.php \
- wp-content/mu-plugins/slt-force-strong-passwords.php \
- wp-content/mu-plugins/stop-long-comments.php \
- wp-content/mu-plugins/wpengine-common \
- wp-content/mu-plugins/endurance-* \
- wp-content/mu-plugins/liquidweb_mwp.php \
- wp-content/mu-plugins/lw-varnish-cache-purger.php \
- wp-content/mu-plugins/lw_disable_nags.php \
- wp-content/mu-plugins/kinsta-mu-plugins* \
- wp-content/mu-plugins/synth* \
- wp-content/mu-plugins/includes \
- wp-content/mu-plugins/scribe \
- wp-content/mu-plugins/mu-includes.php \
- wp-content/mu-plugins/site-management \
- wp-content/mu-plugins/sysmsg \
- wp-content/mu-plugins/wpe* \
- wp-content/mu-plugins/nexcess-mapps* \
- wp-content/object-cache.php \
- wp-content/cache \
- wp-content/object-cache.php \
- wp-content/db.php \
- .user.ini \
- wordfence-waf.php
 
 # sed -i '/^[[:blank:]]*\*/d;s/\/\*\*.*//;/^$/d' wp-config.php
 
