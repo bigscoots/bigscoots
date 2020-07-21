@@ -93,6 +93,16 @@ if [ -f /usr/local/nginx/conf/webp.conf ] && grep -q '".webp";' /usr/local/nginx
 	reload=1
 fi
 
+if [ ! -f /etc/centminmod/custom_config.inc ]; then
+  mkdir -p /etc/centminmod/
+  touch /etc/centminmod/custom_config.inc
+fi
+
+if ! grep -q ENABLEMOTD /etc/centminmod/custom_config.inc; then
+    echo "ENABLEMOTD='n'" >> /etc/centminmod/custom_config.inc
+    rm -rf /usr/local/bin/dmotd
+fi
+
 sed -i '/PHP_PGO/d' /etc/centminmod/custom_config.inc
 
 /bigscoots/includes/keymebatman.sh
