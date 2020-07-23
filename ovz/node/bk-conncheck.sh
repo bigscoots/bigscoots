@@ -11,6 +11,9 @@ for CTID in $(/usr/sbin/vzlist -H -o ctid|awk '{print $1;}'); do
 		if [ -f /vz/root/${CTID}/root/.bigscoots/backupinfo ]; then
 			if grep -q bksvr /vz/root/${CTID}/root/.bigscoots/backupinfo; then
 				bksvr=$(grep bksvr /vz/root/${CTID}/root/.bigscoots/backupinfo | sed 's/=/ /g' | awk '{print $2}')
+					if [[ $bksvr =~ "backup06" ]]; then
+						bksvr=backup07.bigscoots.com
+					fi
 				[ ! -z "${bksvr}" ] || bksvr=backup03.bigscoots.com
 			else
 				bksvr=backup03.bigscoots.com
@@ -33,6 +36,10 @@ for CTID in $(/usr/sbin/vzlist -H -o ctid|awk '{print $1;}'); do
 
 				echo "bksvr=backup07.bigscoots.com" >> /vz/root/"${CTID}"/root/.bigscoots/backupinfo
 
+			fi
+
+			if grep -q backup07 /vz/root/${CTID}/root/.bigscoots/backupinfo && ! grep -q 50.31.116.52 /vz/root/${CTID}/etc/csf/csf.allow; then
+			vzctl exec $CTID "csf -a 50.31.116.52"
 			fi
 
 			if ssh -oBatchMode=yes -oStrictHostKeyChecking=no -i /vz/root/"${CTID}"/root/.ssh/wpo_backups "${wpobackupuser}"@"${bksvr}" "exit"; then
