@@ -34,7 +34,9 @@ for CTID in $(/usr/sbin/vzlist -H -o ctid|awk '{print $1;}'); do
 				echo "Adding pub key to auth keys"
 				ssh ${bksvr} "echo ${wpobackupsshkey} > /home/wpo_users/${wpobackupuser}/.ssh/authorized_keys"
 
-				echo "bksvr=backup07.bigscoots.com" >> /vz/root/"${CTID}"/root/.bigscoots/backupinfo
+				if ! grep -q bksvr /vz/root/"${CTID}"/root/.bigscoots/backupinfo; then
+					echo "bksvr=backup07.bigscoots.com" >> /vz/root/"${CTID}"/root/.bigscoots/backupinfo
+				fi
 
 			fi
 
@@ -45,9 +47,9 @@ for CTID in $(/usr/sbin/vzlist -H -o ctid|awk '{print $1;}'); do
 			if ssh -oBatchMode=yes -oStrictHostKeyChecking=no -i /vz/root/"${CTID}"/root/.ssh/wpo_backups "${wpobackupuser}"@"${bksvr}" "exit"; then
 				echo "${CTID} successfull ssh connection to the backup server."
 			else
-				echo "${CTID} FAILED ssh connection to the backup server, trying again cuz Justin sucks at coding"
+				echo "${CTID} FAILED ssh connection to the backup server"
 				rm -f /vz/root/"${CTID}"/root/.ssh/wpo_backups*
-				bash /bigscoots/ovz/node/bk-conncheck.sh
+				# bash /bigscoots/ovz/node/bk-conncheck.sh
 			fi
 
 		else
