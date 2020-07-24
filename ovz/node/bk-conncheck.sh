@@ -19,7 +19,7 @@ for CTID in $(/usr/sbin/vzlist -H -o ctid|awk '{print $1;}'); do
 				bksvr=backup03.bigscoots.com
 			fi
 
-			if [ ! -f /vz/root/"${CTID}"/root/.ssh/wpo_backups ]; then
+			if [ ! -s /vz/root/"${CTID}"/root/.ssh/wpo_backups ]; then
 
 				ssh-keygen -b 4096 -t rsa -f /vz/root/${CTID}/root/.ssh/wpo_backups -q -N '' <<< y >/dev/null 2>&1
 				wpobackupsshkey=$(cat /vz/root/${CTID}/root/.ssh/wpo_backups.pub)
