@@ -41,14 +41,18 @@ for CTID in $(/usr/sbin/vzlist -H -o ctid|awk '{print $1;}'); do
 			fi
 
 			if grep -q backup07 /vz/root/${CTID}/root/.bigscoots/backupinfo && ! grep -q 50.31.116.52 /vz/root/${CTID}/etc/csf/csf.allow; then
-			vzctl exec $CTID "csf -a 50.31.116.52"
+				if [ -f /vz/root/${CTID}/etc/csf/csf.error ]; then
+					rm -f /vz/root/${CTID}/etc/csf/csf.error
+					vzctl exec $CTID "csf -ra"
+					vzctl exec $CTID "csf -a 50.31.116.52"
+				fi
 			fi
 
 			if ssh -oBatchMode=yes -oStrictHostKeyChecking=no -i /vz/root/"${CTID}"/root/.ssh/wpo_backups "${wpobackupuser}"@"${bksvr}" "exit"; then
 				echo "${CTID} successfull ssh connection to the backup server."
 			else
-				sort /root/.bigscoots/backupinfo | uniq > /vz/root/"${CTID}"/root/.bigscoots/backupinfo
-				cat /root/.bigscoots/backupinfo.tmp | sed '/^$/d' > /vz/root/"${CTID}"/root/.bigscoots/backupinfo
+				sort /vz/root/"${CTID}"/root/.bigscoots/backupinfo | uniq > /vz/root/"${CTID}"/root/.bigscoots/backupinfo
+				cat /vz/root/"${CTID}"/root/.bigscoots/backupinfo.tmp | sed '/^$/d' > /vz/root/"${CTID}"/root/.bigscoots/backupinfo
 				if ssh -oBatchMode=yes -oStrictHostKeyChecking=no -i /vz/root/"${CTID}"/root/.ssh/wpo_backups "${wpobackupuser}"@"${bksvr}" "exit"; then
 					echo "${CTID} successfull ssh connection to the backup server."
 				else 
