@@ -47,9 +47,13 @@ for CTID in $(/usr/sbin/vzlist -H -o ctid|awk '{print $1;}'); do
 			if ssh -oBatchMode=yes -oStrictHostKeyChecking=no -i /vz/root/"${CTID}"/root/.ssh/wpo_backups "${wpobackupuser}"@"${bksvr}" "exit"; then
 				echo "${CTID} successfull ssh connection to the backup server."
 			else
-				echo "${CTID} FAILED ssh connection to the backup server"
-				rm -f /vz/root/"${CTID}"/root/.ssh/wpo_backups*
-				# bash /bigscoots/ovz/node/bk-conncheck.sh
+				if ssh -oBatchMode=yes -oStrictHostKeyChecking=no -i /vz/root/"${CTID}"/root/.ssh/wpo_backups "${wpobackupuser}"@"${bksvr}" "exit"; then
+					echo "${CTID} successfull ssh connection to the backup server."
+				else 
+					echo "${CTID} FAILED ssh connection to the backup server"
+					rm -f /vz/root/"${CTID}"/root/.ssh/wpo_backups*
+					# bash /bigscoots/ovz/node/bk-conncheck.sh
+				fi
 			fi
 
 		else
