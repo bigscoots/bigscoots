@@ -47,6 +47,8 @@ for CTID in $(/usr/sbin/vzlist -H -o ctid|awk '{print $1;}'); do
 			if ssh -oBatchMode=yes -oStrictHostKeyChecking=no -i /vz/root/"${CTID}"/root/.ssh/wpo_backups "${wpobackupuser}"@"${bksvr}" "exit"; then
 				echo "${CTID} successfull ssh connection to the backup server."
 			else
+				sort /root/.bigscoots/backupinfo | uniq > /vz/root/"${CTID}"/root/.bigscoots/backupinfo
+				cat /root/.bigscoots/backupinfo.tmp | sed '/^$/d' > /vz/root/"${CTID}"/root/.bigscoots/backupinfo
 				if ssh -oBatchMode=yes -oStrictHostKeyChecking=no -i /vz/root/"${CTID}"/root/.ssh/wpo_backups "${wpobackupuser}"@"${bksvr}" "exit"; then
 					echo "${CTID} successfull ssh connection to the backup server."
 				else 
