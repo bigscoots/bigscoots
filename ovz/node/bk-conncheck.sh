@@ -47,6 +47,17 @@ for CTID in $(/usr/sbin/vzlist -H -o ctid|awk '{print $1;}'); do
 					vzctl exec $CTID "csf -a 50.31.116.52"
 				fi
 			fi
+			
+			if [ $(grep -c bksvr /vz/root/${CTID}/root/.bigscoots/backupinfo) -gt 1 ]; then
+				if grep -q bksvr=backup03 /vz/root/${CTID}/root/.bigscoots/backupinfo; then
+					sed -i '/bksvr/d' /vz/root/${CTID}/root/.bigscoots/backupinfo
+					echo "bksvr=backup03.bigscoots.com" >> /vz/root/"${CTID}"/root/.bigscoots/backupinfo
+				else
+					sed -i '/bksvr/d' /vz/root/${CTID}/root/.bigscoots/backupinfo
+					echo "bksvr=backup07.bigscoots.com" >> /vz/root/"${CTID}"/root/.bigscoots/backupinfo
+				fi
+			fi
+
 
 			if ssh -oBatchMode=yes -oStrictHostKeyChecking=no -i /vz/root/"${CTID}"/root/.ssh/wpo_backups "${wpobackupuser}"@"${bksvr}" "exit"; then
 				echo "${CTID} successfull ssh connection to the backup server."
