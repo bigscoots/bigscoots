@@ -18,12 +18,12 @@ fi
 sourcesitedocroot=/home/nginx/domains/"${sourcesite}"/public
 destinationsitedocroot=/home/nginx/domains/"${destinationsite}"/public
 
-if ! sourcesitedb=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${sourcesitedocroot} > /dev/null 2>&1); then
-    wp ${WPCLIFLAGS} config get DB_NAME --path=${sourcesitedocroot} > /dev/null 2>&1
+if ! sourcesitedb=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${sourcesitedocroot} 2>/dev/null); then
+    wp ${WPCLIFLAGS} config get DB_NAME --path=${sourcesitedocroot} 2>/dev/null
     if [ $? -eq 255 ]; then
         echo $?
         sed -i '/wp-salt.php/d' ${sourcesitedocroot}/wp-config.php
-        if ! sourcesitedb=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${sourcesitedocroot} 2>&1); then
+        if ! sourcesitedb=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${sourcesitedocroot} 2>/dev/null); then
         echo "Something is wrong when trying to get the database name from $sourcesite site: https://github.com/jcatello/bigscoots/blob/master/wpo/manage/clone.sh#L21" | mail -s "WPO Clone failed to pull $sourcesite database name - From: $sourcesite To: $destinationsite  -  $HOSTNAME" monitor@bigscoots.com
         # exit 1
         fi
@@ -31,10 +31,10 @@ if ! sourcesitedb=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${sourcesitedocro
     # exit 1
 fi < /dev/null 2> /dev/null
 
-if ! destinationsitedb=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${destinationsitedocroot} 2>&1); then
+if ! destinationsitedb=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${destinationsitedocroot} 2>/dev/null); then
     if [ $? -eq 255 ]; then
     sed -i '/wp-salt.php/d' ${destinationsitedocroot}/wp-config.php
-        if ! destinationsitedb=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${destinationsitedocroot} 2>&1); then
+        if ! destinationsitedb=$(wp ${WPCLIFLAGS} config get DB_NAME --path=${destinationsitedocroot} 2>/dev/null); then
         echo "Something is wrong when trying to get the database name from $destinationsite site: https://github.com/jcatello/bigscoots/blob/master/wpo/manage/clone.sh#L21" | mail -s "WPO Clone failed to pull $destinationsite database name - From: $sourcesite To: $destinationsite  -  $HOSTNAME" monitor@bigscoots.com
         exit 1
         fi
@@ -86,6 +86,8 @@ sourcesitedbuser=$(wp ${WPCLIFLAGS} config get DB_USER --path="${sourcesitedocro
 destinationsitedbuser=$(wp ${WPCLIFLAGS} config get DB_USER --path="${destinationsitedocroot}")
 wdpprefix=$(wp ${WPCLIFLAGS} config get table_prefix --path="${sourcesitedocroot}")
 
+wc_sub_url=$(mysql "${sourcesitedb}" -sNe "select option_value from ${wdpprefix}options where option_name = 'wc_subscriptions_siteurl';")
+
 wp ${WPCLIFLAGS} db reset --yes --path="${destinationsitedocroot}" --quiet 2> /dev/null
 
 if wp ${WPCLIFLAGS} db tables "${wdpprefix}swp_*" --format=csv --all-tables --path="${sourcesitedocroot}" >/dev/null 2>&1; then
@@ -110,6 +112,10 @@ fi < /dev/null 2> /dev/null
 siteurl=$(wp ${WPCLIFLAGS} option get siteurl --path="${sourcesitedocroot}" --quiet 2> /dev/null | sed -r 's/https?:\/\///g')
 
 wp ${WPCLIFLAGS} search-replace "$siteurl" "$destinationsitereplace" --recurse-objects --skip-tables="${wdpprefix}"users --all-tables-with-prefix="${wdpprefix}" --path="${destinationsitedocroot}" --quiet 2> /dev/null
+
+if [ -n "$wc_sub_url" ]; then
+    mysql "${destinationsitedb}" -e "update ${wdpprefix}options set option_value = '${wc_sub_url}' where ${wdpprefix}options.option_name = 'wc_subscriptions_siteurl';"
+fi
 
 if [ -n "$3" ] && [ -n "$4" ]; then
 
