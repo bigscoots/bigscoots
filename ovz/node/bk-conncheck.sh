@@ -13,6 +13,7 @@ for CTID in $(/usr/sbin/vzlist -H -o ctid|awk '{print $1;}'); do
 				bksvr=$(grep bksvr /vz/root/${CTID}/root/.bigscoots/backupinfo | sed 's/=/ /g' | awk '{print $2}')
 					if [[ $bksvr =~ "backup06" ]]; then
 						bksvr=backup07.bigscoots.com
+						sed -i 's/backup06/backup07/g' /vz/root/${CTID}/root/.bigscoots/backupinfo
 					fi
 				[ ! -z "${bksvr}" ] || bksvr=backup03.bigscoots.com
 			else
@@ -41,12 +42,12 @@ for CTID in $(/usr/sbin/vzlist -H -o ctid|awk '{print $1;}'); do
 			fi
 
 			if grep -q backup07 /vz/root/${CTID}/root/.bigscoots/backupinfo && ! grep -q 50.31.116.52 /vz/root/${CTID}/etc/csf/csf.allow; then
-				if [ -f /vz/root/${CTID}/etc/csf/csf.error ]; then
-					rm -f /vz/root/${CTID}/etc/csf/csf.error
-					vzctl exec $CTID "csf -ra"
-					vzctl exec $CTID "csf -a 50.31.116.52"
-				fi
-			fi
+                                if [ -f /vz/root/${CTID}/etc/csf/csf.error ]; then
+                                        rm -f /vz/root/${CTID}/etc/csf/csf.error
+                                        vzctl exec $CTID "csf -ra"
+                                fi
+                                vzctl exec $CTID "csf -a 50.31.116.52"
+                        fi
 			
 			if [ $(grep -c bksvr /vz/root/${CTID}/root/.bigscoots/backupinfo) -gt 1 ]; then
 				if grep -q bksvr=backup03 /vz/root/${CTID}/root/.bigscoots/backupinfo; then
