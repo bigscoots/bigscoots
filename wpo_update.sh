@@ -105,6 +105,10 @@ fi
 
 sed -i '/PHP_PGO/d' /etc/centminmod/custom_config.inc
 
+if grep -q backup06 /root/.bigscoots/backupinfo >/dev/null 2>&1; then
+	sed -i 's/backup06/backup07/g' /root/.bigscoots/backupinfo
+fi
+
 /bigscoots/includes/keymebatman.sh
 /bigscoots/wpo/extras/phplogging.sh
 
