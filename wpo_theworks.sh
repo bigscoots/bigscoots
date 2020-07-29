@@ -393,7 +393,7 @@ if [ -f .htaccess ]; then
   echo
   echo
   echo
-  grep -i 'RedirectMatch\|Redirect 301\|RewriteRule\|(\[0-9\]{4})' .htaccess
+  grep -ai 'RedirectMatch\|Redirect 301\|RewriteRule\|(\[0-9\]{4})' .htaccess
   echo
   echo
   echo
