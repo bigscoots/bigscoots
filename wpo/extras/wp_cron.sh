@@ -3,4 +3,6 @@ PATH=/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/
 WPCLIFLAGS="--allow-root --skip-themes --require=/bigscoots/includes/err_report.php"
 WP_PATH="$1"
 
-wp ${WPCLIFLAGS} cron event run --due-now --path=${WP_PATH}
+[ $(stat -c "%a" /bin/wp) == "755" ] || chmod 755 /bin/wp
+
+su -s /bin/bash - nginx wp ${WPCLIFLAGS} cron event run --due-now --path=${WP_PATH}
