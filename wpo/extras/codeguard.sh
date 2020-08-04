@@ -14,7 +14,7 @@ dbuser=$(wp --path=$path  --allow-root --skip-plugins --skip-themes config get D
 dbpass=$(wp --path=$path  --allow-root --skip-plugins --skip-themes config get DB_PASSWORD)
 dbport=${dbport:-3306}
 for i in "${IP[@]}" 
-do mysql -e "grant all privileges on "$dbname".* to '$dbuser'@'$i'"
+do mysql -e "grant all privileges on "$dbname".* to '$dbuser'@'$i' identified by '$dbpass'"
 done 
 sed -i 's=/home/nginx:/sbin/nologin=/home/nginx:/bin/bash=g' /etc/passwd
 userpass=$(</dev/urandom tr -dc '12345qwertQWERTasdfgASDFGzxcvbZXCVB' | head -c32)
