@@ -81,7 +81,7 @@ if  [[ $remote == y ]] && [[ ! $1 =~ (initial_*|download) ]]; then
     if ssh -oBatchMode=yes -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"backup06.bigscoots.com" 'uptime' >/dev/null 2>&1 ; [ $? -eq 255 ]
     then
       WPOIP=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
-      curl -d "email=${WPOIP}&domain=${HOSTNAME}&type=Backup%20Failure" -X POST https://api-dev.bigscoots.com/alerts/generate-support-task
+      curl -s -d "email=${WPOIP}&domain=${HOSTNAME}&type=Backup%20Failure" -X POST https://api-dev.bigscoots.com/alerts/generate-support-task
       # echo "Mark for Justin" | mail -s "$HOSTNAME- WPO failed to SSH to backup server." monitor@bigscoots.com
       exit 1
     elif ! grep -q bksvr= "${BSPATH}"/backupinfo; then 
