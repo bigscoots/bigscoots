@@ -20,6 +20,17 @@ if ! jq -Rn >/dev/null 2>&1; then
   chmod +x /usr/bin/jq
 fi 
 
+if [ -f /etc/csf/csf.allow ] && ! grep -q 69.162.173.37 /etc/csf/csf.allow; then 
+    csf -a 69.162.173.37
+fi
+
+if [ -f /etc/csf/csf.allow ] && ! grep -q 50.31.116.52 /etc/csf/csf.allow; then 
+    csf -a 50.31.116.52
+fi
+
+if [ -f /etc/csf/csf.allow ] && ! grep -q 67.202.70.92 /etc/csf/csf.allow; then 
+    csf -a 67.202.70.92
+fi
 
 if [ ! -f "$BSPATH"/rsync/exclude ]; then
   mkdir -p "$BSPATH"/rsync
