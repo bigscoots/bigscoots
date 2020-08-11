@@ -8,6 +8,8 @@ sourcedomain="$1"
 destinationdomain="$2"
 skip=0
 
+WPCLIFLAGS="--allow-root --skip-plugins --skip-themes --require=/bigscoots/includes/err_report.php"
+
 if [ "$3" == skip ]; then 
     skip=1
 fi
@@ -64,9 +66,12 @@ if grep -q 'return 301 https' /usr/local/nginx/conf/conf.d/"$sourcedomain".conf 
     fi
 fi
 
+wp ${WPCLIFLAGS} config set JETPACK_STAGING_MODE true --raw --path=/home/nginx/domains/"$destinationdomain"/public/ 2>&1
+
 if ! grep -q "function wp_mail()" /home/nginx/domains/"$destinationdomain"/public/wp-config.php > /dev/null 2>&1 ; then
 
 cat <<EOT >> /home/nginx/domains/"$destinationdomain"/public/wp-config.php
+
 
 
 // Disable Outgoing WordPress Emails Should exist in Staging only
