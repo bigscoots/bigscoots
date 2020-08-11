@@ -66,7 +66,7 @@ if grep -q 'return 301 https' /usr/local/nginx/conf/conf.d/"$sourcedomain".conf 
     fi
 fi
 
-wp ${WPCLIFLAGS} config set JETPACK_STAGING_MODE true --raw --path=/home/nginx/domains/"$destinationdomain"/public/ 2>&1
+wp ${WPCLIFLAGS} config set JETPACK_STAGING_MODE true --raw --path=/home/nginx/domains/"$destinationdomain"/public/ > /dev/null 2>&1
 
 if ! grep -q "function wp_mail()" /home/nginx/domains/"$destinationdomain"/public/wp-config.php > /dev/null 2>&1 ; then
 
