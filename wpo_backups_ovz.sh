@@ -50,6 +50,7 @@ if [ ! -f "$BSPATH"/rsync/exclude ]; then
   echo "*/wp-content/uploads/ShortpixelBackups"
   echo "backupbuddy_backups"
   echo "*/wp-content/backupwordpress-*-backups"
+  echo "*/wp-content/backups-dup-pro"
   } > "$BSPATH"/rsync/exclude
 
 fi

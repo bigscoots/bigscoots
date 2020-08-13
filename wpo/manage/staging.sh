@@ -34,6 +34,7 @@ if [ "$skip" == 0 ]; then
     --exclude wp-content/cache \
     --exclude wp-content/wpbackitup_backups \
     --exclude wp-content/backupwordpress-*-backups \
+    --exclude wp-content/backups-dup-pro \
     -s /home/nginx/domains/"$sourcedomain" | awk '{print $1}')"
     freespace="$(df -k / | tr -s ' ' | cut -d" " -f 4 | grep -v Available)"
     percentofreespace=$((sourcedomainsize*100/freespace))
