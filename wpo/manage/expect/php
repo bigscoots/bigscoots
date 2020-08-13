@@ -17,8 +17,8 @@ set timeout -1
 spawn centmin
 expect "Enter option"
 send -- "5\r"
-expect "Do you want to run YUM install checks"
-send -- "n\r"
+# expect "Do you want to run YUM install checks"
+# send -- "n\r"
 expect "PHP Upgrade/Downgrade - Would you like to continue"
 send -- "y\r"
 expect "Enter PHP Version number"
