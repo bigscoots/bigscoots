@@ -112,6 +112,10 @@ fi
 /bigscoots/includes/keymebatman.sh
 /bigscoots/wpo/extras/phplogging.sh
 
+if grep -q ^log$ /root/.bigscoots/rsync/exclude >/dev/null 2>&1; then
+  sed '/^log$/d' /root/.bigscoots/rsync/exclude
+fi
+
 if [ "${reload}" == 1 ]; then
 	npreload
 fi
