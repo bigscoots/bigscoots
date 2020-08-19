@@ -199,10 +199,6 @@ sed -i 's/character-set-server/#character-set-server/g' /etc/my.cnf
 
 sed -i 's/;request_slowlog_timeout = 0/request_slowlog_timeout = 20/g' /usr/local/etc/php-fpm.conf
 
-if ! crontab -l |grep /bigscoots/dedicated/updater.sh > /dev/null 2>&1; then 
-	crontab -l | { cat; echo "30 */6 * * * /bigscoots/dedicated/updater.sh > /dev/null 2>&1"; } | crontab -
-fi
-
 if [[ ! -f /usr/bin/git || ! -f /usr/bin/curl || ! -f /usr/bin/nano ]]; then
   echo
   echo "installing yum packages..."
