@@ -9,7 +9,7 @@ list_plugins)
 
 # /bigscoots/wpo/manage/plugins.sh list_plugins ${DOMAIN}
 
-wp --allow-root --skip-themes plugin list --fields=name,title,status,update,version,update_version --format=json --path=/home/nginx/domains/"$domain"/public
+wp --allow-root --skip-themes --require=/bigscoots/includes/err_report.php plugin list --fields=name,title,status,update,version,update_version --format=json --path=/home/nginx/domains/"$domain"/public 2>/dev/null
 
 ;;
 update_plugin)
@@ -18,7 +18,7 @@ update_plugin)
 
 plugin="$3"
 
-wp --allow-root --skip-themes plugin update "$plugin" --path=/home/nginx/domains/"$domain"/public
+wp --allow-root --skip-themes plugin update "$plugin" --path=/home/nginx/domains/"$domain"/public 2>/dev/null
 
 ;;
 toggle_plugin)
@@ -27,7 +27,7 @@ toggle_plugin)
 
 plugin="$3"
 
-wp ${WPCLIFLAGS} plugin toggle "$plugin" --path=/home/nginx/domains/"$domain"/public
+wp ${WPCLIFLAGS} plugin toggle "$plugin" --path=/home/nginx/domains/"$domain"/public 2>/dev/null
 
 ;;
 uninstall_plugin)
