@@ -92,7 +92,7 @@ mkdir -p /etc/centminmod
   echo DISABLE_IPVSIX='y'
   } >> /etc/centminmod/custom_config.inc
 
-curl -O https://centminmod.com/betainstaller73.sh && chmod 0700 betainstaller73.sh && bash betainstaller73.sh
+curl -O https://centminmod.com/betainstaller74.sh && chmod 0700 betainstaller74.sh && bash betainstaller74.sh
 
 echo "LETSENCRYPT_DETECT='y'" >> /etc/centminmod/custom_config.inc
 echo "DUALCERTS='y'" >> /etc/centminmod/custom_config.inc
