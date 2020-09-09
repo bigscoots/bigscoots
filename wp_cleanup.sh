@@ -96,6 +96,7 @@ echo
 find wp-content/uploads/ -type f -name '*php*'
 find wp-content/uploads/ -type f -name '*.ico'
 grep -rl '))));}' --include='*php'
+grep -rl 'eval (gzinflate(base64_decode'
 
 echo
 echo
