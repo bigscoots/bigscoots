@@ -2,7 +2,8 @@
 
 if [ -f /etc/centminmod-release ]; then 
 	
-	if ! crontab -l | grep -q wpo_update.sh; then 
+	if ! crontab -l | grep -q wpo_update.sh; then
+		crontab -l | grep -v '/usr/bin/cmupdate'  | crontab -
 		crontab -l | { cat; echo "0 */6 * * * /usr/bin/cmupdate 2>/dev/null ; /bigscoots/wpo_update.sh 2>/dev/null ; wget -O /usr/local/src/centminmod/inc/wpsetup.inc https://raw.githubusercontent.com/jcatello/centminmod/master/inc/wpsetup.inc"; } | crontab -
 	fi
 
