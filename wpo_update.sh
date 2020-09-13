@@ -110,7 +110,7 @@ if [ -f /usr/local/src/centminmod/centmin.sh ] ; then
   fi
 
   if grep -q ^log$ /root/.bigscoots/rsync/exclude >/dev/null 2>&1; then
-    sed '/^log$/d' /root/.bigscoots/rsync/exclude
+    sed -i '/^log$/d' /root/.bigscoots/rsync/exclude
   fi
 
   /bigscoots/wpo/extras/phplogging.sh
