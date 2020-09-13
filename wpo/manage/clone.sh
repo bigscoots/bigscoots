@@ -75,6 +75,7 @@ rsync -aqhv --delete \
 --exclude wp-content/cache/ \
 --exclude wp-content/wpbackitup_backups \
 --exclude wp-content/backupwordpress-*-backups \
+--exclude wp-content/backups-dup-pro \
 --exclude-from="${BSPATH}"/rsync/exclude \
 --exclude-from="${BSPATH}"/rsync/"${destinationsite}"/exclude \
 "$sourcesitedocroot/" "$destinationsitedocroot/"
