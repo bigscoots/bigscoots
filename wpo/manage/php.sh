@@ -18,7 +18,11 @@ echo
 echo 
 echo "Upgrading php..."
 
-PHPVER=$(wget 'https://php.net/ChangeLog-7.php' -qO -|grep h3|sed 's/<[^<>]*>//g' | head -1 | awk '{print $2}')
+if [ -z "$1" ]; then
+	PHPVER=$(wget 'https://php.net/ChangeLog-7.php' -qO -|grep h3|sed 's/<[^<>]*>//g' | head -1 | awk '{print $2}')
+else
+	PHPVER="$1"
+fi
 
 if [ -z "$PHPVER" ]; then
 	echo "PHP Version unable to set"
