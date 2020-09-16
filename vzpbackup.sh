@@ -208,8 +208,12 @@ if grep -w "$CTID" <<< `$VZLIST_CMD -a -Hoctid` &> /dev/null; then
             tar --use-compress-program=pbzip2 -cvf $WORK_DIR/vzpbackup_${CTID}_${HNAME}_${TIMESTAMP}.tar.bz2 .
             COMPRESS_SUFFIX=bz2
         else
-            #tar -cvf - . | pigz -9 -p 4 | ssh bigscoots@int-backup2.bigscoots.com "cat > ~/vps/$(hostname | cut -d"." -f1)/vzpbackup_${CTID}_${HNAME}_${TIMESTAMP}.tar.gz"
-            tar -cvf - --exclude='./dump' --exclude='./root.hdd/root.hdd.*' . | ssh bigscoots@int-backup3.bigscoots.com "pigz -9 > ~/vps/$(hostname | cut -d"." -f1)/vzpbackup_${CTID}_${HNAME}_${TIMESTAMP}.tar.gz"
+            #tar -cvf - . | pigz -9 -p 4 | ssh bigscoots@backup2.bigscoots.com "cat > ~/vps/$(hostname | cut -d"." -f1)/vzpbackup_${CTID}_${HNAME}_${TIMESTAMP}.tar.gz"
+
+            # Fastest compression
+            tar -cvf -  --exclude='./root.hdd/root.hdd.*' . | ssh bigscoots@backup06.bigscoots.com "gzip -1 > ~/vps/$(hostname | cut -d"." -f1)/vzpbackup_${CTID}_${HNAME}_${TIMESTAMP}.tar.gz"
+            # No compression
+            # tar -cvf -  --exclude='./root.hdd/root.hdd.*' . | ssh bigscoots@backup2.bigscoots.com "cat > ~/vps/$(hostname | cut -d"." -f1)/vzpbackup_${CTID}_${HNAME}_${TIMESTAMP}.tar"
         fi
 
         echo "Removing backup config files: "
@@ -273,13 +277,12 @@ if grep -w "$CTID" <<< `$VZLIST_CMD -a -Hoctid` &> /dev/null; then
   fi
 
 
-        echo "BACKUP FILE: $BACKUP_FILE"
-        ls -la $BACKUP_FILE
+        # echo "BACKUP FILE: $BACKUP_FILE"
+        # ls -la $BACKUP_FILE
 
         # Delete (merge) the snapshot
         $VZCTL_CMD snapshot-delete $CTID --id $ID
 else
         echo "WARNING: No CT found for ID $CTID. Skipping..."
 fi
-
 done
