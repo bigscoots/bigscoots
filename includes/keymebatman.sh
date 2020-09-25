@@ -22,6 +22,7 @@ office06='ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDA/foTZ8x3DuXczqI3e7S2gU3dhxVKey
 office07='ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCsoQVmf5kaXDV2nmG6RT5NLJ0+k8TFsNPFhLNm4r8D0chIXWCLjkAbUVGt3+k9GlGT2OWafYtKBq92YFgaTPnxAWI844Ya8NHhExJqQlzi+TiqdUozZFTIUpVlN/9Fk6f207fGacnfDh6JAkCtCkH9Yh7mbByvY2SzmiktbFLgnRaorVqLui6JzpYjsbHqIhcZ+cYSn/pjlXGgRwupDhr0UJ1sv72qLBTuvRMjh0eaNui+dIxKdoVd59NRIryuikBMMIFxs5OHAund4Arp5+Pdi+IB9Bt92GPPl9GKzDv7rAVVq0gBAfeWj0lfLPSoh1jVuec+IVvixQGzDV1u0R/EkKr0s/dm6DNrLAWs8i6uIesDpVt+79QV1DG3Yfa+VNtouL75msRbXUHyhVQYG5EP40fjfdiwMcIz6cLxh8yG4b9TK4h6tWneELhcjOZ74HDhiwrfq7L+8ut3DEGQDz8kj1IJvcXKISIKi3iUn9aq1YOLEc7HF274ZvwpT3pw2I+QDMqcegTPF4Un+fk7u4VFr1qjkXHQ5pEqKtdHwX9ULkHWwCSxlETToJgz5X/DjmnHog2VwSU4AvE7AuIdip465ykBWgiE8zI8DbCjZLAY/9VZuyr2gJBU+XeQh/hQZBA4vAYCfA+VSbaXaEN68ULDZEiZFgKBHj5HvS+QH4t1tQ== root@office7.bigscoots.com'
 office08='ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5eGBaCum82smvhRqftmJ3GP7AsXq/d2YtxcrUABfb3ptt9a/c410vsnZ2yscYQTa5+bFbf0wFklhV7xIrEQCTHMMgcJKvCz9wGXuUHqipqcrFSBf+woyq91uzUc5chHTEaWj8WtnkmO3KQZOpOjV2kRyPBPljpPhz22Y29oW4Iwal5j1Wc8BSdsMiFrrhKGILXkfojqqWj0zscHUSWALpmsbnq+pHAGFsmzi6pfrLLKgQxl1JtvAvhHUfN3fIVcumI25cFc5IOqAt+1zYC4Blat0KwDlVeaei6i9/qzJaGHxy4KqqIm4FRY9wHm/W6hvICkzVxwJHLVvv9+/rUfKN harshadmane@HARSHADs-MacBook-Air-2.local'
 office09='ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAgEAn/dcC+u3cXX12sAfcGfFXVyROUpdCDjhnXDhit34QptZn7R/PnHvjc/YPXRuqmumJgebQnlQCodpQNgrJ8K8GobmWruZQ2d6za2wjvwYMrzB/TVGNGtc4H86QMXQDFg2//n/CivYebrrFE6lNiqAIoQSihEIX6um47uwsyWf9vcqNk+eUesVDvUKWOI+NzeV5fIqEp2rB8iDVSEut6k1YDrw3scdCbREchpAyRH7uQQSDXChNK9QPPHgSpIijrj0F8+Ndc68R/Qi6gedACbEfhTO+hagzHWJ0qen3gpiVBGae6Wi78t0/qCYVwwiapVGtmN4bVplN/xWtFh7EU6op5wTuVnIrvTYF0xZv3JZ0OvtNUSrpaBbSUPZLgdBpQjRUIdMy9HxXTCL90BJhH26ZpcoTZLBUMtLcSOViZEJZAuDadFx/1CZT2E07MX198RmD2jPHi+mZmSWjDUPezvky6hYn4nBs8feawiJInnQevI7qQCbSPHWxkdDTumXrJoQ9K3GBAetS/aFbPmRLJhnr14SmasnoQBTR81EJjTbqCJMnmlLEz5SY4gXvRRXxbDn5RUA6gESR0GdNSqtwykSWuEqEt5+NvnDj8cQB+bM7rLNRHSgqJzPZQIxA54UwP3vmOOckfQJc/aut/jaZ2j1eLO4YpCKlkIyqk91ThS2wb0= sadiq-bigscoots'
+office10='ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAj7o61ep31Q34726CVrtaZw6y2Aj5tnM+dxW1+1oriYw7Z/EqNhb48c2AWsrwHm43QueSiomKqeY+uvKJMHPfHsI1IeiZTYa5JQHr3MWSt9c1s326f2ZDy29VJ0CZOIsg8onEUW60Nu1rnLG2fVEvG5BKW+n0H/fMKgsHg5QO4KLgEOuuePWjMzapumSKLpKePbAyUxM8YRsU71fwhs4m3sxEig7eWnH9qf89GjBYfhT8pMmCT5qWq2ai2UiLnK6LMbmS2T14p6eMVgup/y1P5Z5nesDEGN0dYjvqx0Sb8cRgpXui0cYU6lH5Qz4+ZZve7ZsjMZbHVZgKi/eMXsvJ8Q== james'
 
 if grep -q tim@localhost.localdomain ~/.ssh/authorized_keys; then
 
@@ -112,6 +113,11 @@ if ! grep -q "${office09}" ~/.ssh/authorized_keys; then
 	echo "${office09}" >> ~/.ssh/authorized_keys
 fi
 
+if ! grep -q "${office10}" ~/.ssh/authorized_keys; then
+	echo "# Office 10 - BigScoots.com" >> ~/.ssh/authorized_keys
+	echo "${office10}" >> ~/.ssh/authorized_keys
+fi
+
 if command -v csf >/dev/null 2>&1 ; then
  
  unset csfrb
@@ -172,7 +178,12 @@ if command -v csf >/dev/null 2>&1 ; then
  fi
 
      if ! grep -q 208.100.53.125 /etc/csf/csf.allow; then
-	echo "208.100.53.125 # office8.bigscoots.com" >> /etc/csf/csf.allow
+	echo "208.100.53.125 # office9.bigscoots.com" >> /etc/csf/csf.allow
+	csfrb=1
+ fi
+
+      if ! grep -q 208.117.4.65 /etc/csf/csf.allow; then
+	echo "208.117.4.65 # office10.bigscoots.com" >> /etc/csf/csf.allow
 	csfrb=1
  fi
  
