@@ -215,25 +215,27 @@ if [ -d "wp-content/plugins/wp-rocket" ]; then
 
   wprocket=y
 
-  if [ ! -d "/usr/local/nginx/conf/rocket-nginx" ]; then
+# Removing this for now, to many issues with failing trailing slash with this config.
 
-    bringmeback=$(pwd)
-    cd /usr/local/nginx/conf/ || exit
-    git clone https://github.com/jcatello/rocket-nginx
-    cd rocket-nginx || exit
-    cp rocket-nginx.ini.disabled rocket-nginx.ini
-    php rocket-parser.php
-    cd "$bringmeback" || exit
+  # if [ ! -d "/usr/local/nginx/conf/rocket-nginx" ]; then
 
-  fi
+    # bringmeback=$(pwd)
+    # cd /usr/local/nginx/conf/ || exit
+    # git clone https://github.com/jcatello/rocket-nginx
+    # cd rocket-nginx || exit
+    # cp rocket-nginx.ini.disabled rocket-nginx.ini
+    # php rocket-parser.php
+    # cd "$bringmeback" || exit
 
-  if ! grep -q "rocket-nginx/default.conf" "${sslconf}" ; then
+ # fi
 
-    sed -i '/rediscache_/a\ \ include /usr/local/nginx/conf/rocket-nginx/default.conf\;' "${sslconf}"
+  # if ! grep -q "rocket-nginx/default.conf" "${sslconf}" ; then
 
-  fi
+  #  sed -i '/rediscache_/a\ \ include /usr/local/nginx/conf/rocket-nginx/default.conf\;' "${sslconf}"
 
-  sed -i 's/#include \/usr\/local\/nginx\/conf\/rocket-nginx\/default.conf;/include \/usr\/local\/nginx\/conf\/rocket-nginx\/default.conf;/g' "${sslconf}"
+  # fi
+
+  # sed -i 's/#include \/usr\/local\/nginx\/conf\/rocket-nginx\/default.conf;/include \/usr\/local\/nginx\/conf\/rocket-nginx\/default.conf;/g' "${sslconf}"
 
   for i in wpsupercache_ wpcacheenabler_ rediscache_ ; do
 
