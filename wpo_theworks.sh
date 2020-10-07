@@ -20,6 +20,12 @@ if [ -f /etc/csf/csf.allow ] && ! grep -q 69.162.173.37 /etc/csf/csf.allow; then
     csf -a 69.162.173.37
 fi
 
+skipcache=0
+
+if [ "$2" == skipcache ]; then 
+    skipcache=1
+fi
+
 # Pre-checks
 # remove add_filter should be used in a mu-plugin, otherwise breaks wp-cli
 
@@ -251,7 +257,9 @@ if [ -d "wp-content/plugins/wp-rocket" ]; then
 
 else
 
-  if ! grep -q skipplugin=1 /root/.bigscoots/wp/options >/dev/null 2>&1; then 
+  if [ "$skipcache" == 1 ] || grep -q skipplugin=1 /root/.bigscoots/wp/options >/dev/null 2>&1; then 
+    wp plugin uninstall cache-enabler --deactivate ${WPCLIFLAGS} --quiet >/dev/null 2>&1
+  else
     wp plugin install cache-enabler --activate ${WPCLIFLAGS} --quiet ; wp plugin delete comet-cache sg-cachepress wp-hummingbird wp-super-cache w3-total-cache nginx-helper wp-redis wp-fastest-cache ${WPCLIFLAGS} --quiet
   fi
   

@@ -62,7 +62,11 @@ cd /home/nginx/domains/"$domain"/public || exit
 wp ${WPCLIFLAGS} plugin uninstall --all --deactivate --path=/home/nginx/domains/"$domain"/public >/dev/null 2>&1
 
 if [ "$2" == fresh ]; then
-  bash /bigscoots/wpo_theworks.sh fresh
+  if [ "$3" == skipcache ]; then 
+    bash /bigscoots/wpo_theworks.sh fresh skipcache
+  else
+    bash /bigscoots/wpo_theworks.sh fresh
+  fi
 fi
 
 

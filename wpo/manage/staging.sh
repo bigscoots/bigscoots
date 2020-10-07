@@ -7,10 +7,16 @@ BSPATH=/root/.bigscoots
 sourcedomain="$1"
 destinationdomain="$2"
 skip=0
+fresh=0
 
 WPCLIFLAGS="--allow-root --skip-plugins --skip-themes --require=/bigscoots/includes/err_report.php"
 
 if [ "$3" == skip ]; then 
+    skip=1
+fi
+
+if [ "$3" == fresh ]; then 
+    fresh=1
     skip=1
 fi
 
@@ -48,11 +54,16 @@ if [ "$skip" == 0 ]; then
 fi
 
 if [ ! -d /home/nginx/domains/"$destinationdomain" ] ; then
-        echo "$destinationdomain doesn't exist, creating it..."
+    if [ "$3" == fresh ]; then  
+        /bigscoots/wpo/manage/createdomain.sh "$destinationdomain" fresh skipcache
+    else   
         /bigscoots/wpo/manage/createdomain.sh "$destinationdomain"
+    fi
 fi
 
-/bigscoots/wpo/manage/clone.sh "$sourcedomain" "$destinationdomain" dev dev
+if [ "$fresh" == 0 ]; then
+    /bigscoots/wpo/manage/clone.sh "$sourcedomain" "$destinationdomain" dev dev
+fi
 
 if grep -q 'return 301 https' /usr/local/nginx/conf/conf.d/"$sourcedomain".conf && ! grep -q 'BigScoots Force HTTPS' /usr/local/nginx/conf/conf.d/"$destinationdomain".conf; then
         echo "https redirect found, redirecting staging."
