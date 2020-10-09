@@ -139,6 +139,7 @@ manual)
       --ignore-errors \
       --delete \
       --delete-excluded \
+      --exclude-from=/bigscoots/wpo/backups/rsync/exclude \
       --exclude-from="${BSPATH}"/rsync/exclude \
       --link-dest=../current \
       "$(dirname ${PWD})" "${RSYNCLOCATION}incomplete_back-${date}" 
@@ -154,6 +155,7 @@ manual)
       --ignore-errors \
       --delete \
       --delete-excluded \
+      --exclude-from=/bigscoots/wpo/backups/rsync/exclude \
       --exclude-from="$BSPATH"/rsync/exclude \
       --link-dest=../current \
       "$(dirname ${PWD})" "${RSYNCLOCATION}incomplete_back-${date}" 
@@ -194,6 +196,7 @@ gzip -f "$wpinstall$dbname".sql >/dev/null 2>&1
       --ignore-errors \
       --delete \
       --delete-excluded \
+      --exclude-from=/bigscoots/wpo/backups/rsync/exclude \
       --exclude-from="${BSPATH}"/rsync/exclude \
       --link-dest=../current \
       "${HOMEDIR}" "${RSYNCLOCATION}incomplete_back-${date}" 
@@ -209,6 +212,7 @@ gzip -f "$wpinstall$dbname".sql >/dev/null 2>&1
       --ignore-errors \
       --delete \
       --delete-excluded \
+      --exclude-from=/bigscoots/wpo/backups/rsync/exclude \
       --exclude-from="$BSPATH"/rsync/exclude \
       --link-dest=../current \
       "${HOMEDIR}" "${RSYNCLOCATION}incomplete_back-${date}" 
@@ -368,6 +372,7 @@ gzip -f "$wpinstall$dbname".sql >/dev/null 2>&1
       --ignore-errors \
       --delete \
       --delete-excluded \
+      --exclude-from=/bigscoots/wpo/backups/rsync/exclude \
       --exclude-from="${BSPATH}"/rsync/exclude \
       --link-dest=../current \
       "${HOMEDIR}" "${RSYNCLOCATION}incomplete_back-${date}" 
@@ -383,6 +388,7 @@ gzip -f "$wpinstall$dbname".sql >/dev/null 2>&1
       --ignore-errors \
       --delete \
       --delete-excluded \
+      --exclude-from=/bigscoots/wpo/backups/rsync/exclude \
       --exclude-from="$BSPATH"/rsync/exclude \
       --link-dest=../current \
       "${HOMEDIR}" "${RSYNCLOCATION}incomplete_back-${date}" 

@@ -19,7 +19,6 @@ log/error.log*
 */wp-content/uploads/wpallimport
 */wp-content/wpbackitup_backups
 */wp-snapshots
-*/wp-content/cache/supercache
 */wp-content/wfcache
 */wp-content/wflogs
 */wp-content/plugins/wordfence/tmp
