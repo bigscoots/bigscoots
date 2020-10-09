@@ -27,7 +27,7 @@ echo -e "${LB} Downloading php malware scanner"
 git clone https://github.com/scr34m/php-malware-scanner.git /root/scanner/
 echo "==========================="
 echo -e "${WH} Running scan, this is just a check and there might be false-possitives"
-php /root/scanner/scan.php -b -c -k -s -p -t -d /home/nginx/domains/"$1"/public/
+php /root/scanner/scan.php -b -c -k -p -t -d /home/nginx/domains/"$1"/public/
 echo "==========================="
 echo -e "${GR} Running VirusTotal scan"
 zip -r9q /root/scanner/scan.zip /home/nginx/domains/"$1"/public/ -i '*.php' -x \*wp\-config\*
