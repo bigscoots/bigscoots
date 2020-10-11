@@ -33,7 +33,10 @@ if [ -f /etc/centminmod-release ]; then
             crontab -l | sed 's/wpo_backups_ovz.sh/wpo_backups_ovz.sh \; \/bigscoots\/wpo\/backups\/local-backup-cleanup.sh/g' | crontab -
             echo "$(date) - added backup cleanup script if dedicated and missing" >> /root/.bigscoots/updates.log
         fi
-	fi
+        if ! grep -q destination=local /root/.bigscoots/backupinfo; then
+        	echo destination=local >> /root/.bigscoots/backupinfo
+        fi
+    fi
 
 	if [ ! -f /usr/local/src/centminmod/centmin.sh ]; then
 		cd /usr/local/src/
