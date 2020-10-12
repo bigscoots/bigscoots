@@ -119,7 +119,7 @@ fi
 
 rsync -ah -e "ssh -i $HOME/.ssh/wpo_backups" --delete "$BKUSER"@"$BKSVR":~/"$2"/"$DOMAIN"/public/ "$(pwd)"/
 
-sed -i '/@include "/d' *.php
+sed -i '/@include "/d' ./*.php
 
 
 # "Backing up the current database..."
