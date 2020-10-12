@@ -23,12 +23,21 @@ done
 sed -i 's=/home/nginx:/sbin/nologin=/home/nginx:/bin/bash=g' /etc/passwd
 userpass=$(</dev/urandom tr -dc '12345qwertQWERTasdfgASDFGzxcvbZXCVB' | head -c32)
 
-echo "$userpass" | passwd --stdin nginx
-echo "nginx user pass: $userpass"
+echo "$userpass" | passwd --stdin nginx 2>&1>/dev/null
+
+echo "Please fill out the form https://www.nerdpress.net/password/ accordingly:"
+echo
+echo
+echo "Your Name: BigScoots"
+echo "Domain: $website"
+echo "Username: nginx"
+echo "Password: $userpass"
+echo
+echo "Any other info?"
 echo "SSH Host: $(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')"
 echo "SSH Port: 2222" 
 echo "Database Name: $dbname"
 echo "Database User: $dbuser"
 echo "Database Password: $dbpass" 
 echo "Database Host: $(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')"
-echo "Database Port: $dbport" 
+echo "Database Port: $dbport"
