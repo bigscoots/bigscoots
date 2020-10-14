@@ -7,7 +7,7 @@
 SOURCESITE="$1"
 DESTINATIONSITE="$2"
 BSPATH=/root/.bigscoots
-REMOTEHOST=69.162.173.120
+REMOTEHOST="$3"
 REMOTEPORT=2222
 
 WPCLIFLAGS="--allow-root --skip-plugins --skip-themes --require=/bigscoots/includes/err_report.php"
