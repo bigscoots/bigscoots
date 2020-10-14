@@ -132,7 +132,9 @@ else
 fi
 echo "Done."
 
+echo "Setting db table prefix on destination site."
 wp ${WPCLIFLAGS} config set table_prefix ${WDPPREFIX} --path="${DESTINATIONSITEDOCROOT}" --quiet
+echo "Done."
 
 if wp ${WPCLIFLAGS} config get WP_SITEURL --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" >/dev/null 2>&1; then
 
@@ -145,10 +147,15 @@ if wp ${WPCLIFLAGS} config get WP_SITEURL --path="${SOURCESITEDOCROOT}" --ssh="$
 
 fi
 
+echo "Getting SITEURL of source site."
 SITEURLSOURCE=$(wp ${WPCLIFLAGS} option get siteurl --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" --quiet | sed -r 's/https?:\/\///g')
+echo "$SITEURLSOURCE done."
 
+echo "Running search/replace on $SITEURLSOURCE to $DESTINATIONSITEREPLACE"
 wp ${WPCLIFLAGS} search-replace "$SITEURLSOURCE" "$DESTINATIONSITEREPLACE" --recurse-objects --skip-columns=guid --skip-tables="${WDPPREFIX}"users --path="${DESTINATIONSITEDOCROOT}" --quiet
+echo "Done."
 
+echo "Checking for wp-rocket"
 if [ -d "$DESTINATIONSITEDOCROOT/wp-content/plugins/wp-rocket" ]; then
 
     if wp ${WPCLIFLAGS} plugin is-active wp-rocket --path="${DESTINATIONSITEDOCROOT}"; then 
@@ -157,28 +164,38 @@ if [ -d "$DESTINATIONSITEDOCROOT/wp-content/plugins/wp-rocket" ]; then
         wp plugin ${WPCLIFLAGS} activate wp-rocket --path="${DESTINATIONSITEDOCROOT}"
     fi
 fi
+echo "Done."
 
+echo "Updating .user.ini if found"
 if [ -f "$DESTINATIONSITEDOCROOT"/.user.ini ]; then
     sed -i "s/$SOURCESITE/$DESTINATIONSITE/g" "$DESTINATIONSITEDOCROOT"/.user.ini
 fi
+echo "Done."
 
+echo "Flushing elementor cache if any"
 if wp ${WPCLIFLAGS} plugin is-installed elementor --path="${DESTINATIONSITEDOCROOT}" >/dev/null 2>&1; then
     wp ${WPCLIFLAGS} elementor flush_css --skip-plugins=$(wp ${WPCLIFLAGS} plugin list --format=csv --field=name --path="${DESTINATIONSITEDOCROOT}" | paste -s -d, - | sed -r 's/,?elementor//g') --path="${DESTINATIONSITEDOCROOT}"
 fi
+echo "Done."
 
+echo "Chowning files at destination"
 chown -R nginx: /home/nginx/domains/$DESTINATIONSITE &
-
+echo "Done."
 # Clear All Cache
 
+echo "Clearing all cache"
 ! command -v redis-cli  >/dev/null 2>&1 || redis-cli flushall  >/dev/null 2>&1
 [ -d ${DESTINATIONSITEDOCROOT}/wp-content/cache ] && rm -rf ${DESTINATIONSITEDOCROOT}/wp-content/cache/* >/dev/null 2>&1
-
+echo "Done."
 # Force HTTPS if not already.
 
+echo "Forcing https if not already"
 if ! grep -q '# BigScoots Force HTTPS' /usr/local/nginx/conf/conf.d/"$DESTINATIONSITE".conf; then
         /bigscoots/wpo_forcehttps.sh "$DESTINATIONSITE"
 fi
+echo "Done."
 
+echo "Testing nginx config"
 "$NGINX" -t > /dev/null 2>&1
     if [ $? -eq 0 ]; then
                 npreload > /dev/null 2>&1
@@ -186,3 +203,6 @@ fi
                 "$NGINX" -t 2>&1 | mail -s "WPO URGENT - Nginx conf fail during clone request - From: $SOURCESITE To: $DESTINATIONSITE  -  $HOSTNAME" monitor@bigscoots.com
                 exit 1
     fi
+echo "Done."
+
+echo "Migration has been completed."
