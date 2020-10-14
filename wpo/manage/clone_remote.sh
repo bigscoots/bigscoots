@@ -16,6 +16,15 @@ NGINX=$(which nginx)
 SOURCESITEDOCROOT=/home/nginx/domains/"${SOURCESITE}"/public
 DESTINATIONSITEDOCROOT=/home/nginx/domains/"${DESTINATIONSITE}"/public
 
+if [ -f /etc/csf/csf.allow ] && ! grep -q "$REMOTEHOST" /etc/csf/csf.allow; then 
+    csf -a "$REMOTEHOST" >/dev/null 2>&1
+fi
+
+if ! ssh -oBatchMode=yes -oStrictHostKeyChecking=no -p "$REMOTEPORT" "$REMOTEHOST" 'exit'; then
+    echo "SSH: Connection to $REMOTEHOST over port $REMOTEPORT failed."
+    exit
+fi
+
 if ! wp ${WPCLIFLAGS} core is-installed --path="${SOURCESITEDOCROOT}" --ssh="${REMOTEHOST}":"${REMOTEPORT}" && ! wp ${WPCLIFLAGS} core is-installed --path="${DESTINATIONSITEDOCROOT}" ; then
 	echo "${SOURCESITE} or ${DESTINATIONSITE} does not exist."
     exit
