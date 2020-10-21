@@ -69,6 +69,7 @@ if [ "$2" == fresh ]; then
   fi
 fi
 
+/bigscoots/wpo/extras/phplogging.sh
 
 crontab -l | grep -v '/root/tools/wp_updater'  | crontab -
 
