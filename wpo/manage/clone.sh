@@ -57,10 +57,16 @@ if [[ $sourcesitedb == "$destinationsitedb" ]]; then
     fi
 fi < /dev/null 2> /dev/null
 
-mkdir -p "${BSPATH}"/rsync/"${destinationsite}"
+mkdir -p "${BSPATH}"/rsync/"${destinationsite}" "${BSPATH}"/logs
+LOGFILE="clone.$(date +%Y-%m-%d_%H:%M).log"
 touch "${BSPATH}"/rsync/"${destinationsite}"/exclude "${BSPATH}"/rsync/exclude
+touch "${BSPATH}"/logs/"${LOGFILE}"
 
-rsync -aqhv --delete \
+echo "Cloning ${sourcesite} to ${destinationsite}" > "${BSPATH}"/logs/"${LOGFILE}"
+echo >> "${BSPATH}"/logs/"${LOGFILE}"
+echo >> "${BSPATH}"/logs/"${LOGFILE}"
+
+rsync -aqhv --delete --log-file="${BSPATH}"/logs/"${LOGFILE}" \
 --exclude 'wp-content/uploads/backupbuddy*' \
 --exclude 'wp-content/backup*' \
 --exclude wp-content/uploads/backup \
@@ -78,7 +84,13 @@ rsync -aqhv --delete \
 --exclude wp-content/backups-dup-pro \
 --exclude-from="${BSPATH}"/rsync/exclude \
 --exclude-from="${BSPATH}"/rsync/"${destinationsite}"/exclude \
-"$sourcesitedocroot/" "$destinationsitedocroot/"
+"$sourcesitedocroot/" "$destinationsitedocroot/" >/dev/null 2>&1
+
+rsyncVal=$?
+
+if [ $rsyncVal -ne 0 ] && [ $rsyncVal -ne 24 ]; then
+    echo "Check logfile ${BSPATH}/logs/${LOGFILE}" | mail -s "WPO Clone - Issue with rsync during clone, log path in ticket. - From: $sourcesite To: $destinationsite  -  $HOSTNAME" monitor@bigscoots.com
+fi
 
 destinationsitereplace=$(wp ${WPCLIFLAGS} option get siteurl --path="${destinationsitedocroot}" --quiet 2> /dev/null | sed -r 's/https?:\/\///g')
 
