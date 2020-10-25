@@ -380,6 +380,8 @@ if [[ $(wp option get siteurl ${WPCLIFLAGS}) =~ https:// ]]; then
     fi
 fi
 
+bash /bigscoots/wpo/extras/phplogging.sh
+
 if [[ $(wp option get siteurl ${WPCLIFLAGS}) =~ //www. ]]; then
     sed -i -E 's/return 301 https:\/\/(www)?/return 301 https:\/\/www./g' /usr/local/nginx/conf/conf.d/$(pwd | sed 's/\// /g' | awk '{print $4}').conf
 
