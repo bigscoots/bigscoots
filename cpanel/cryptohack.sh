@@ -9,5 +9,5 @@ until ! ps aux|grep "./cron.php -e0.0.0.0 -p" |grep -v grep > /dev/null 2>&1; do
 	/usr/sbin/lsof -p "${PIDHACK}" >> /root/tmpdtshack.txt
 	echo "---------------------------" >> /root/tmpdtshack.txt
 	kill -9  "${PIDHACK}"
-	cat /root/tmpdtshack.txt | mail -s "$HOSTNAME - cPanel User: ${PIDUSER} infected - info in ticket." monitor@bigscoots.com
+	cat /root/tmpdtshack.txt | mail -s "$HOSTNAME - cPanel User: ${PIDUSER} infected -  info in ticket." monitor@bigscoots.com
 done
