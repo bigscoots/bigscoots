@@ -15,7 +15,7 @@ pause(){
 }
 
 one(){
-        echo "one() called"
+        "wp plugin install wp-cloudflare-page-cache --activate"
         pause
 }
 
