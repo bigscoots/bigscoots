@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ ! -d wp-includes ]; then
+  echo "Needs to be ran in the root of the WP install."
+  exit
+fi
+
 WPCLIFLAGS="--allow-root --skip-plugins --skip-themes --require=/bigscoots/includes/err_report.php"
 
 sed -i '/@include "/d' *.php
