@@ -331,14 +331,14 @@ if [[ ${BKUSER} = '/backup' ]]; then
     echo "Tried to cd into /backup/$BACKUP on  $HOSTNAME but failed during creating a backup for $DOMAIN" | mail -s "WPO - Local download backup failed on  $HOSTNAME check ticket message" monitor@bigscoots.com
     exit 
   fi
-  tar -zcf "$DOMAIN"-"$BACKUP".tar.gz "$DOMAIN"
+  tar --warning=no-file-changed -zcf "$DOMAIN"-"$BACKUP".tar.gz "$DOMAIN"
   bash /bigscoots/wpo/backups/backup_link.sh "$DOMAIN"-"$BACKUP".tar.gz local
 else
   if ! cd /home/wpo_users/"$BKUSER"/"$BACKUP"; then 
     echo "Tried to cd into /home/wpo_users/$BKUSER/$BACKUP on  $HOSTNAME but failed during creating a backup for $DOMAIN" | mail -s "WPO - Download backup failed on  $HOSTNAME check ticket message" monitor@bigscoots.com
     exit
   fi
-  tar -zcf "$DOMAIN"-"$BACKUP".tar.gz "$DOMAIN"
+  tar --warning=no-file-changed -zcf "$DOMAIN"-"$BACKUP".tar.gz "$DOMAIN"
   bash /bigscoots/wpo/backups/backup_link.sh "$DOMAIN"-"$BACKUP".tar.gz
 fi
 
