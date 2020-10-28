@@ -100,10 +100,10 @@ echo
 
 find wp-content/uploads/ -type f -name '*php*'
 find wp-content/uploads/ -type f -name '*.ico'
-grep -rl '))));}' --include='*php'
-grep -rl 'eval (gzinflate(base64_decode' --include='*php'
-grep -rli anonymousfox --include='*php'
+grep -rl '))));}\|php eval(gzinflate(base64_decode\|eval (gzinflate(base64_decode\|anonymousfox' --include='*php' --exclude-dir='.infected_*'
 
 echo
 echo
-echo "Make sure to check the theme and wp-content in general..."
+echo "Please remove the .infected_$(date +%m%d%y-%H%M) folder after you are done checking to make sure nothing needs to be moved back into the public folder."
+echo
+echo
