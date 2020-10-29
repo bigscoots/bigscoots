@@ -5,6 +5,7 @@
 RANDO1=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 16 | head -n 1)
 RANDO2=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 16 | head -n 1)
 BACKUP=$1
+WWWPATH=/var/www/html
 
 if [ -z "${BACKUP}" ]; then 
 	echo "need filename"
@@ -21,15 +22,15 @@ if [[ $2 == local ]]; then
 	link="https://$HOSTNAME/${RANDO1}/${RANDO2}/${BACKUP}"
 else
 
-	mkdir -p /var/www/html/"${RANDO1}"/"${RANDO2}"/
-	mv "${BACKUP}" /var/www/html/"${RANDO1}"/"${RANDO2}"/
-	screen -dmS "${BACKUP}" bash -c "sleep 172800 ; rm -rf /var/www/html/${RANDO1}"
+	mkdir -p "${WWWPATH}"/"${RANDO1}"/"${RANDO2}"/
+	mv "${BACKUP}" "${WWWPATH}"/"${RANDO1}"/"${RANDO2}"/
+	screen -dmS "${BACKUP}" bash -c "sleep 172800 ; rm -rf ${WWWPATH}/${RANDO1}"
 
-	# echo "Path: /var/www/html/${RANDO1}/${RANDO2}/${BACKUP}"
+	# echo "Path: "${WWWPATH}"/${RANDO1}/${RANDO2}/${BACKUP}"
 	link="http://$HOSTNAME/${RANDO1}/${RANDO2}/${BACKUP}"
 fi
 
-if [ ! -z "$link" ]; then
+if [ -n "$link" ]; then
 downloadinfo="DownloadLink
 $link"
 	
