@@ -6,6 +6,7 @@ mkdir -p /home/nginx/.ssh
 touch /home/nginx/.ssh/authorized_keys
 chmod 700 /home/nginx/.ssh
 chmod 600 /home/nginx/.ssh/authorized_keys
+chown -R nginx: /home/nginx/.ssh
 sed -i 's=/home/nginx:/sbin/nologin=/home/nginx:/bin/bash=g' /etc/passwd
 
 echo "SSH Host: $(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')"
