@@ -18,36 +18,48 @@ o) optional=${OPTARG};;
 esac
 done
 
-echo $postname
-echo $source
-echo $target
-echo $optional
+echo "Postname: $postname"
+echo "Source Domain: $source"
+echo "Destination Domain: $target"
+echo "$optional"
+
+echo
+echo
 
 sourcepath="/home/nginx/domains/${source}/public"
 targetpath="/home/nginx/domains/${target}/public"
 
-echo $sourcepath
-echo $targetpath
+mkdir -p "${targetpath}"/tmp
 
-mkdir -p ${targetpath}/tmp
+postidsource=$(wp ${WPCLIFLAGS} post list --field=ID --post_type=post --post_status=draft,publish,pending,future --name="${postname}" --path="${sourcepath}")
+postidtarget=$(wp ${WPCLIFLAGS} post list --field=ID --post_type=post --post_status=draft,publish,pending,future --name="${postname}" --path="${targetpath}")
 
-postidsource=$(wp ${WPCLIFLAGS} post list --field=ID --post_type=post --post_status=draft,publish,pending,future --name=${postname} --path=${sourcepath})
-postidtarget=$(wp ${WPCLIFLAGS} post list --field=ID --post_type=post --post_status=draft,publish,pending,future --name=${postname} --path=${targetpath})
+echo "Source Post ID: ${postidsource}"
+echo "Destination Post ID: ${postidtarget}"
 
-echo ${postidsource}
-echo ${postidtarget}
+echo
+echo
+
+echo "If Source Post does not exist, will exit."
+
+if [ -z "$postidsource" ];then
+        echo "${postname} does not exist on source, exiting..."
+        exit
+fi
+
+echo "Source Post exists.. Continuing..."
 
 if [ -z "$postidtarget" ];then
-
-  wp ${WPCLIFLAGS} export --post__in=${postidsource} --with_attachments --path=${sourcepath} --dir=${targetpath}/tmp/ --filename_format='bigscoots.{site}.wordpress.{date}.{n}.xml'
-  wp --allow-root --skip-themes --require=/bigscoots/includes/err_report.php --skip-plugins=$(wp ${WPCLIFLAGS} plugin list --field=name --path=${sourcepath} | grep -v ^wordpress-importer$ | tr  '\n' ',') import --authors=skip --path=${targetpath} ${targetpath}/tmp/
-  rm -f ${targetpath}/tmp/bigscoots.*.xml >/dev/null 2>&1
-
+  echo "Post does not exist on destination, importing now..."
+  wp ${WPCLIFLAGS} export --post__in="${postidsource}" --with_attachments --path="${sourcepath}" --dir="${targetpath}"/tmp/ --filename_format='bigscoots.{site}.wordpress.{date}.{n}.xml'
+  wp --allow-root --skip-themes --require=/bigscoots/includes/err_report.php --skip-plugins=$(wp ${WPCLIFLAGS} plugin list --field=name --path="${sourcepath}" | grep -v ^wordpress-importer$ | tr  '\n' ',') import --authors=skip --path="${targetpath}" "${targetpath}"/tmp/
+  rm -f "${targetpath}"/tmp/bigscoots.*.xml >/dev/null 2>&1
 else
-
- wp ${WPCLIFLAGS} post delete ${postidtarget} --path=${targetpath} --force
- wp ${WPCLIFLAGS} export --post__in=${postidsource} --with_attachments --path=${sourcepath} --dir=${targetpath}/tmp/ --filename_format='bigscoots.{site}.wordpress.{date}.{n}.xml'
- wp --allow-root --skip-themes --require=/bigscoots/includes/err_report.php --skip-plugins=$(wp ${WPCLIFLAGS} plugin list --field=name --path=${sourcepath} | grep -v ^wordpress-importer$ | tr  '\n' ',') import --authors=skip --path=${targetpath} ${targetpath}/tmp/
- rm -f ${targetpath}/tmp/bigscoots.*.xml >/dev/null 2>&1
-
+ echo "Post exists on destination, removing it first then importing it..."
+ wp ${WPCLIFLAGS} post delete "${postidtarget}" --path="${targetpath}" --force
+ wp ${WPCLIFLAGS} export --post__in="${postidsource}" --with_attachments --path="${sourcepath}" --dir="${targetpath}"/tmp/ --filename_format='bigscoots.{site}.wordpress.{date}.{n}.xml'
+ wp --allow-root --skip-themes --require=/bigscoots/includes/err_report.php --skip-plugins=$(wp ${WPCLIFLAGS} plugin list --field=name --path="${sourcepath}" | grep -v ^wordpress-importer$ | tr  '\n' ',') import --authors=skip --path="${targetpath}" "${targetpath}"/tmp/
+ rm -f "${targetpath}"/tmp/bigscoots.*.xml >/dev/null 2>&1
 fi
+
+echo "Importing of post ${postname} into ${target} complete."
