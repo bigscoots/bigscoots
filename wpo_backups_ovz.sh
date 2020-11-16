@@ -32,6 +32,14 @@ if [ -f /etc/csf/csf.allow ] && ! grep -q 67.202.70.92 /etc/csf/csf.allow; then
     csf -a 67.202.70.92 >/dev/null 2>&1
 fi
 
+if [ -f /etc/csf/csf.allow ] && ! grep -q 216.185.212.7 /etc/csf/csf.allow; then 
+    csf -a 216.185.212.7 >/dev/null 2>&1
+fi
+
+if [ -f /etc/csf/csf.allow ] && ! grep -q 216.185.212.8 /etc/csf/csf.allow; then 
+    csf -a 216.185.212.8 >/dev/null 2>&1
+fi
+
 if [ ! -f "$BSPATH"/rsync/exclude ]; then
   mkdir -p "$BSPATH"/rsync
 
@@ -102,7 +110,7 @@ if  [[ $remote == y ]] && [[ ! $1 =~ (initial_*|download) ]]; then
       # echo "Mark for Justin" | mail -s "$HOSTNAME- WPO failed to SSH to backup server." monitor@bigscoots.com
       exit 1
     elif ! grep -q bksvr= "${BSPATH}"/backupinfo; then 
-      echo bksvr=backup07.bigscoots.com >> /root/.bigscoots/backupinfo
+      echo bksvr=backup11.bigscoots.com >> /root/.bigscoots/backupinfo
       BKSVR=$(grep bksvr "${BSPATH}"/backupinfo | sed 's/bksvr=//g')
       /bigscoots/wpo_backups_ovz.sh
       exit
