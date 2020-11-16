@@ -2,7 +2,7 @@
 
 date=$(date "+%Y-%m-%dT%H_%M_%S")
 HOMEDIR=/home/nginx/domains/
-BKSVR=backup3.bigscoots.com
+BKSVR=
 BSPATH=/root/.bigscoots
 PATH=/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin:/root/bin
 WPCLIFLAGS="--allow-root --skip-plugins --skip-themes --require=/bigscoots/includes/err_report.php"
@@ -98,25 +98,18 @@ if  [[ $remote == y ]] && [[ ! $1 =~ (initial_*|download) ]]; then
   RSYNCLOCATION="$BKUSER@$BKSVR:"
 
   # Try the backup server that is already defined
-  if ssh -oBatchMode=yes -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" 'uptime' >/dev/null 2>&1 ; [ $? -eq 255 ]
-  then
-    if ssh -oBatchMode=yes -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"backup07.bigscoots.com" 'uptime' >/dev/null 2>&1 ; [ $? -eq 255 ]
-    then
-      if [ ! "$(ls -A /home/nginx/domains)" ]; then
-        exit
-      fi
-      WPOIP=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
-      curl -s -d "email=${WPOIP}&domain=${HOSTNAME}&type=Backup%20Failure" -X POST https://api-dev.bigscoots.com/alerts/generate-support-task
-      # echo "Mark for Justin" | mail -s "$HOSTNAME- WPO failed to SSH to backup server." monitor@bigscoots.com
-      exit 1
-    elif ! grep -q bksvr= "${BSPATH}"/backupinfo; then 
-      echo bksvr=backup11.bigscoots.com >> /root/.bigscoots/backupinfo
-      BKSVR=$(grep bksvr "${BSPATH}"/backupinfo | sed 's/bksvr=//g')
-      /bigscoots/wpo_backups_ovz.sh
+  if ! ssh -oBatchMode=yes -oStrictHostKeyChecking=no -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" 'exit' >/dev/null 2>&1; then
+    # If there are no domains that means initial backup was never ran yet so connectin is going to fail, so just exit and initialize from wpo. 
+    if [ ! "$(ls -A /home/nginx/domains)" ]; then
       exit
     fi
+    # SSH connection failed, will open up a support task in WPO.
+    WPOIP=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+    curl -s -d "email=${WPOIP}&domain=${HOSTNAME}&type=Backup%20Failure" -X POST https://api-dev.bigscoots.com/alerts/generate-support-task
+    exit 1
   fi
 else
+  # If this is not a remote backup then well just set the backup location to the local backup drive.
   RSYNCLOCATION=/backup/
 fi
 
@@ -279,6 +272,11 @@ fi
 
 if ! crontab -l | grep /bigscoots/wpo_backups_ovz.sh >/dev/null 2>&1; then 
   crontab -l | { cat; echo "$(( ( RANDOM % 60 )  + 1 )) $(( ( RANDOM % 4 )  + 1 )) * * * /bigscoots/wpo_backups_ovz.sh"; } | crontab -
+fi
+
+if ! grep -q bksvr "${BSPATH}"/backupinfo >/dev/null 2>&1 ; then
+  BKSVR="$(shuf -e backup10.bigscoots.com backup11.bigscoots.com | head -1)"
+  echo bkuser="${BKSVR}" >> "${BSPATH}"/backupinfo
 fi
 
 pushkey=false
