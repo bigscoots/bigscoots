@@ -276,7 +276,7 @@ fi
 
 if ! grep -q bksvr "${BSPATH}"/backupinfo >/dev/null 2>&1 ; then
   BKSVR="$(shuf -e backup10.bigscoots.com backup11.bigscoots.com | head -1)"
-  echo bkuser="${BKSVR}" >> "${BSPATH}"/backupinfo
+  echo bksvr="${BKSVR}" >> "${BSPATH}"/backupinfo
 fi
 
 pushkey=false
