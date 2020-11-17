@@ -15,15 +15,14 @@ then
 fi
 
 if [[ $ipaddress == *"50.31.98"* ]] || [[ $ipaddress == *"50.31.99"* ]] ; then
-
-ipgateway=50.31.98.1
-ipnetmask=255.255.254.0
-
+	ipgateway=50.31.98.1
+	ipnetmask=255.255.254.0
+elif [[ $ipaddress == *"216.185.21"* ]]; then
+	ipgateway=216.185.212.1
+	ipnetmask=255.255.252.0
 else
-
-ipgateway=$(awk -F"." '{print $1"."$2"."$3".1"}'<<<"$ipaddress")
-ipnetmask=255.255.255.0
-
+	ipgateway=$(awk -F"." '{print $1"."$2"."$3".1"}'<<<"$ipaddress")
+	ipnetmask=255.255.255.0
 fi
 
 {
