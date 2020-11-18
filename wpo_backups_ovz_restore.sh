@@ -75,7 +75,7 @@ fi
 
 if [ $2 = "daily" ]; then
 
-ssh -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" "ls -1d */$DOMAIN | sed 's/incomplete_back-//g ; s/back-//g ; s/T/ /g ; s/_/:/g ; s/\/$DOMAIN//g' | grep -v 'current\|manual' | sed 's/$/;/g'"
+ssh -i "$HOME"/.ssh/wpo_backups "$BKUSER"@"$BKSVR" "ls -1d */$DOMAIN | sed 's/back-//g ; s/T/ /g ; s/_/:/g ; s/incomplete:/incomplete_/g ; s/\/$DOMAIN//g' | grep -v 'current\|manual' | sed 's/$/;/g'"
 
 # /bigscoots/wpo_backups_ovz_restore.sh h manual
 # This will list out backups in WPO panel format for manual backups
@@ -186,7 +186,7 @@ h)
 
 if [ $2 = "daily" ]; then
 
-ls -1d /backup/*/"$DOMAIN" | sed 's/\/backup\///g' | sed "s/incomplete_back-//g ; s/back-//g ; s/T/ /g ; s/_/:/g ; s/\/$DOMAIN//g" | grep -v 'current\|manual' | sed 's/$/;/g'
+ls -1d /backup/*/"$DOMAIN" | sed 's/\/backup\///g' | sed "s/back-//g ; s/T/ /g ; s/_/:/g ; s/incomplete:/incomplete_/g ; s/\/$DOMAIN//g" | grep -v 'current\|manual' | sed 's/$/;/g'
 
 elif [ $2 = "manual" ]; then
 
