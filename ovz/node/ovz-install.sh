@@ -113,5 +113,5 @@ wget -O /vz/template/cache/centos-7-x86_64-cpanelv1.tar.gz http://208.117.38.205
 /usr/libexec/ovz-template-converter --verbose /vz/template/cache/centos-7-x86_64-wpov2.tar.gz
 /usr/libexec/ovz-template-converter --verbose /vz/template/cache/centos-7-x86_64-cpanelv1.tar.gz
 
-wget https://files.soluslabs.com/install.sh
-sh install.sh
+wget -o /root/install.sh https://files.soluslabs.com/install.sh
+wall "All good, run /root/install.sh to start solus installer."
