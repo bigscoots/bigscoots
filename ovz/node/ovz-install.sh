@@ -5,7 +5,6 @@
 # New Server Install - BigScoots.com
 # Install Tools and update system
 
-
 yum -y install nano ntp mailx pciutils bind-utils traceroute nmap screen yum-utils net-tools dos2unix lshw python python-ctypes iotop ncurses-devel libpcap-devel gcc make wget curl unzip wget mailx git
 yum -y update
 
@@ -62,44 +61,6 @@ service sshd restart
 
 cd /bigscoots/
 /bigscoots/includes/keymebatman.sh
-
-cp -rf /etc/sysconfig/network-scripts /etc/sysconfig/network-scripts.bk
-cd /etc/sysconfig/network-scripts/
-
-sed -i 's/^/#/' /etc/sysconfig/network-scripts/ifcfg-eth0
-sed -i 's/^/#/' /etc/sysconfig/network-scripts/ifcfg-eth1
-
-{
-echo DEVICE=bond0
-echo BRIDGE=br0
-echo TYPE=Bond
-echo ONBOOT=yes
-echo NM_CONTROLLED=no
-} >> /etc/sysconfig/network-scripts/ifcfg-bond0
-
-{
-echo 
-echo DEVICE=eth0
-echo ONBOOT=yes
-echo NM_CONTROLLED=no
-echo MASTER=bond0
-echo SLAVE=yes
-} >> /etc/sysconfig/network-scripts/ifcfg-eth0
-
-{
-echo 
-echo DEVICE=eth1
-echo ONBOOT=yes
-echo NM_CONTROLLED=no
-echo MASTER=bond0
-echo SLAVE=yes
-} >> /etc/sysconfig/network-scripts/ifcfg-eth1
-
-sed -i 's/#HWADDR/HWADDR/g' /etc/sysconfig/network-scripts/ifcfg-eth0 /etc/sysconfig/network-scripts/ifcfg-eth1
-sed -i 's/#UUID/UUID/g' /etc/sysconfig/network-scripts/ifcfg-eth0 /etc/sysconfig/network-scripts/ifcfg-eth1
-
-{ echo alias bond0 bonding; echo options bond0 miimon=100 mode=0 lacp_rate=1; } >> /etc/modprobe.d/bonding.conf
-#service network restart
 
 echo 'QUOTAUGIDLIMIT="1"' >> /etc/vz/conf/ve-vswap-solus.conf-sample
 sed -i '/DISKSPACE/c\DISKSPACE="20485760:20485760"' /etc/vz/conf/vps.vzpkgtools.conf-sample
