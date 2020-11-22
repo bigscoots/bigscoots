@@ -69,8 +69,8 @@ wget https://www.dropbox.com/s/60csqc35sd9gjax/ovz-converter.txt -O /usr/libexec
 /usr/libexec/ovz-template-converter
 
 mkdir -p /vz/template/cache
-wget -O /vz/template/cache/centos-7-x86_64-wpov2.tar.gz http://208.117.38.205/ovz-temp/scoots/centos-7-x86_64-wpov2.tar.gz
-wget -O /vz/template/cache/centos-7-x86_64-cpanelv1.tar.gz http://208.117.38.205/ovz-temp/scoots/centos-7-x86_64-cpanelv1.tar.gz
+wget --no-check-certificate -O /vz/template/cache/centos-7-x86_64-wpov2.tar.gz http://208.117.38.205/ovz-temp/scoots/centos-7-x86_64-wpov2.tar.gz
+wget --no-check-certificate -O /vz/template/cache/centos-7-x86_64-cpanelv1.tar.gz http://208.117.38.205/ovz-temp/scoots/centos-7-x86_64-cpanelv1.tar.gz
 
 /usr/libexec/ovz-template-converter --verbose /vz/template/cache/centos-7-x86_64-wpov2.tar.gz
 /usr/libexec/ovz-template-converter --verbose /vz/template/cache/centos-7-x86_64-cpanelv1.tar.gz
