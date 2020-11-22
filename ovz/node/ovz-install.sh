@@ -70,11 +70,11 @@ sed -i 's/^/#/' /etc/sysconfig/network-scripts/ifcfg-eth0
 sed -i 's/^/#/' /etc/sysconfig/network-scripts/ifcfg-eth1
 
 {
-DEVICE=bond0
-BRIDGE=br0
-TYPE=Bond
-ONBOOT=yes
-NM_CONTROLLED=no
+echo DEVICE=bond0
+echo BRIDGE=br0
+echo TYPE=Bond
+echo ONBOOT=yes
+echo NM_CONTROLLED=no
 } >> /etc/sysconfig/network-scripts/ifcfg-bond0
 
 {
@@ -114,4 +114,6 @@ wget -O /vz/template/cache/centos-7-x86_64-cpanelv1.tar.gz http://208.117.38.205
 /usr/libexec/ovz-template-converter --verbose /vz/template/cache/centos-7-x86_64-cpanelv1.tar.gz
 
 wget -O /root/install.sh https://files.soluslabs.com/install.sh
-wall "All good, run /root/install.sh to start solus installer."
+bash install.sh <<EOF
+1
+EOF
