@@ -120,24 +120,11 @@ echo "######################################################"
 sleep 1
 
 mkdir /home/installtmp
-cd /home/installtmp || exit
-wget -N http://www.networkpanda.com/scripts/cel_install
-sh cel_install
-wget https://download.configserver.com/csf.tgz
-wget https://download.configserver.com/cmc.tgz
-wget https://download.configserver.com/cse.tgz
-wget https://download.configserver.com/cmq.tgz
-wget https://download.configserver.com/cmm.tgz
-tar -zxvf csf.tgz
-tar -zxvf cmc.tgz
-tar -zxvf cse.tgz
-tar -zxvf cmq.tgz
-tar -zxvf cmm.tgz
-cd cmc || exit ; sh install.sh ; cd ..
-cd cse || exit; sh install.sh ; cd ..
-cd cmq || exit ; sh install.sh ; cd ..
-cd cmm || exit ; sh install.sh ; cd ..
-cd csf || exit ; sh install.cpanel.sh ; cd ..
+wget -O /home/installtmp/csf.tgz https://download.configserver.com/csf.tgz
+tar -zxvf /home/installtmp/csf.tgz -C /home/installtmp/
+sh /home/installtmp/csf/install.cpanel.sh
+
+/usr/local/cpanel/scripts/setupftpserver --force pure-ftpd
 
 echo
 echo "######################################################"
@@ -278,8 +265,7 @@ whmapi1 set_tweaksetting key=smtpmailgidonly value=0
 
 wget -O /usr/local/sbin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar ; chmod +x /usr/local/sbin/wp
 ln -s /usr/local/sbin/wp /usr/sbin/wp
-echo "alias wp='/opt/cpanel/ea-php70/root/usr/bin/php /usr/local/sbin/wp --allow-root'" >> /root/.bashrc
-crontab -l | { cat; echo "*/15 * * * * /bigscoots/mon_disk.sh"; } | crontab -
+echo "alias wp='/usr/local/bin/php /usr/local/sbin/wp --allow-root'" >> /root/.bashrc
 sed -i 's/export PATH/export PATH\nexport EDITOR=nano/g' /root/.bash_profile
 
 curl -s https://repo.cloudlinux.com/kernelcare/kernelcare_install.sh | bash
@@ -292,8 +278,6 @@ kcarectl --set-patch-type free --update
 
 sysctl -w fs.enforce_symlinksifowner=1
 sysctl -w fs.symlinkown_gid=99
-
-/usr/local/cpanel/bin/update-roundcube-sqlite-db --force
 
 echo
 echo "######################################################"
