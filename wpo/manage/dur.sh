@@ -2,7 +2,7 @@
 
 # DUR - https://github.com/amekkawi/diskusagereports
 
-DATE=${date +'%m%d%Y%H%M'}
+DATE=$(date +'%m%d%Y%H%M')
 DURL="https://${HOSTNAME}/diskusagereports/?${DATE}/"
 
 if [ ! -d /usr/local/nginx/html/diskusagereports ]; then 
