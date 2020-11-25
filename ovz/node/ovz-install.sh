@@ -68,6 +68,8 @@ sed -i '/DISKSPACE/c\DISKSPACE="20485760:20485760"' /etc/vz/conf/vps.vzpkgtools.
 wget https://www.dropbox.com/s/60csqc35sd9gjax/ovz-converter.txt -O /usr/libexec/ovz-template-converter
 /usr/libexec/ovz-template-converter
 
+yum install vzpkg* centos-7-x86_64-ez -y
+
 mkdir -p /vz/template/cache
 wget --no-check-certificate -O /vz/template/cache/centos-7-x86_64-wpov2.tar.gz http://208.117.38.205/ovz-temp/scoots/centos-7-x86_64-wpov2.tar.gz
 wget --no-check-certificate -O /vz/template/cache/centos-7-x86_64-cpanelv1.tar.gz http://208.117.38.205/ovz-temp/scoots/centos-7-x86_64-cpanelv1.tar.gz
