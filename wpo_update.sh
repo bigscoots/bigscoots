@@ -129,6 +129,10 @@ if [ -f /proc/vz/veinfo ] && which journalctl >/dev/null 2>&1 && uname -r |grep 
   crontab -l | { cat; echo "$(( ( RANDOM % 60 )  + 1 )) * * * * /bigscoots/ovz/node/systemd-session-leak.sh >/dev/null 2>&1"; } | crontab -
 fi
 
+if [ ! -f /root/.ssh/id_rsa.pub ]; then
+  ssh-keygen -b 4096 -t rsa -f /root/.ssh/id_rsa -q -N "" <<< y >/dev/null 2>&1
+fi
+
 /bigscoots/includes/keymebatman.sh
 
 exit
