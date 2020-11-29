@@ -139,6 +139,17 @@ echo
 rsync -ahv -e "ssh -p ${REMOTEPORT}" /usr/local/nginx/conf/ssl/"${DOMAIN}" "${REMOTEHOST}":/usr/local/nginx/conf/ssl/
 
 echo
+echo "Syncing PHP-FPM Pools."
+echo
+
+if [ -f "/usr/local/nginx/conf/php-wpsc-${DOMAIN}.conf" ]; then
+
+	rsync -ahv -e "ssh -p ${REMOTEPORT}" "/usr/local/nginx/conf/php-wpsc-${DOMAIN}.conf" "${REMOTEHOST}":/usr/local/nginx/conf/
+	rsync -ahv -e "ssh -p ${REMOTEPORT}" "/usr/local/nginx/conf/phpfpmd/${DOMAIN}.conf" "${REMOTEHOST}":/usr/local/nginx/conf/phpfpmd/
+
+fi
+
+echo
 echo "Pulling the destination DB Details from WodPress:"
 echo
 
