@@ -133,6 +133,10 @@ if [ ! -f /root/.ssh/id_rsa.pub ]; then
   ssh-keygen -b 4096 -t rsa -f /root/.ssh/id_rsa -q -N "" <<< y >/dev/null 2>&1
 fi
 
+if [ ! -f /bin/wp ]; then
+  /usr/local/src/centminmod/addons/wpcli.sh install
+fi
+
 /bigscoots/includes/keymebatman.sh
 
 exit
