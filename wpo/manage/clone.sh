@@ -57,9 +57,9 @@ if [[ $sourcesitedb == "$destinationsitedb" ]]; then
     fi
 fi < /dev/null 2> /dev/null
 
-mkdir -p "${BSPATH}"/rsync/"${destinationsite}" "${BSPATH}"/logs
+mkdir -p "${BSPATH}"/rsync/"${destinationsite}" "${BSPATH}"/rsync/"${sourcesite}" "${BSPATH}"/logs
 LOGFILE="clone.$(date +%Y-%m-%d_%H:%M).log"
-touch "${BSPATH}"/rsync/"${destinationsite}"/exclude "${BSPATH}"/rsync/exclude
+touch "${BSPATH}"/rsync/"${destinationsite}"/exclude "${BSPATH}"/rsync/"${sourcesite}"/exclude "${BSPATH}"/rsync/exclude
 touch "${BSPATH}"/logs/"${LOGFILE}"
 
 echo "Cloning ${sourcesite} to ${destinationsite}" > "${BSPATH}"/logs/"${LOGFILE}"
