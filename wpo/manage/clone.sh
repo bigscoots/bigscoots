@@ -84,6 +84,7 @@ rsync -aqhv --delete --log-file="${BSPATH}"/logs/"${LOGFILE}" \
 --exclude wp-content/backups-dup-pro \
 --exclude-from="${BSPATH}"/rsync/exclude \
 --exclude-from="${BSPATH}"/rsync/"${destinationsite}"/exclude \
+--exclude-from="${BSPATH}"/rsync/"${sourcesite}"/exclude \
 "$sourcesitedocroot/" "$destinationsitedocroot/" >/dev/null 2>&1
 
 rsyncVal=$?
