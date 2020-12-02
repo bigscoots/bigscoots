@@ -122,7 +122,8 @@ sleep 1
 mkdir /home/installtmp
 wget -O /home/installtmp/csf.tgz https://download.configserver.com/csf.tgz
 tar -zxvf /home/installtmp/csf.tgz -C /home/installtmp/
-sh /home/installtmp/csf/install.cpanel.sh
+cd /home/installtmp/csf/
+bash install.cpanel.sh
 
 /usr/local/cpanel/scripts/setupftpserver --force pure-ftpd
 
