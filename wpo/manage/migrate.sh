@@ -220,5 +220,5 @@ ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}
 echo
 echo
 echo
-echo "Migrated completed!"
+echo "Migration completed!"
 echo
