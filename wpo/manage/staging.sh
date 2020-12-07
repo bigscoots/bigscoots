@@ -80,7 +80,7 @@ fi
 
 wp ${WPCLIFLAGS} config set JETPACK_STAGING_MODE true --raw --path=/home/nginx/domains/"$destinationdomain"/public/ > /dev/null 2>&1
 
-if [ ! -f /root/.bigscoots/staging/enable_mail ]; then 
+if [ ! -f /root/.bigscoots/staging/"$destinationdomain"/enable_mail ]; then 
     if ! grep -q "function wp_mail()" /home/nginx/domains/"$destinationdomain"/public/wp-config.php > /dev/null 2>&1 ; then
 
 cat <<EOT >> /home/nginx/domains/"$destinationdomain"/public/wp-config.php
