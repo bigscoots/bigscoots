@@ -3,6 +3,8 @@
 
 DOMAIN=$1
 
+yes | /usr/local/src/centminmod/addons/acmetool.sh acmeupdate
+
 if grep -q "${DOMAIN}"-acme.cer /usr/local/nginx/conf/conf.d/"${DOMAIN}".ssl.conf; then
         echo "SSL already exists."
         exit 0
