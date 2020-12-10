@@ -255,3 +255,22 @@ echo
 echo
 echo "Migration completed!"
 echo
+echo
+echo "Make sure to update Hostbill with the new IP:"
+echo $(echo $HOSTNAME | sed 's/.bigscoots-wpo.com//g' | sed 's/^/https:\/\/www.bigscoots.com\/portal\/admin\/?cmd=accounts\&action=edit\&id=/g')
+echo "That URL might be wrong so please double check it."
+echo
+echo
+echo "If all domains are migrated and working, we need to stop mysql server shutdown this server."
+echo "We want to stop mysql on old server and make sure it doesn't come back online incase old server is booted back up at a later time."
+echo
+echo "Stop the cron that tries to restart services"
+echo "Command: crontab -l | grep -v '/bigscoots/wpo_servicechk.sh'  | crontab -"
+echo "Disable mysql start on boot"
+echo "Command: chkconfig mysql off"
+echo "Stop MySQL"
+echo "Command: service mysql stop"
+echo "Shutdown old server"
+echo "Command: shutdown -h now"
+echo
+echo
