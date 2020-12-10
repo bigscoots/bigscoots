@@ -22,6 +22,7 @@ fi
 ####
 DOMAIN="$1"
 REMOTEHOST="$2"
+LOCALHOSTNAME=$HOSTNAME
 ####
 DOCROOT="/home/nginx/domains/${DOMAIN}/public"
 REMOTEPORT=2222
@@ -57,6 +58,21 @@ else
 	echo
 fi
 
+echo
+echo "Checking HOSTNAME on destination server."
+echo
+
+REMOTEHOSTNAME=$(ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "echo \$HOSTNAME")
+
+if [ ${REMOTEHOSTNAME} != ${LOCALHOSTNAME} ]; then 
+	echo "Hostnames do not match, setting it on destination server."
+	ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "hostnamectl set-hostname ${LOCALHOSTNAME}"
+	ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "sed -i "s/$HOSTNAME/${LOCALHOSTNAME}/g" /usr/local/nginx/conf/conf.d/virtual.conf"
+fi
+
+echo
+echo "Checking to see if this is a new server, if yes we need to confirm its correct server.."
+echo
 
 if [ ! "$(ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "ls -A /home/nginx/domains/")" ]; then
 
@@ -86,6 +102,8 @@ if [ ! "$(ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${R
 	fi
 fi
 
+
+#### Start the actual migration ##### 
 
 # destination
 echo
