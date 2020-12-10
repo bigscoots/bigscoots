@@ -67,7 +67,7 @@ REMOTEHOSTNAME=$(ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=
 if [ ${REMOTEHOSTNAME} != ${LOCALHOSTNAME} ]; then 
 	echo "Hostnames do not match, setting it on destination server."
 	ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "hostnamectl set-hostname ${LOCALHOSTNAME}"
-	ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "sed -i "s/$HOSTNAME/${LOCALHOSTNAME}/g" /usr/local/nginx/conf/conf.d/virtual.conf"
+	ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "sed -i "s/\$HOSTNAME/${LOCALHOSTNAME}/g" /usr/local/nginx/conf/conf.d/virtual.conf"
 fi
 
 echo
