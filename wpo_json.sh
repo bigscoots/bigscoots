@@ -78,7 +78,7 @@ fi
 
 for domain in $(\ls /home/nginx/domains/) ; do
 
-pmaurl=$(grep "https://$HOSTNAME/[0-9]" $(grep -rl $(echo /usr/local/nginx/html/*mysqladmin* | sed 's/\/usr\/local\/nginx\/html\///g' | head -1) /root/centminlogs/centminmod_phpmyadmin_install_*.log) | sed -r "s/\x1B\[([0-9]{1,3}((;[0-9]{1,3})*)?)?[m|K]//g" | sed 's/$/\//g' | tr -d " \t\n\r")
+pmaurl="$(echo https://$HOSTNAME/$(echo /usr/local/nginx/html/*mysqladmin* | sed 's/\/usr\/local\/nginx\/html\///g' | head -1)/)"
 pmauser=$(grep Username: $(grep -rl $(echo /usr/local/nginx/html/*mysqladmin* | sed 's/\/usr\/local\/nginx\/html\///g' | head -1) /root/centminlogs/centminmod_phpmyadmin_install_*.log) | awk '{print $2}')
 pmapass=$(grep Password: $(grep -rl $(echo /usr/local/nginx/html/*mysqladmin* | sed 's/\/usr\/local\/nginx\/html\///g' | head -1) /root/centminlogs/centminmod_phpmyadmin_install_*.log) | awk '{print $2}')
 pmadbuser=$(wp ${WPCLIFLAGS} config get DB_USER --path=/home/nginx/domains/"$domain"/public/)
@@ -130,7 +130,7 @@ if [[ ! -d /home/nginx/domains/"$domain" ]] ; then
   exit 1
 fi
 
-pmaurl=$(grep "https://$HOSTNAME/[0-9]" $(grep -rl $(echo /usr/local/nginx/html/*mysqladmin* | sed 's/\/usr\/local\/nginx\/html\///g' | head -1) /root/centminlogs/centminmod_phpmyadmin_install_*.log) | sed -r "s/\x1B\[([0-9]{1,3}((;[0-9]{1,3})*)?)?[m|K]//g" | sed 's/$/\//g' | tr -d " \t\n\r")
+pmaurl="$(echo https://$HOSTNAME/$(echo /usr/local/nginx/html/*mysqladmin* | sed 's/\/usr\/local\/nginx\/html\///g' | head -1)/)"
 pmauser=$(grep Username: $(grep -rl $(echo /usr/local/nginx/html/*mysqladmin* | sed 's/\/usr\/local\/nginx\/html\///g' | head -1) /root/centminlogs/centminmod_phpmyadmin_install_*.log) | awk '{print $2}')
 pmapass=$(grep Password: $(grep -rl $(echo /usr/local/nginx/html/*mysqladmin* | sed 's/\/usr\/local\/nginx\/html\///g' | head -1) /root/centminlogs/centminmod_phpmyadmin_install_*.log) | awk '{print $2}')
 pmadbuser=$(wp ${WPCLIFLAGS} config get DB_USER --path=/home/nginx/domains/"$domain"/public/)
