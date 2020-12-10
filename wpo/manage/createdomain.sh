@@ -69,6 +69,13 @@ if [ "$2" == fresh ]; then
   fi
 fi
 
+if [ ! -f /usr/local/nginx/conf/xmlrpcblock.conf ]; then
+{
+echo     allow 192.0.64.0/18\;
+echo     deny all\;
+} >> /usr/local/nginx/conf/xmlrpcblock.conf
+fi
+
 /bigscoots/wpo/extras/phplogging.sh
 
 crontab -l | grep -v '/root/tools/wp_updater'  | crontab -
