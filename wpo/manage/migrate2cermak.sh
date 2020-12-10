@@ -14,11 +14,6 @@ if [ -z "$2" ]; then
   exit 1
 fi
 
-if ! grep -q "${REMOTEHOST}" /etc/csf/csf.allow; then
-	echo "Whitelisting IP in CSF"
-	csf -a "${REMOTEHOST}"
-fi
-
 ####
 DOMAIN="$1"
 REMOTEHOST="$2"
@@ -42,6 +37,15 @@ if [ -d "${DOCROOT}" ]; then
 else
 	echo "${DOMAIN} does not exist, exiting..."
 	exit 1
+fi
+
+echo
+echo "Whitelisting destination IP in Firewall.."
+echo
+
+if ! grep -q "${REMOTEHOST}" /etc/csf/csf.allow; then
+	echo "Whitelisting IP in CSF"
+	csf -a "${REMOTEHOST}"
 fi
 
 echo
