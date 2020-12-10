@@ -55,7 +55,7 @@ if ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHO
 else
 	echo
 	echo "Connection failed, make sure SSH key is on ${REMOTEHOST}"
-	echo
+	exit
 fi
 
 echo
@@ -64,7 +64,7 @@ echo
 
 REMOTEHOSTNAME=$(ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "echo \$HOSTNAME")
 
-if [ ${REMOTEHOSTNAME} != ${LOCALHOSTNAME} ]; then 
+if [ "${REMOTEHOSTNAME}" != "${LOCALHOSTNAME}" ]; then 
 	echo "Hostnames do not match, setting it on destination server."
 	ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "hostnamectl set-hostname ${LOCALHOSTNAME}"
 	ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "sed -i "s/\$HOSTNAME/${LOCALHOSTNAME}/g" /usr/local/nginx/conf/conf.d/virtual.conf"
@@ -272,5 +272,6 @@ echo "Stop MySQL"
 echo "Command: service mysql stop"
 echo "Shutdown old server"
 echo "Command: shutdown -h now"
+echo
 echo
 echo
