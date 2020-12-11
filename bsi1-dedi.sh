@@ -50,6 +50,9 @@ if [ "$?" -eq "0" ]; then
           chmod +x lsi.sh
           (crontab -l ; echo "0 * * * * ~/lsi.sh checkNemail") | crontab - .
           rm -f /etc/cron.daily/raid
+          /opt/MegaRAID/MegaCli/MegaCli64 -LDSetProp -WT -Immediate -Lall -aAll
+          /opt/MegaRAID/MegaCli/MegaCli64 -LDSetProp -NORA -Immediate -Lall -aAll
+          /opt/MegaRAID/MegaCli/MegaCli64 -LDSetProp -Direct -Immediate -Lall -aAll
         fi
 fi
 
