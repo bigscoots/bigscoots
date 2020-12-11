@@ -1,5 +1,9 @@
 #!/bin/bash
 
+exec 3>&1 4>&2
+trap 'exec 2>&4 1>&3' 0 1 2 3
+exec 1>/var/log/bsinstaller.log 2>&1
+
 clear
 
 echo
@@ -113,29 +117,27 @@ rm -f /var/cpanel/hulkd/enabled
 
 echo
 echo "######################################################"
+echo "cPanel BigScoots plans"
+echo "######################################################"
+sleep 1
+
+rsync -ah /bigscoots/cpanel/acllists /var/cpanel/
+rsync -ah /bigscoots/cpanel/packages /var/cpanel/
+rsync -ah /bigscoots/cpanel/acllists /var/cpanel/
+
+echo
+echo "######################################################"
 echo "Install addons"
 echo "######################################################"
 sleep 1
 
 mkdir /home/installtmp
-cd /home/installtmp || exit
-wget -N http://www.networkpanda.com/scripts/cel_install
-sh cel_install
-wget https://download.configserver.com/csf.tgz
-wget https://download.configserver.com/cmc.tgz
-wget https://download.configserver.com/cse.tgz
-wget https://download.configserver.com/cmq.tgz
-wget https://download.configserver.com/cmm.tgz
-tar -zxvf csf.tgz
-tar -zxvf cmc.tgz
-tar -zxvf cse.tgz
-tar -zxvf cmq.tgz
-tar -zxvf cmm.tgz
-cd cmc || exit ; sh install.sh ; cd ..
-cd cse || exit; sh install.sh ; cd ..
-cd cmq || exit ; sh install.sh ; cd ..
-cd cmm || exit ; sh install.sh ; cd ..
-cd csf || exit ; sh install.cpanel.sh ; cd ..
+wget -O /home/installtmp/csf.tgz https://download.configserver.com/csf.tgz
+tar -zxvf /home/installtmp/csf.tgz -C /home/installtmp/
+cd /home/installtmp/csf/
+bash install.cpanel.sh
+
+/usr/local/cpanel/scripts/setupftpserver --force pure-ftpd
 
 echo
 echo "######################################################"
@@ -154,8 +156,6 @@ sed -i '/PT_INTERVAL = /c\PT_INTERVAL = "0"' /etc/csf/csf.conf
 sed -i '/PT_USERTIME = /c\PT_USERTIME = "0"' /etc/csf/csf.conf
 sed -i '/LF_INTEGRITY = /c\LF_INTEGRITY = "0"' /etc/csf/csf.conf
 sed -i '/PT_USERMEM = /c\PT_USERMEM = "0"' /etc/csf/csf.conf
-
-# UDPFLOOD has to be disbaled in virtuozzo7 https://bugs.openvz.org/browse/OVZ-6659
 sed -i '/UDPFLOOD = /c\UDPFLOOD = "0"' /etc/csf/csf.conf
 sed -i '/LF_DIRWATCH = /c\LF_DIRWATCH = "0"' /etc/csf/csf.conf
 sed -i 's/LF_EMAIL_ALERT = "1"/LF_EMAIL_ALERT = "0"/g' /etc/csf/csf.conf
@@ -172,9 +172,7 @@ sed -i 's/LF_NETBLOCK_ALERT = "1"/LF_NETBLOCK_ALERT = "0"/g' /etc/csf/csf.conf
 sed -i 's/RT_RELAY_ALERT = "1"/RT_RELAY_ALERT = "0"/g' /etc/csf/csf.conf
 sed -i 's/LF_ALERT_TO = ""/LF_ALERT_TO = "manage@bigscoots.com"/g' /etc/csf/csf.conf
 sed -i 's/X_ARF_TO = ""/X_ARF_TO = "manage@bigscoots.com"/g' /etc/csf/csf.conf
-
 sed -i '/PassivePortRange/c\PassivePortRange          49152 65534' /etc/pure-ftpd.conf
-
 
 echo
 echo "######################################################"
@@ -238,31 +236,6 @@ chkconfig rpcbind off
 service saslauthd stop
 chkconfig saslauthd off
 
-#yum remove iputils -y
-#rpm -ivh https://buildlogs.centos.org/c7.1511.00/iputils/20151120190818/20121221-7.el7.x86_64/iputils-20121221-7.el7.x86_64.rpm
-#yum -y install initscripts
-
-echo
-echo "######################################################"
-echo "Install maldet and clamav"
-echo "######################################################"
-sleep 1
-
-/scripts/update_local_rpm_versions --edit target_settings.clamav installed
-/scripts/check_cpanel_rpms --fix --targets=clamav
-cd /usr/local/src/ || exit
-wget http://www.rfxn.com/downloads/maldetect-current.tar.gz
-tar -xzf maldetect-current.tar.gz
-cd maldetect-* || exit
-sh ./install.sh
-ln -s /usr/local/cpanel/3rdparty/bin/clamscan /usr/local/sbin/clamscan
-ln -s /usr/local/cpanel/3rdparty/bin/freshclam /usr/local/sbin/freshclam
-maldet -d
-maldet -u
-
-# Takes too long, will just update it via cron at night.
-# freshclam
-
 echo
 echo "######################################################"
 echo "Rando"
@@ -287,6 +260,21 @@ sed -i 's/export PATH/export PATH\nexport EDITOR=nano/g' /root/.bash_profile
 
 sysctl -w fs.enforce_symlinksifowner=1
 sysctl -w fs.symlinkown_gid=99
+
+# Installing Softaculous
+wget -N http://files.softaculous.com/install.sh
+chmod 755 install.sh
+./install.sh
+
+# Install LiteSpeed Plugin
+cd /usr/src
+wget http://www.litespeedtech.com/packages/cpanel/lsws_whm_plugin_install.sh
+sh ./lsws_whm_plugin_install.sh
+rm -f lsws_whm_plugin_install.sh
+
+# install cloudlfare plugin
+
+bash <(curl -s https://raw.githubusercontent.com/cloudflare/CloudFlare-CPanel/master/cloudflare.install.sh) -k e3471ba7eea3a19d1459332492e51679 -n \"BigScoots, INC\"
 
 echo
 echo "######################################################"
