@@ -1,5 +1,0 @@
-addrs_dlpi.o: addrs_dlpi.c /usr/include/stdc-predef.h config.h
-
-/usr/include/stdc-predef.h:
-
-config.h:
