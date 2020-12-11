@@ -71,7 +71,7 @@ echo "$EMAIL" > /root/.forward
 
 mkdir -p /root/cpanel_profile
 cp -rf /bigscoots/cpanel.config /root/cpanel_profile/cpanel.config
-cp -rf /bigscoots/cpanel/bigscoots_shared_def_ea4.json /etc/cpanel_initial_install_ea4_profile.json
+cp -rf /bigscoots/cpanel/bigscoots_shared_def_ea4.json /bigscoots/cpanel/EA4/CL-PHP74.json
 
 echo
 echo "######################################################"
