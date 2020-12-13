@@ -133,7 +133,7 @@ tar -zxvf /home/installtmp/csf.tgz -C /home/installtmp/
 cd /home/installtmp/csf/
 bash install.cpanel.sh
 
-/usr/local/cpanel/scripts/setupftpserver --force pure-ftpd
+screen -dmS pureftpd_install sh -c '/usr/local/cpanel/scripts/setupftpserver --force pure-ftpd'
 
 echo
 echo "######################################################"
@@ -241,7 +241,7 @@ sleep 1
 whmapi1 setminimumpasswordstrengths default=50
 whmapi1 set_tweaksetting key=smtpmailgidonly value=0
 
-/scripts/install_lets_encrypt_autossl_provider
+screen -dmS LEinstall sh -c '/scripts/install_lets_encrypt_autossl_provider'
 
 wget -O /usr/local/sbin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar ; chmod +x /usr/local/sbin/wp
 ln -s /usr/local/sbin/wp /usr/sbin/wp
@@ -258,6 +258,7 @@ sysctl -w fs.enforce_symlinksifowner=1
 sysctl -w fs.symlinkown_gid=99
 
 # Installing Softaculous
+cd /home/installtmp
 wget -N http://files.softaculous.com/install.sh
 chmod 755 install.sh
 ./install.sh
