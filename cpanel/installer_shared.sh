@@ -211,11 +211,11 @@ echo "Restart some services that need changes to take effect."
 echo "######################################################"
 sleep 1
 
-service httpd restart
-csf -r
-service pure-ftpd restart
-service mysql restart
-service sshd restart
+/usr/sbin/csf -ra
+/scripts/restartsrv_apache
+/scripts/restartsrv_pureftpd
+/scripts/restartsrv_mysql
+/scripts/restartsrv_sshd
 
 echo
 echo "######################################################"
