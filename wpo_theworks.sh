@@ -184,11 +184,35 @@ else
   wp ${WPCLIFLAGS} config set DB_HOST localhost
 
   if [ -f bigscoots.sql ]; then
-  wp ${WPCLIFLAGS} db import bigscoots.sql
-  exit_on_error $? MySQL Import
-  mv bigscoots.sql ../bigscoots_original-"${date}".sql
+    if wp ${WPCLIFLAGS} core is-installed > /dev/null 2>&1; then
+      echo
+      echo "###########################"
+      read -p "The database already contains a live site, please confirm you want to overwrite the database. Press O to overwrite or any other key to skip import." -n 1 -r
+      echo
+      echo "###########################"
+      echo
+      if [[ $REPLY =~ ^[Oo]$ ]]; then
+        echo
+        echo
+        temp_cnt=10
+        while [[ ${temp_cnt} -gt 0 ]]; do
+          printf "\rYou have %2d second(s) remaining to hit Ctrl+C to cancel that operation!" ${temp_cnt}
+          sleep 1
+          ((temp_cnt--))
+        done
+        echo ""
+        wp ${WPCLIFLAGS} db import bigscoots.sql
+        exit_on_error $? MySQL Import
+        mv bigscoots.sql ../bigscoots_original-"${date}".sql
+      else
+        echo "Skipping import of database."
+      fi
+    else
+      wp ${WPCLIFLAGS} db import bigscoots.sql
+      exit_on_error $? MySQL Import
+      mv bigscoots.sql ../bigscoots_original-"${date}".sql
+    fi
   fi
-
 fi
 
 if ! wp ${WPCLIFLAGS} core is-installed; then
