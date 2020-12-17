@@ -255,6 +255,29 @@ else
 fi
 
 echo
+echo "Checking to see if newrelic is installed.."
+echo
+
+if php -m |grep -q newrelic; then
+	echo "newrelic has been detected, checking on remote.."
+ 	if ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "php -m |grep -q newrelic"; then
+	 	echo "newrelic has been detected on remote server, skipping install."
+	 else
+	 	echo "newrelic is not running on remote server, installing..."
+	 	ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "rpm -Uvh http://yum.newrelic.com/pub/newrelic/el5/x86_64/newrelic-repo-5-3.noarch.rpm"
+		ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "yum install newrelic-sysmond newrelic-php5 -y"
+	 	nrlicense=$(grep newrelic.license /etc/centminmod/php.d/newrelic.ini | grep -o '".*"' | sed 's/"//g')
+	 	ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "nrsysmond-config --set license_key=${nrlicense}"
+	 	rsync -ahv -e "ssh -p ${REMOTEPORT}" /etc/centminmod/php.d/newrelic.ini "${REMOTEHOST}":/etc/centminmod/php.d/newrelic.ini
+	 	ssh -p "${REMOTEPORT}" -oBatchMode=yes -oStrictHostKeyChecking=no "${REMOTEHOST}" "service newrelic-sysmond restart && service newrelic-daemon restart && nprestart"
+
+	 	echo
+		echo "newrelic install completed, make sure to check /var/log/newrelic/php_agent.log to ensure its working after migratiosn are complete."
+		echo
+	fi
+fi
+
+echo
 echo
 echo
 echo "Migration completed!"
