@@ -245,7 +245,7 @@ screen -dmS LEinstall sh -c '/scripts/install_lets_encrypt_autossl_provider'
 
 wget -O /usr/local/sbin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar ; chmod +x /usr/local/sbin/wp
 ln -s /usr/local/sbin/wp /usr/sbin/wp
-echo "alias wp='/opt/cpanel/ea-php70/root/usr/bin/php /usr/local/sbin/wp --allow-root'" >> /root/.bashrc
+echo "alias wp='/usr/local/bin/php /usr/local/sbin/wp --allow-root'" >> /root/.bashrc
 crontab -l | { cat; echo "*/15 * * * * /bigscoots/mon_disk.sh"; } | crontab -
 sed -i 's/export PATH/export PATH\nexport EDITOR=nano/g' /root/.bash_profile
 
