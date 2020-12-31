@@ -71,7 +71,7 @@ echo "$EMAIL" > /root/.forward
 
 mkdir -p /root/cpanel_profile
 cp -rf /bigscoots/cpanel.config /root/cpanel_profile/cpanel.config
-cp -rf /bigscoots/bigscoots.json /etc/cpanel_initial_install_ea4_profile.json
+cp -rf /bigscoots/cpanel/EA4/CL-PHP74.json /etc/cpanel_initial_install_ea4_profile.json
 
 echo
 echo "######################################################"
@@ -79,8 +79,6 @@ echo "Disable iptables, update the server and set the timezone(Chicago)"
 echo "######################################################"
 sleep 3
 
-chkconfig iptables off
-service iptables stop
 yum -y update
 rm -f /etc/localtime
 ln -s /usr/share/zoneinfo/America/Chicago /etc/localtime
@@ -125,7 +123,7 @@ tar -zxvf /home/installtmp/csf.tgz -C /home/installtmp/
 cd /home/installtmp/csf/
 bash install.cpanel.sh
 
-/usr/local/cpanel/scripts/setupftpserver --force pure-ftpd
+screen -dmS pureftpd_install sh -c '/usr/local/cpanel/scripts/setupftpserver --force pure-ftpd'
 
 echo
 echo "######################################################"
@@ -144,8 +142,6 @@ sed -i '/PT_INTERVAL = /c\PT_INTERVAL = "0"' /etc/csf/csf.conf
 sed -i '/PT_USERTIME = /c\PT_USERTIME = "0"' /etc/csf/csf.conf
 sed -i '/LF_INTEGRITY = /c\LF_INTEGRITY = "0"' /etc/csf/csf.conf
 sed -i '/PT_USERMEM = /c\PT_USERMEM = "0"' /etc/csf/csf.conf
-
-# UDPFLOOD has to be disbaled in virtuozzo7 https://bugs.openvz.org/browse/OVZ-6659
 sed -i '/UDPFLOOD = /c\UDPFLOOD = "0"' /etc/csf/csf.conf
 sed -i '/LF_DIRWATCH = /c\LF_DIRWATCH = "0"' /etc/csf/csf.conf
 sed -i 's/LF_EMAIL_ALERT = "1"/LF_EMAIL_ALERT = "0"/g' /etc/csf/csf.conf
@@ -162,7 +158,6 @@ sed -i 's/LF_NETBLOCK_ALERT = "1"/LF_NETBLOCK_ALERT = "0"/g' /etc/csf/csf.conf
 sed -i 's/RT_RELAY_ALERT = "1"/RT_RELAY_ALERT = "0"/g' /etc/csf/csf.conf
 sed -i 's/LF_ALERT_TO = ""/LF_ALERT_TO = "manage@bigscoots.com"/g' /etc/csf/csf.conf
 sed -i 's/X_ARF_TO = ""/X_ARF_TO = "manage@bigscoots.com"/g' /etc/csf/csf.conf
-
 sed -i '/PassivePortRange/c\PassivePortRange          49152 65534' /etc/pure-ftpd.conf
 
 
@@ -207,11 +202,11 @@ echo "Restart some services that need changes to take effect."
 echo "######################################################"
 sleep 1
 
-service httpd restart
-csf -r
-service pure-ftpd restart
-service mysql restart
-service sshd restart
+/usr/sbin/csf -ra
+/scripts/restartsrv_apache
+/scripts/restartsrv_pureftpd
+/scripts/restartsrv_mysql
+/scripts/restartsrv_sshd
 
 echo
 echo "######################################################"
@@ -238,39 +233,16 @@ echo "Install maldet and clamav"
 echo "######################################################"
 sleep 1
 
-/scripts/update_local_rpm_versions --edit target_settings.clamav installed
-/scripts/check_cpanel_rpms --fix --targets=clamav
-cd /usr/local/src/ || exit
-wget http://www.rfxn.com/downloads/maldetect-current.tar.gz
-tar -xzf maldetect-current.tar.gz
-cd maldetect-* || exit
-sh ./install.sh
-ln -s /usr/local/cpanel/3rdparty/bin/clamscan /usr/local/sbin/clamscan
-ln -s /usr/local/cpanel/3rdparty/bin/freshclam /usr/local/sbin/freshclam
-maldet -d
-maldet -u
-
-# Takes too long, will just update it via cron at night.
-# freshclam
-
-echo
-echo "######################################################"
-echo "Rando"
-echo "######################################################"
-sleep 1
-
 whmapi1 setminimumpasswordstrengths default=50
 whmapi1 set_tweaksetting key=smtpmailgidonly value=0
 
-/scripts/install_lets_encrypt_autossl_provider
+screen -dmS LEinstall sh -c '/scripts/install_lets_encrypt_autossl_provider'
 
 wget -O /usr/local/sbin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar ; chmod +x /usr/local/sbin/wp
 ln -s /usr/local/sbin/wp /usr/sbin/wp
 echo "alias wp='/usr/local/bin/php /usr/local/sbin/wp --allow-root'" >> /root/.bashrc
+crontab -l | { cat; echo "*/15 * * * * /bigscoots/mon_disk.sh"; } | crontab -
 sed -i 's/export PATH/export PATH\nexport EDITOR=nano/g' /root/.bash_profile
-
-curl -s https://repo.cloudlinux.com/kernelcare/kernelcare_install.sh | bash
-kcarectl --set-patch-type free --update
 
 {
   echo fs.enforce_symlinksifowner = 1
@@ -279,6 +251,18 @@ kcarectl --set-patch-type free --update
 
 sysctl -w fs.enforce_symlinksifowner=1
 sysctl -w fs.symlinkown_gid=99
+
+# Installing Softaculous
+cd /home/installtmp
+wget -N http://files.softaculous.com/install.sh
+chmod 755 install.sh
+./install.sh
+
+# Install LiteSpeed Plugin
+cd /usr/src
+wget http://www.litespeedtech.com/packages/cpanel/lsws_whm_plugin_install.sh
+sh ./lsws_whm_plugin_install.sh
+rm -f lsws_whm_plugin_install.sh
 
 echo
 echo "######################################################"
