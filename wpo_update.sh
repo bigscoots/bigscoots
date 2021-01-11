@@ -45,7 +45,7 @@ unset reload
 
  # WPO Specific checks
 
-if [ -f /usr/local/src/centminmod/centmin.sh ] ; then 
+if [ -f /etc/centminmod-release ]; then 
 
   if [[ ! -f /etc/centminmod/email-primary.ini ]]; then
 	 touch /etc/centminmod/email-primary.ini
@@ -83,7 +83,7 @@ if [ -f /usr/local/src/centminmod/centmin.sh ] ; then
   # no longer needed since wpo_update.sh will exists on all servers n ow.
 
   if crontab -l |grep /bigscoots/dedicated/updater.sh > /dev/null 2>&1; then 
-    crontab -l | grep -v '/usr/bin/cmupdate'  | crontab -
+    crontab -l | grep -v '/bigscoots/dedicated/updater.sh'  | crontab -
   fi
 
   # Disable serving webp due to Cloudflare
@@ -105,10 +105,6 @@ if [ -f /usr/local/src/centminmod/centmin.sh ] ; then
 
   sed -i '/PHP_PGO/d' /etc/centminmod/custom_config.inc
 
-  if grep -q backup06 /root/.bigscoots/backupinfo >/dev/null 2>&1; then
-    sed -i 's/backup06/backup07/g' /root/.bigscoots/backupinfo
-  fi
-
   if grep -q ^log$ /root/.bigscoots/rsync/exclude >/dev/null 2>&1; then
     sed -i '/^log$/d' /root/.bigscoots/rsync/exclude
   fi
@@ -117,6 +113,10 @@ if [ -f /usr/local/src/centminmod/centmin.sh ] ; then
 
   if [ "${reload}" == 1 ]; then
     npreload
+  fi
+
+  if [ ! -f /bin/wp ]; then
+    /usr/local/src/centminmod/addons/wpcli.sh install
   fi
  
 fi
@@ -131,10 +131,6 @@ fi
 
 if [ ! -f /root/.ssh/id_rsa.pub ]; then
   ssh-keygen -b 4096 -t rsa -f /root/.ssh/id_rsa -q -N "" <<< y >/dev/null 2>&1
-fi
-
-if [ ! -f /bin/wp ]; then
-  /usr/local/src/centminmod/addons/wpcli.sh install
 fi
 
 /bigscoots/includes/keymebatman.sh
