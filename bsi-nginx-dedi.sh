@@ -214,11 +214,15 @@ systemctl daemon-reload
 /etc/init.d/mysql restart
 npreload
 
+yum -y remove mlocate
+
 BSPATH=/root/.bigscoots
 
 mkdir -p "$BSPATH"
 touch "$BSPATH"/backupinfo
 echo "destination=local" >> "$BSPATH"/backupinfo
+
+touch /root/.bigscoots/wpo.installed
 
 /usr/bin/cmupdate 2>/dev/null ; /bigscoots/wpo_update.sh 2>/dev/null ; wget -O /usr/local/src/centminmod/inc/wpsetup.inc https://raw.githubusercontent.com/jcatello/centminmod/master/inc/wpsetup.inc
 
