@@ -35,7 +35,7 @@ if [ "$?" -eq "0" ]; then
   sleep 5 ; kill -9 "$(pgrep mdadm)"
   /sbin/mdadm --monitor --scan --daemonize
     elif [ "$?" -eq "1" ]; then
-      lshw -C storage | grep "vendor: LSI" 2>/dev/null 
+      lshw -C storage | grep "vendor: LSI\|vendor: Broadcom" 2>/dev/null 
         if [ "$?" -eq "0" ]; then
           mkdir -p /tmp/lsi
           cd /tmp/lsi || exit
