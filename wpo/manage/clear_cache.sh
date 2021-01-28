@@ -38,8 +38,8 @@ op_cache)
 
 # /bigscoots/wpo/manage/clear_cache.sh "${DOMAIN}" op_cache
 
+/bin/fpmreload >/dev/null 2>&1
 
-# no setup yet
 exit 0
 
 ;;
