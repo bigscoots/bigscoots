@@ -32,3 +32,6 @@ done
 	whmapi1 start_transfer_session transfer_session_id="$xferid"
 
 rsync -a --exclude 'virtfs' --exclude 'error_log' --exclude 'cpanelsolr' --delete -e "ssh -p "$sshport"" "$liveserver":/home/ /home/
+
+rsync -a -e "ssh -p "$sshport"" "$liveserver":/etc/remotedomains /etc/
+rsync -a -e "ssh -p "$sshport"" "$liveserver":/etc/localdomains /etc/
