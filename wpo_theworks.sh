@@ -207,7 +207,11 @@ else
       else
         echo "Skipping import of database."
       fi
-    else
+    elif mysql -e ""; then
+          DBNAME=$(wp ${WPCLIFLAGS} config get DB_NAME) || { echo 'Error: Obtaining the DB_NAME.' ; exit 1; }
+          mysql $DBNAME < bigscoots.sql
+          mv bigscoots.sql ../bigscoots_original-"${date}".sql
+        else
       wp ${WPCLIFLAGS} db import bigscoots.sql
       exit_on_error $? MySQL Import
       mv bigscoots.sql ../bigscoots_original-"${date}".sql
