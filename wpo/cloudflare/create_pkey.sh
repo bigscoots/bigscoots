@@ -21,11 +21,13 @@ if [ -f /home/nginx/.bigscoots/cf/pkey_"${p_key}".php ]; then
 	fi
 else
 	cat >/home/nginx/.bigscoots/cf/pkey_"${p_key}".php <<EOL
-	define('SITE_ID', "${site_id}");
-	define('MASTER_KEY', "${master_key}");
+<?php
+define('SITE_ID', '${site_id}');
+define('MASTER_KEY', '${master_key}');
+?>
 EOL
 fi
 
-if ! grep .bigscoots/cf/pkey "${wpconfig_path}"; then
+if ! grep -q .bigscoots/cf/pkey "${wpconfig_path}"; then
 	sed -ie "/if ( ! defined( 'ABSPATH' ) ) .*/i \ \n\ninclude '../../../.bigscoots/cf/pkey_${p_key}.php'; \n\n" "${wpconfig_path}"
 fi
