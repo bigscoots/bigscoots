@@ -2,6 +2,19 @@
 
 mkdir -p /root/.bigscoots/logs
 
+if [[ $(rpm --eval '%{centos_ver}') == 6 ]]; then
+	echo "Centos6"
+	exit
+fi
+
+if [ -f /usr/local/cpanel/version ]; then
+	crontab -l | grep -v 'wpo_servicechk'  | crontab -
+	if ! crontab -l | grep -q wpo_update.sh; then
+		crontab -l | { cat; echo "0 */6 * * * /bigscoots/wpo_update.sh 2>/dev/null"; } | crontab -
+	fi
+fi
+
+
 if [ -f /etc/centminmod-release ]; then 
 
 	if ! crontab -l | grep -q wpo_update.sh; then
@@ -80,4 +93,8 @@ if [ -f /etc/centminmod-release ]; then
 	rm -f /etc/csf/csf.error
 	csf -ra
 
+fi
+
+if [ "$1" == reboot ]; then
+	sleep 10 ; reboot
 fi
