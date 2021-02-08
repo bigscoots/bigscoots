@@ -10,7 +10,7 @@ wpconfig_path=$(wp config path ${WPCLIFLAGS})
 
 wp plugin install wp-cloudflare-page-cache --activate ${WPCLIFLAGS}
 
-wp config set SWCFPC_CF_API_EMAIL "${CF_API_EMAIL}"
-wp config set SWCFPC_CF_API_KEY "${CF_API_KEY}"
-wp config set SWCFPC_CF_API_ZONE_ID "${CF_API_KEY_ZONE_ID}"
+wp config set SWCFPC_CF_API_EMAIL "${CF_API_EMAIL}" ${WPCLIFLAGS}
+wp config set SWCFPC_CF_API_KEY "${CF_API_KEY}" ${WPCLIFLAGS}
+wp config set SWCFPC_CF_API_ZONE_ID "${CF_API_KEY_ZONE_ID}" ${WPCLIFLAGS}
 
