@@ -100,7 +100,7 @@ echo
 
 find wp-content/uploads/ -type f -name '*php*'
 find wp-content/uploads/ -type f -name '*.ico'
-grep -rl '))));}\|php eval(gzinflate(base64_decode\|eval (gzinflate(base64_decode\|anonymousfox' --include='*php' --exclude-dir='.infected_*'
+grep -rl '))));}\|php eval(gzinflate(base64_decode\|eval (gzinflate(base64_decode\|anonymousfox\|eval/\*' --include='*php' --exclude-dir='.infected_*'
 
 echo
 echo
